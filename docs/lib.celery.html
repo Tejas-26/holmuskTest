@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lib.celery package &mdash; src  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="lib.celeryWorkerExample package" href="lib.celeryWorkerExample.html" />
+    <link rel="prev" title="lib.argParsers package" href="lib.argParsers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> src
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="holmuskTest.html">holmuskTest module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lib.html">lib package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lib.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lib.argParsers.html">lib.argParsers package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lib.celery package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-lib.celery.App">lib.celery.App module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-lib.celery">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lib.celeryWorkerExample.html">lib.celeryWorkerExample package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.databaseIO.html">lib.databaseIO package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.resultGraph.html">lib.resultGraph package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.testLib.html">lib.testLib package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logs.html">logs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">src</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="lib.html">lib package</a> &raquo;</li>
+        
+      <li>lib.celery package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/lib.celery.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lib-celery-package">
+<h1>lib.celery package<a class="headerlink" href="#lib-celery-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-lib.celery.App">
+<span id="lib-celery-app-module"></span><h2>lib.celery.App module<a class="headerlink" href="#module-lib.celery.App" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="lib.celery.App.setup_loggers">
+<code class="sig-prename descclassname">lib.celery.App.</code><code class="sig-name descname">setup_loggers</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/celery/App.html#setup_loggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.celery.App.setup_loggers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-lib.celery">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lib.celery" title="Permalink to this headline">¶</a></h2>
+<p>library for the celery worker</p>
+<p>This contains a library that will generate a celery app. This is
+a library that is provided so that everything can be made as
+simple as possible. There is no need to change anything in this
+library, and this library should work as is. The currelt celery
+library works usign an updated logger, and this will create its
+own logger.</p>
+<p>All requirements for this library can be specified within the
+configuration file <code class="docutils literal notranslate"><span class="pre">config/celery.json</span></code> Currently this relies
+upon you geenrating the broker and results backend, all of which
+can be easily canged within the configuration file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="p">{</span>
+<span class="hll">     <span class="s2">&quot;base&quot;</span><span class="p">:{</span>
+</span>         <span class="s2">&quot;name&quot;</span>        <span class="p">:</span> <span class="s2">&quot;holmuskTest&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;BROKER_URL&quot;</span>  <span class="p">:</span> <span class="s2">&quot;redis://localhost:6379/0&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;BACKEND_URL&quot;</span> <span class="p">:</span> <span class="s2">&quot;redis://localhost:6379/1&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;include&quot;</span>     <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;lib.celeryWorkerExample.worker_1&quot;</span><span class="p">]</span>
+     <span class="p">},</span>
+
+<span class="hll">     <span class="s2">&quot;extra&quot;</span> <span class="p">:</span> <span class="p">{</span>
+</span>         <span class="s2">&quot;result_expires&quot;</span> <span class="p">:</span> <span class="mi">3600</span>
+     <span class="p">}</span>
+ <span class="p">}</span>
+</pre></div>
+</div>
+<p>It is absolutely essential that you specify the <code class="docutils literal notranslate"><span class="pre">&quot;base&quot;</span></code> configuration. This
+is where information about the name (which defaults to the name of the project),
+the <code class="docutils literal notranslate"><span class="pre">BROKER_URL</span></code> and the <code class="docutils literal notranslate"><span class="pre">BACKEND_URL</span></code> must be specified. The default is a
+local Redis instance, and this will certainly have to be modified to suit your
+needs.</p>
+<p>All workers must be specified in the <code class="docutils literal notranslate"><span class="pre">base.includes</span></code> specification. You may
+specify as many as you want.</p>
+<p>All other information <strong>must</strong> be specified within the <code class="docutils literal notranslate"><span class="pre">extra</span></code> configuration.</p>
+<p>Once this is specified, it is possible to run a set of celery workers using the
+command <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">runCelery</span></code> in the <code class="docutils literal notranslate"><span class="pre">src</span></code> folder. This will allow you run 4
+parallel workers. If you want to start many more (depending upon your processor
+capabilities) you should start the celery worker yourself using the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>celery -A lib.celery.App worker --concurrency<span class="o">=</span><span class="m">10</span>  --loglevel<span class="o">=</span>INFO
+</pre></div>
+</div>
+<p>Note that celery provides multiple ways of startng workers as shown
+[here](<a class="reference external" href="http://docs.celeryproject.org/en/latest/userguide/workers.html">http://docs.celeryproject.org/en/latest/userguide/workers.html</a>)
+including autoscaling, etc. and you are welcome to experiment with all its
+features.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="lib.celeryWorkerExample.html" class="btn btn-neutral float-right" title="lib.celeryWorkerExample package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="lib.argParsers.html" class="btn btn-neutral float-left" title="lib.argParsers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Author
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

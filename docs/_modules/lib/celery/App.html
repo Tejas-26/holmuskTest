@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lib.celery.App &mdash; src  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> src
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../holmuskTest.html">holmuskTest module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../lib.html">lib package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../logs.html">logs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">modules package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">src</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>lib.celery.App</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for lib.celery.App</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">logs</span> <span class="k">import</span> <span class="n">logDecorator</span> <span class="k">as</span> <span class="n">lD</span>
+<span class="kn">import</span> <span class="nn">jsonref</span><span class="o">,</span> <span class="nn">psycopg2</span>
+<span class="kn">from</span> <span class="nn">celery</span> <span class="k">import</span> <span class="n">Celery</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span> <span class="k">as</span> <span class="n">dt</span>
+
+<span class="kn">from</span> <span class="nn">celery.signals</span> <span class="k">import</span> <span class="n">after_setup_logger</span>
+
+
+<span class="n">config</span>   <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../config/config.json&#39;</span><span class="p">))</span>
+<span class="n">logBase</span>  <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;logging&#39;</span><span class="p">][</span><span class="s1">&#39;logBase&#39;</span><span class="p">]</span>
+<span class="n">logLevel</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;logging&#39;</span><span class="p">][</span><span class="s1">&#39;level&#39;</span><span class="p">]</span>
+<span class="n">logSpecs</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;logging&#39;</span><span class="p">][</span><span class="s1">&#39;specs&#39;</span><span class="p">]</span>
+<span class="n">cConfig</span>  <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../config/celery.json&#39;</span><span class="p">))</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">logBase</span><span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Celery</span><span class="p">(</span> 
+    <span class="n">cConfig</span><span class="p">[</span><span class="s1">&#39;base&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> 
+    <span class="n">broker</span>  <span class="o">=</span> <span class="n">cConfig</span><span class="p">[</span><span class="s1">&#39;base&#39;</span><span class="p">][</span><span class="s1">&#39;BROKER_URL&#39;</span><span class="p">],</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">cConfig</span><span class="p">[</span><span class="s1">&#39;base&#39;</span><span class="p">][</span><span class="s1">&#39;BACKEND_URL&#39;</span><span class="p">],</span>
+    <span class="n">include</span> <span class="o">=</span> <span class="n">cConfig</span><span class="p">[</span><span class="s1">&#39;base&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+
+<span class="n">app</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span> <span class="o">**</span><span class="n">cConfig</span><span class="p">[</span><span class="s1">&#39;extra&#39;</span><span class="p">]</span> <span class="p">)</span>
+
+<span class="c1"># ------------------------------------------------------------------</span>
+<span class="c1"># https://www.distributedpython.com/2018/08/28/celery-logging/</span>
+<span class="c1"># help about loggign is obtained from here ...</span>
+<span class="c1"># ------------------------------------------------------------------</span>
+<div class="viewcode-block" id="setup_loggers"><a class="viewcode-back" href="../../../lib.celery.html#lib.celery.App.setup_loggers">[docs]</a><span class="nd">@after_setup_logger</span><span class="o">.</span><span class="n">connect</span>
+<span class="k">def</span> <span class="nf">setup_loggers</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">now</span>       <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">_%H-%M-%S&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Generate a file handler if necessary</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;file&#39;</span> <span class="ow">in</span> <span class="n">logSpecs</span><span class="p">)</span> <span class="ow">and</span> <span class="n">logSpecs</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">][</span><span class="s1">&#39;todo&#39;</span><span class="p">]:</span>
+        <span class="n">fH</span>  <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/celery_</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">logSpecs</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">][</span><span class="s1">&#39;logFolder&#39;</span><span class="p">],</span> <span class="n">now</span><span class="p">)</span> <span class="p">)</span>
+        
+        <span class="n">fH</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fH</span><span class="p">)</span>
+
+    <span class="c1"># Generate a file handler if necessary</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;stdout&#39;</span> <span class="ow">in</span> <span class="n">logSpecs</span><span class="p">)</span> <span class="ow">and</span> <span class="n">logSpecs</span><span class="p">[</span><span class="s1">&#39;stdout&#39;</span><span class="p">][</span><span class="s1">&#39;todo&#39;</span><span class="p">]:</span>
+        <span class="n">cH</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+        <span class="n">cH</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">cH</span><span class="p">)</span>
+
+    <span class="c1"># Generate a file handler if necessary</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;logstash&#39;</span> <span class="ow">in</span> <span class="n">logSpecs</span><span class="p">)</span> <span class="ow">and</span> <span class="n">logSpecs</span><span class="p">[</span><span class="s1">&#39;logstash&#39;</span><span class="p">][</span><span class="s1">&#39;todo&#39;</span><span class="p">]:</span>
+
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;celeryTest&#39;</span> <span class="p">,</span> <span class="n">now</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="s1">&#39;tags&#39;</span> <span class="ow">in</span> <span class="n">logSpecs</span><span class="p">[</span><span class="s1">&#39;logstash&#39;</span><span class="p">]:</span>
+            <span class="n">tags</span> <span class="o">+=</span> <span class="n">logSpecs</span><span class="p">[</span><span class="s1">&#39;logstash&#39;</span><span class="p">][</span><span class="s1">&#39;tags&#39;</span><span class="p">]</span>
+        
+
+        <span class="n">lH</span> <span class="o">=</span> <span class="n">logstash</span><span class="o">.</span><span class="n">TCPLogstashHandler</span><span class="p">(</span>
+            <span class="n">host</span>    <span class="o">=</span> <span class="n">logSpecs</span><span class="p">[</span><span class="s1">&#39;logstash&#39;</span><span class="p">][</span><span class="s1">&#39;host&#39;</span><span class="p">],</span> 
+            <span class="n">port</span>    <span class="o">=</span> <span class="n">logSpecs</span><span class="p">[</span><span class="s1">&#39;logstash&#39;</span><span class="p">][</span><span class="s1">&#39;port&#39;</span><span class="p">],</span> 
+            <span class="n">version</span> <span class="o">=</span> <span class="n">logSpecs</span><span class="p">[</span><span class="s1">&#39;logstash&#39;</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">],</span>
+            <span class="n">tags</span>    <span class="o">=</span> <span class="n">tags</span><span class="p">)</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">lH</span><span class="p">)</span>
+
+    <span class="c1"># set the level of the handler</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logLevel</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Author
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

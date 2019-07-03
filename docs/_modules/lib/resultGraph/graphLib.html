@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lib.resultGraph.graphLib &mdash; src  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> src
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../holmuskTest.html">holmuskTest module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../lib.html">lib package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../logs.html">logs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">modules package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">src</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>lib.resultGraph.graphLib</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for lib.resultGraph.graphLib</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">logs</span> <span class="k">import</span> <span class="n">logDecorator</span> <span class="k">as</span> <span class="n">lD</span>
+<span class="kn">import</span> <span class="nn">jsonref</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> <span class="c1"># This comes before networkx</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">from</span> <span class="nn">networkx.drawing.nx_pydot</span> <span class="k">import</span> <span class="n">graphviz_layout</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span> <span class="k">as</span> <span class="n">dt</span>
+<span class="kn">from</span> <span class="nn">lib.databaseIO</span> <span class="k">import</span> <span class="n">pgIO</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../config/config.json&#39;</span><span class="p">))</span>
+<span class="n">logBase</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;logging&#39;</span><span class="p">][</span><span class="s1">&#39;logBase&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.lib.resultGraph.graphLib&#39;</span>
+
+<div class="viewcode-block" id="generateGraph"><a class="viewcode-back" href="../../../lib.resultGraph.html#lib.resultGraph.graphLib.generateGraph">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.generateGraph&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generateGraph</span><span class="p">(</span><span class="n">logger</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;generate a directed graph from the modules config</span>
+<span class="sd">    </span>
+<span class="sd">    generate a networkX.Graph object by reading the contents</span>
+<span class="sd">    of the ``config/modules/`` folder. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : {logging.logger}</span>
+<span class="sd">        logging element </span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    networkX.Graph object</span>
+<span class="sd">        Graph of which object is created when</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+
+        <span class="n">folder</span> <span class="o">=</span> <span class="s1">&#39;../config/modules&#39;</span>
+        <span class="n">files</span>  <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">)]</span>
+
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">f</span><span class="p">)))</span>
+            <span class="n">inp</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">out</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="n">graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="n">f</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;module&#39;</span><span class="p">,</span> <span class="n">summary</span><span class="o">=</span><span class="s1">&#39;&#39;</span> <span class="p">)</span>
+            
+            <span class="c1"># Add the incoming edges</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">inp</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                    <span class="n">summary</span> <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">])</span>
+                    <span class="n">graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="n">n</span><span class="p">,</span> 
+                        <span class="nb">type</span>    <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+                        <span class="n">summary</span> <span class="o">=</span> <span class="n">summary</span><span class="p">)</span>
+
+                <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+            <span class="c1"># Add the outgoing edges</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                    <span class="n">summary</span> <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">])</span>
+                    <span class="n">graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="n">n</span><span class="p">,</span> 
+                        <span class="nb">type</span>    <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">],</span>
+                        <span class="n">summary</span> <span class="o">=</span> <span class="n">summary</span><span class="p">)</span>
+
+                <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Unable to generate the graph: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">graph</span></div>
+
+<div class="viewcode-block" id="plotGraph"><a class="viewcode-back" href="../../../lib.resultGraph.html#lib.resultGraph.graphLib.plotGraph">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.plotGraph&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">plotGraph</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;plot the graph</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : {logging.logger}</span>
+<span class="sd">        logging element </span>
+<span class="sd">    graph : {networkX.Graph object}</span>
+<span class="sd">        The graph that needs to be plotted</span>
+<span class="sd">    fileName : {str}, optional</span>
+<span class="sd">        name of the file where to save the graph (the default is None, which</span>
+<span class="sd">        results in no graph being generated)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+        <span class="n">moduleNodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;module&#39;</span> <span class="o">==</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])]</span>
+        <span class="n">otherNodes</span>  <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;module&#39;</span> <span class="o">!=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])]</span>
+        <span class="n">lables</span>      <span class="o">=</span> <span class="p">{</span><span class="n">m</span><span class="p">:</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">}</span>
+
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">graphviz_layout</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;dot&#39;</span><span class="p">)</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="n">moduleNodes</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">nodelist</span><span class="o">=</span><span class="n">otherNodes</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;cyan&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span>  <span class="n">arrows</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_labels</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">lables</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">fileName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Graph saved ...&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Unable to plot the graph: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="generateSubGraph"><a class="viewcode-back" href="../../../lib.resultGraph.html#lib.resultGraph.graphLib.generateSubGraph">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.generateSubGraph&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">generateSubGraph</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">keyNode</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;generate a subgraph that contains all prior nodes</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : {logging.logger}</span>
+<span class="sd">        logging element </span>
+<span class="sd">    graph : {networkX.Graph object}</span>
+<span class="sd">        [description]</span>
+<span class="sd">    keyNode : {str}</span>
+<span class="sd">        Name of the node whose ancestors need to be geenrated.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    networkX.Graph object</span>
+<span class="sd">        graph containing the particular node and its ancistors.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">newGraph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+
+        <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">ancestors</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">keyNode</span><span class="p">))</span>
+        <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">keyNode</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">):</span>
+                <span class="n">newGraph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="n">n</span><span class="p">,</span> <span class="o">**</span><span class="n">d</span> <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">n1</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n2</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">):</span>
+                <span class="n">newGraph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Unable to generate the right subgraph: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">newGraph</span></div>
+
+<div class="viewcode-block" id="graphToSerialized"><a class="viewcode-back" href="../../../lib.resultGraph.html#lib.resultGraph.graphLib.graphToSerialized">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.graphToSerialized&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">graphToSerialized</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;serializes a graph</span>
+<span class="sd">    </span>
+<span class="sd">    Takes a networkX.Graph object and converts it into a serialized</span>
+<span class="sd">    set of nodes and edges. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : {logging.logger}</span>
+<span class="sd">        logging element </span>
+<span class="sd">    graph : {networkX.Graph object}</span>
+<span class="sd">        A networkX graph object that is to be serialized</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple of serialized lists</span>
+<span class="sd">        This is a tuple of nodes and edges in a serialized format</span>
+<span class="sd">        that can be later directly inserted into a database.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">progName</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;logging&#39;</span><span class="p">][</span><span class="s1">&#39;logBase&#39;</span><span class="p">]</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">([</span>
+                <span class="n">progName</span><span class="p">,</span>  <span class="c1"># program name</span>
+                <span class="n">now</span><span class="p">,</span>   <span class="c1"># current datetime </span>
+                <span class="n">n</span><span class="p">,</span>         <span class="c1"># node name</span>
+                <span class="n">d</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">],</span> <span class="c1"># &#39;module&#39;, &#39;csv&#39;. ... </span>
+                <span class="n">d</span><span class="p">[</span><span class="s1">&#39;summary&#39;</span><span class="p">]])</span>
+
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+        <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">progName</span><span class="p">,</span> <span class="n">now</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span></div>
+
+<div class="viewcode-block" id="serializedToGraph"><a class="viewcode-back" href="../../../lib.resultGraph.html#lib.resultGraph.graphLib.serializedToGraph">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.serializedToGraph&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">serializedToGraph</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;deserialize a graph serialized earlier</span>
+<span class="sd">    </span>
+<span class="sd">    Take serialized versions of the nodes and edges which is</span>
+<span class="sd">    produced by the function ``graphToSerialized`` and convert</span>
+<span class="sd">    that into a normal ``networkX``.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : {logging.logger}</span>
+<span class="sd">        logging element </span>
+<span class="sd">    nodes : {list}</span>
+<span class="sd">        serialized versions of the nodes of a graph</span>
+<span class="sd">    edges : {list}</span>
+<span class="sd">        A list of edges in a serialized form</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    networkX.Graph object</span>
+<span class="sd">        Takes a list of serialized nodes and edges and converts it</span>
+<span class="sd">        into a networkX.Graph object</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span> 
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span> <span class="n">n</span><span class="p">,</span> <span class="nb">type</span> <span class="o">=</span> <span class="n">t</span><span class="p">,</span> <span class="n">summary</span> <span class="o">=</span> <span class="n">s</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+        
+
+    <span class="k">return</span> <span class="n">graph</span></div>
+
+<div class="viewcode-block" id="uploadGraph"><a class="viewcode-back" href="../../../lib.resultGraph.html#lib.resultGraph.graphLib.uploadGraph">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.uploadGraph&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">uploadGraph</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">dbName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;upload the supplied graph to a database</span>
+<span class="sd">    </span>
+<span class="sd">    Given a graph, this function is going to upload the graph into</span>
+<span class="sd">    a particular database. In case a database is not specified, this</span>
+<span class="sd">    will try to upload the data into the default database.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : {logging.logger}</span>
+<span class="sd">        logging element </span>
+<span class="sd">    graph : {networkX graph}</span>
+<span class="sd">        The graph that needs to be uploaded into the database</span>
+<span class="sd">    dbName : {str}, optional</span>
+<span class="sd">        The name of the database in which to upload the data into. This</span>
+<span class="sd">        is the identifier within the ``db.json`` configuration file. (the </span>
+<span class="sd">        default is ``None``, which would use the default database specified</span>
+<span class="sd">        within the same file)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">nodes</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">graphToSerialized</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+        <span class="n">queryNodes</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;insert into graphs.nodes values </span><span class="si">%s</span><span class="s1">&#39;&#39;&#39;</span>
+        <span class="n">queryEdges</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;insert into graphs.edges values </span><span class="si">%s</span><span class="s1">&#39;&#39;&#39;</span>
+
+        <span class="n">pgIO</span><span class="o">.</span><span class="n">commitDataList</span><span class="p">(</span><span class="n">queryNodes</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">dbName</span><span class="o">=</span><span class="n">dbName</span><span class="p">)</span>
+        <span class="n">pgIO</span><span class="o">.</span><span class="n">commitDataList</span><span class="p">(</span><span class="n">queryEdges</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">dbName</span><span class="o">=</span><span class="n">dbName</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">()</span>
+
+
+    <span class="k">return</span></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Author
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

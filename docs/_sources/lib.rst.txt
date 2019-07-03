@@ -1,0 +1,22 @@
+lib package
+===========
+
+Subpackages
+-----------
+
+.. toctree::
+
+   lib.argParsers
+   lib.celery
+   lib.celeryWorkerExample
+   lib.databaseIO
+   lib.resultGraph
+   lib.testLib
+
+Module contents
+---------------
+
+.. automodule:: lib
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,22 @@
+lib.celery package
+==================
+
+Submodules
+----------
+
+lib.celery.App module
+---------------------
+
+.. automodule:: lib.celery.App
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: lib.celery
+   :members:
+   :undoc-members:
+   :show-inheritance:

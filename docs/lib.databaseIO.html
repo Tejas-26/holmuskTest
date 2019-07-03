@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lib.databaseIO package &mdash; src  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="lib.resultGraph package" href="lib.resultGraph.html" />
+    <link rel="prev" title="lib.celeryWorkerExample package" href="lib.celeryWorkerExample.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> src
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="holmuskTest.html">holmuskTest module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lib.html">lib package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lib.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="lib.argParsers.html">lib.argParsers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.celery.html">lib.celery package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.celeryWorkerExample.html">lib.celeryWorkerExample package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lib.databaseIO package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-lib.databaseIO.pgIO">lib.databaseIO.pgIO module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-lib.databaseIO">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lib.resultGraph.html">lib.resultGraph package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.testLib.html">lib.testLib package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logs.html">logs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">src</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="lib.html">lib package</a> &raquo;</li>
+        
+      <li>lib.databaseIO package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/lib.databaseIO.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lib-databaseio-package">
+<h1>lib.databaseIO package<a class="headerlink" href="#lib-databaseio-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-lib.databaseIO.pgIO">
+<span id="lib-databaseio-pgio-module"></span><h2>lib.databaseIO.pgIO module<a class="headerlink" href="#module-lib.databaseIO.pgIO" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="lib.databaseIO.pgIO.commitData">
+<code class="sig-prename descclassname">lib.databaseIO.pgIO.</code><code class="sig-name descname">commitData</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">query</em>, <em class="sig-param">values=None</em>, <em class="sig-param">dbName=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/databaseIO/pgIO.html#commitData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.databaseIO.pgIO.commitData" title="Permalink to this definition">¶</a></dt>
+<dd><p>query data from the database</p>
+<p>Query the data over here. If there is a problem with
+the data, it is going to return the value of <code class="docutils literal notranslate"><span class="pre">None</span></code>, and
+log the error. Your program needs to check whether
+there was an error with the query by checking for a <code class="docutils literal notranslate"><span class="pre">None</span></code>
+return value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
+<li><p><strong>query</strong> (<em>{str}</em>) – The query to be made to the databse</p></li>
+<li><p><strong>values</strong> (<em>{tuple</em><em> or </em><em>list-like}</em><em>, </em><em>optional</em>) – Additional values to be passed to the query (the default
+is None)</p></li>
+<li><p><strong>dbName</strong> (<em>{str</em><em> or </em><em>None}</em><em>, </em><em>optional</em>) – The name of the database to use. If this is None, the function will
+attempt to read the name from the <code class="docutils literal notranslate"><span class="pre">defaultDB</span></code> item within the
+file <code class="docutils literal notranslate"><span class="pre">../config/db.json</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>On successful completion, a <code class="docutils literal notranslate"><span class="pre">True</span></code> is returned. In case
+there is an error, the error will be logged, and a <code class="docutils literal notranslate"><span class="pre">None</span></code> will
+be returnd</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>True or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="lib.databaseIO.pgIO.commitDataList">
+<code class="sig-prename descclassname">lib.databaseIO.pgIO.</code><code class="sig-name descname">commitDataList</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">query</em>, <em class="sig-param">values</em>, <em class="sig-param">dbName=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/databaseIO/pgIO.html#commitDataList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.databaseIO.pgIO.commitDataList" title="Permalink to this definition">¶</a></dt>
+<dd><p>query data from the database</p>
+<p>Query the data over here. If there is a problem with
+the data, it is going to return the value of None, and
+log the error. Your program needs to check whether
+there was an error with the query by checking for a <code class="docutils literal notranslate"><span class="pre">None</span></code>
+return value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
+<li><p><strong>query</strong> (<em>{str}</em>) – The query to be made to the databse</p></li>
+<li><p><strong>values</strong> (<em>{tuple</em><em> or </em><em>list-like}</em><em>, </em><em>optional</em>) – Additional values to be passed to the query (the default
+is None)</p></li>
+<li><p><strong>dbName</strong> (<em>{str</em><em> or </em><em>None}</em><em>, </em><em>optional</em>) – The name of the database to use. If this is None, the function will
+attempt to read the name from the <code class="docutils literal notranslate"><span class="pre">defaultDB</span></code> item within the
+file <code class="docutils literal notranslate"><span class="pre">../config/db.json</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A successful completion of this function returns a <code class="docutils literal notranslate"><span class="pre">True</span></code>.
+In case there is an error, the error will be logged, and a <code class="docutils literal notranslate"><span class="pre">None</span></code> will
+be returned</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>True or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="lib.databaseIO.pgIO.getAllData">
+<code class="sig-prename descclassname">lib.databaseIO.pgIO.</code><code class="sig-name descname">getAllData</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">query</em>, <em class="sig-param">values=None</em>, <em class="sig-param">dbName=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/databaseIO/pgIO.html#getAllData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.databaseIO.pgIO.getAllData" title="Permalink to this definition">¶</a></dt>
+<dd><p>query data from the database</p>
+<p>Query the data over here. If there is a problem with the data, it is going
+to return the value of None, and log the error. Your program needs to check
+whether  there was an error with the query by checking for a None return
+value. Note that the location of the dataabses are assumed to be present
+within the file <code class="docutils literal notranslate"><span class="pre">../config/db.json</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
+<li><p><strong>query</strong> (<em>{str}</em>) – The query to be made to the databse</p></li>
+<li><p><strong>values</strong> (<em>{tuple</em><em> or </em><em>list-like}</em><em>, </em><em>optional</em>) – Additional values to be passed to the query (the default is None)</p></li>
+<li><p><strong>dbName</strong> (<em>{str</em><em> or </em><em>None}</em><em>, </em><em>optional</em>) – The name of the database to use. If this is None, the function will
+attempt to read the name from the <code class="docutils literal notranslate"><span class="pre">defaultDB</span></code> item within the
+file <code class="docutils literal notranslate"><span class="pre">../config/db.json</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tuples containing the values is returned. In case
+there is an error, the error will be logged, and a None will
+be return</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="lib.databaseIO.pgIO.getDataIterator">
+<code class="sig-prename descclassname">lib.databaseIO.pgIO.</code><code class="sig-name descname">getDataIterator</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">query</em>, <em class="sig-param">values=None</em>, <em class="sig-param">chunks=100</em>, <em class="sig-param">dbName=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/databaseIO/pgIO.html#getDataIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.databaseIO.pgIO.getDataIterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an iterator from a largish query</p>
+<p>This is a generator that returns values in chunks of chunksize <code class="docutils literal notranslate"><span class="pre">chunks</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
+<li><p><strong>query</strong> (<em>{str}</em>) – The query to be made to the databse</p></li>
+<li><p><strong>values</strong> (<em>{tuple</em><em> or </em><em>list-like}</em><em>, </em><em>optional</em>) – Additional values to be passed to the query (the default
+is None)</p></li>
+<li><p><strong>chunks</strong> (<em>{number}</em><em>, </em><em>optional</em>) – This is the number of rows that the data is going to return at every call
+if __next__() to this function. (the default is 100)</p></li>
+<li><p><strong>dbName</strong> (<em>{str</em><em> or </em><em>None}</em><em>, </em><em>optional</em>) – The name of the database to use. If this is None, the function will
+attempt to read the name from the <code class="docutils literal notranslate"><span class="pre">defaultDB</span></code> item within the
+file <code class="docutils literal notranslate"><span class="pre">../config/db.json</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>list of tuples</em> – A list of tuples from the query, with a maximum of <code class="docutils literal notranslate"><span class="pre">chunks</span></code> tuples returned
+at one time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="lib.databaseIO.pgIO.getSingleDataIterator">
+<code class="sig-prename descclassname">lib.databaseIO.pgIO.</code><code class="sig-name descname">getSingleDataIterator</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">query</em>, <em class="sig-param">values=None</em>, <em class="sig-param">dbName=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/databaseIO/pgIO.html#getSingleDataIterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.databaseIO.pgIO.getSingleDataIterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an iterator from a largish query</p>
+<p>This is a generator that returns values in chunks of chunksize 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
+<li><p><strong>query</strong> (<em>{str}</em>) – The query to be made to the databse</p></li>
+<li><p><strong>values</strong> (<em>{tuple</em><em> or </em><em>list-like}</em><em>, </em><em>optional</em>) – Additional values to be passed to the query (the default
+is None)</p></li>
+<li><p><strong>dbName</strong> (<em>{str</em><em> or </em><em>None}</em><em>, </em><em>optional</em>) – The name of the database to use. If this is None, the function will
+attempt to read the name from the <code class="docutils literal notranslate"><span class="pre">defaultDB</span></code> item within the
+file <code class="docutils literal notranslate"><span class="pre">../config/db.json</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>list of tuples</em> – A list of tuples from the query, with a maximum of <code class="docutils literal notranslate"><span class="pre">chunks</span></code> tuples returned
+at one time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-lib.databaseIO">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lib.databaseIO" title="Permalink to this headline">¶</a></h2>
+<p>Functions for accessing databases</p>
+<p>This library contains functions that will allow you to write
+high performance code for accessing various databases. Currently
+it only has access to Postgres libraries.</p>
+<p>Specifications of the locations of the databases are assumed to be present
+within the <code class="docutils literal notranslate"><span class="pre">../config/db.json</span></code> file. A <code class="docutils literal notranslate"><span class="pre">../config/db.template.json</span></code> file
+has been provided for templating your <code class="docutils literal notranslate"><span class="pre">db.json</span></code> file with this file.</p>
+<div class="section" id="available-database-libraries">
+<h3>Available Database Libraries:<a class="headerlink" href="#available-database-libraries" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Postgres: <code class="docutils literal notranslate"><span class="pre">pgIO</span></code></p></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="lib.resultGraph.html" class="btn btn-neutral float-right" title="lib.resultGraph package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="lib.celeryWorkerExample.html" class="btn btn-neutral float-left" title="lib.celeryWorkerExample package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Author
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

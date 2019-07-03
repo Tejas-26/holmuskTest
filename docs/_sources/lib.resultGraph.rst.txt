@@ -1,0 +1,22 @@
+lib.resultGraph package
+=======================
+
+Submodules
+----------
+
+lib.resultGraph.graphLib module
+-------------------------------
+
+.. automodule:: lib.resultGraph.graphLib
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: lib.resultGraph
+   :members:
+   :undoc-members:
+   :show-inheritance:

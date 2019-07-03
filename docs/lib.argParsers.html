@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>lib.argParsers package &mdash; src  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="lib.celery package" href="lib.celery.html" />
+    <link rel="prev" title="lib package" href="lib.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> src
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="holmuskTest.html">holmuskTest module</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="lib.html">lib package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="lib.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">lib.argParsers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-lib.argParsers.addAllParsers">lib.argParsers.addAllParsers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-lib.argParsers.config">lib.argParsers.config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-lib.argParsers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="lib.celery.html">lib.celery package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.celeryWorkerExample.html">lib.celeryWorkerExample package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.databaseIO.html">lib.databaseIO package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.resultGraph.html">lib.resultGraph package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lib.testLib.html">lib.testLib package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logs.html">logs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">src</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="lib.html">lib package</a> &raquo;</li>
+        
+      <li>lib.argParsers package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/lib.argParsers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lib-argparsers-package">
+<h1>lib.argParsers package<a class="headerlink" href="#lib-argparsers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-lib.argParsers.addAllParsers">
+<span id="lib-argparsers-addallparsers-module"></span><h2>lib.argParsers.addAllParsers module<a class="headerlink" href="#module-lib.argParsers.addAllParsers" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="lib.argParsers.addAllParsers.decodeParsers">
+<code class="sig-prename descclassname">lib.argParsers.addAllParsers.</code><code class="sig-name descname">decodeParsers</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/argParsers/addAllParsers.html#decodeParsers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.argParsers.addAllParsers.decodeParsers" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the parser namespace into a dict</p>
+<p>This takes the parsed arguments and converts the values
+into a dictionary that can be used …</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.Logger}</em>) – The logger used for logging error information</p></li>
+<li><p><strong>args</strong> (<em>{a parsed object}</em>) – A Namespace that contains the values of the parsed
+arguments according to the values provided.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A doctionary containing a list of all the parsers
+converted into their respective sub dictionaries</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="lib.argParsers.addAllParsers.parsersAdd">
+<code class="sig-prename descclassname">lib.argParsers.addAllParsers.</code><code class="sig-name descname">parsersAdd</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/argParsers/addAllParsers.html#parsersAdd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.argParsers.addAllParsers.parsersAdd" title="Permalink to this definition">¶</a></dt>
+<dd><p>add all available CLI arguments to the parser</p>
+<p>This function is going to add all available parser
+information into the provided parser argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.Logger}</em>) – The logger used for logging error information</p></li>
+<li><p><strong>parser</strong> (<em>{argparse.ArgumentParser instance}</em>) – An instance of <code class="docutils literal notranslate"><span class="pre">argparse.ArgumentParser()</span></code> that will be
+used for parsing the command line arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This is a <code class="docutils literal notranslate"><span class="pre">argparse.ArgumentParser()</span></code> instance that captures
+all the optional argument options that have been passed to
+the instance</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">argparse.ArgumentParser()</span></code> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="lib.argParsers.addAllParsers.updateArgs">
+<code class="sig-prename descclassname">lib.argParsers.addAllParsers.</code><code class="sig-name descname">updateArgs</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">defaultDict</em>, <em class="sig-param">claDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/argParsers/addAllParsers.html#updateArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.argParsers.addAllParsers.updateArgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper function for decoding arguments</p>
+<p>This function takes the dictionary provided by the
+namespace arguments, and updates the dictionary that
+needs parsing, in a meaningful manner. This allows
+<code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">bool</span></code>, <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">complex</span></code>
+and <code class="docutils literal notranslate"><span class="pre">dict</span></code> arguments to be changed. Make sure that
+you use it with caution. If you are unsure what this
+is going to return, just role your own parser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.Logger}</em>) – The logger used for logging error information</p></li>
+<li><p><strong>defaultDict</strong> (<em>{</em><em>[</em><em>type</em><em>]</em><em>}</em>) – [description]</p></li>
+<li><p><strong>claDict</strong> (<em>{</em><em>[</em><em>type</em><em>]</em><em>}</em>) – [description]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[type]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-lib.argParsers.config">
+<span id="lib-argparsers-config-module"></span><h2>lib.argParsers.config module<a class="headerlink" href="#module-lib.argParsers.config" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="lib.argParsers.config.addParsers">
+<code class="sig-prename descclassname">lib.argParsers.config.</code><code class="sig-name descname">addParsers</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">parser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/argParsers/config.html#addParsers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.argParsers.config.addParsers" title="Permalink to this definition">¶</a></dt>
+<dd><p>add argument parsers specific to the <code class="docutils literal notranslate"><span class="pre">config/config.json</span></code> file</p>
+<p>This function is kgoing to add argument parsers specific to the
+<code class="docutils literal notranslate"><span class="pre">config/config.json</span></code> file. This file has several options for
+logging data. This information will be</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.Logger}</em>) – The logger used for logging error information</p></li>
+<li><p><strong>parser</strong> (<em>{argparse.ArgumentParser instance}</em>) – An instance of <code class="docutils literal notranslate"><span class="pre">argparse.ArgumentParser()</span></code> that will be
+used for parsing the command line arguments specific to the
+config file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The same parser argument to which new CLI arguments have been
+appended</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>argparse.ArgumentParser instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="lib.argParsers.config.decodeParser">
+<code class="sig-prename descclassname">lib.argParsers.config.</code><code class="sig-name descname">decodeParser</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/argParsers/config.html#decodeParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.argParsers.config.decodeParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>generate a dictionary from the parsed args</p>
+<p>The parsed args may/may not be present. When they are
+present, they are pretty hard to use. For this reason,
+this function is going to convert the result into
+something meaningful.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> (<em>{logging.Logger}</em>) – The logger used for logging error information</p></li>
+<li><p><strong>args</strong> (<em>{args Namespace}</em>) – parsed arguments from the command line</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary that converts the arguments into something
+meaningful</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-lib.argParsers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lib.argParsers" title="Permalink to this headline">¶</a></h2>
+<p>Argument parsers will be located gere</p>
+<p>Currently, there is just one argument parser. However
+you are encouraged to use as many argument parsers
+that you wish to have. Ideally you should have one
+argument parser per config file.</p>
+<p>For each config file, you want to add a function for adding
+the respective parser to the CLI and another that will
+convert the values back into a dictionary. You have to
+generate a proper namespace for your parsed documents
+so that they can be easily separated. We recommend using
+the name of the config file without the extension as a
+starting point.</p>
+<div class="section" id="defining-parsers">
+<h3>Defining Parsers<a class="headerlink" href="#defining-parsers" title="Permalink to this headline">¶</a></h3>
+<p>Parsers for a new config file should be defined within a new
+file correcponding to that file. For example, a <code class="docutils literal notranslate"><span class="pre">config.json</span></code>
+file comes with a file <code class="docutils literal notranslate"><span class="pre">config.py</span></code> Each file should contain
+two functions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">addParsers(parser)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">decodeParser(args)</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">addParser()</span></code> function will add all the necessary command
+line arguments to the supplied <code class="docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code> object
+and return the object.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">decodeParser()</span></code> function will take a parsed Namespace
+object and convert it inot a dictionary.</p>
+<p>This way, different parsing arguments can easily be added and
+deleted at will without restricting the workflow to a great
+extent.</p>
+<p>Within the function <code class="docutils literal notranslate"><span class="pre">addAllParsers.parsersAdd()</span></code>  insert all
+the individual parser insertion function that you just created.
+Within the <code class="docutils literal notranslate"><span class="pre">addAllParsers.decodeParsers</span></code> function, update the
+dictionary that it returns containing all the parsed arguments
+within one big dictionary. Note that this is going to add values
+within the main dictionary only if a particular command line
+argument is supplied.</p>
+</div>
+<div class="section" id="defining-cli-options">
+<h3>Defining CLI Options<a class="headerlink" href="#defining-cli-options" title="Permalink to this headline">¶</a></h3>
+<p>There should be proper namespace created for the CLI arguments
+or else there is a high possibility that the CLI named arguments
+are going to collide. For overcoming this, a couple of simple
+rules should be followed:</p>
+<ol class="arabic">
+<li><p>Make sure that a CLI argument is always verbose. (Dont use
+one letter abbreviations unless it is a really common option
+and is universally used: like <code class="docutils literal notranslate"><span class="pre">-v</span></code> for <code class="docutils literal notranslate"><span class="pre">--verbose</span></code>, <code class="docutils literal notranslate"><span class="pre">-h</span></code>
+for <code class="docutils literal notranslate"><span class="pre">--help</span></code> etc. Note that in this vase, <code class="docutils literal notranslate"><span class="pre">-v</span></code> is already
+handled by the logging level).</p></li>
+<li><p>Start with the name of the config file. Each config file is
+typically a <code class="docutils literal notranslate"><span class="pre">json</span></code> object that translates into a Python
+<code class="docutils literal notranslate"><span class="pre">dict</span></code>. Hence, start every CLI argument with the name of
+the config file followed by an underscore.</p>
+<p><strong>For example</strong>: CLI arguments corresponding to <code class="docutils literal notranslate"><span class="pre">config.json</span></code>
+should start with <code class="docutils literal notranslate"><span class="pre">--config_</span></code></p>
+</li>
+<li><p>Each subsequent object within the main object should have
+the same nomenclature. This will allow a one-to-one mapping
+of a variable in the config file to a CLI argument.</p>
+<p><strong>For example</strong>: within <code class="docutils literal notranslate"><span class="pre">config.json</span></code>, the information referred
+to by the <code class="docutils literal notranslate"><span class="pre">logFolder</span></code> object within the JSON structure
+<code class="docutils literal notranslate"><span class="pre">{&quot;logging&quot;:{&quot;specs&quot;:{&quot;file&quot;:{&quot;logFolder&quot;:&quot;logs&quot;}}}}</span></code> should be
+named <code class="docutils literal notranslate"><span class="pre">--config_logging_specs_file_logFolder</span></code></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="lib.celery.html" class="btn btn-neutral float-right" title="lib.celery package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="lib.html" class="btn btn-neutral float-left" title="lib package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Author
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

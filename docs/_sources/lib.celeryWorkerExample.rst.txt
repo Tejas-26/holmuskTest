@@ -1,0 +1,22 @@
+lib.celeryWorkerExample package
+===============================
+
+Submodules
+----------
+
+lib.celeryWorkerExample.worker\_1 module
+----------------------------------------
+
+.. automodule:: lib.celeryWorkerExample.worker_1
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: lib.celeryWorkerExample
+   :members:
+   :undoc-members:
+   :show-inheritance:
