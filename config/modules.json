@@ -6,8 +6,8 @@
         "description": "",
         "owner"      : ""
     }, {
-        "moduleName" : "module2",
-        "path"       : "modules/module2/module2.py",
+        "moduleName" : "LinearRegression",
+        "path"       : "modules/LinearRegression/LinearRegression.py",
         "execute"    : true,
         "description": "",
         "owner"      : ""

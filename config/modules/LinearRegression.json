@@ -1,0 +1,5 @@
+{
+    "inputs"  : {"../data/aircondit7.csv"},
+    "outputs" : {},
+    "params"  : {}
+}
