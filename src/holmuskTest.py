@@ -13,12 +13,12 @@ logSpecs = config['logging']['specs']
 @lD.log(logBase + '.importModules')
 def importModules(logger, resultsDict):
     '''import and execute required modules
-    
-    This function is used for importing all the 
+
+    This function is used for importing all the
     modules as defined in the ../config/modules.json
     file and executing the main function within it
     if present. In error, it fails gracefully ...
-    
+
     Parameters
     ----------
     logger : {logging.Logger}
@@ -62,7 +62,7 @@ def importModules(logger, resultsDict):
                 logger.error(f'Unable to determine whether this module should be skipped: {e}.\n Module is being skipped.')
                 continue
 
-                
+
         try:
             name, path = m['moduleName'], m['path']
             logger.info('Module {} is being executed'.format( name ))
@@ -80,34 +80,15 @@ def importModules(logger, resultsDict):
 
 def main(logger, resultsDict):
     '''main program
-    
+
     This is the place where the entire program is going
     to be generated.
     '''
 
-    # First import all the modules, and run 
+    # First import all the modules, and run
     # them
     # ------------------------------------
     importModules(resultsDict)
-
-    # Lets just create a simple testing 
-    # for other functions to follow
-    # -----------------------------------
-
-    sampleValues = [
-        (1, 2),
-        (1.2, 5),
-        (3, 'a'),
-        ('First', 'Second'),
-        (55,)
-    ]
-
-    for s in sampleValues:
-        try:
-            sL.simpleTestFunction(*s)
-        except Exception as e:
-            logger.error('Unable to perform addition with values [{}]\n:{}'.format(
-                s, str(e)))
 
     return
 
@@ -115,7 +96,7 @@ if __name__ == '__main__':
 
     # Let us add an argument parser here
     parser = argparse.ArgumentParser(description='holmuskTest command line arguments')
-    
+
     # Add the modules here
     modules = jsonref.load(open('../config/modules.json'))
     modules = [m['moduleName'] for m in modules]
@@ -123,7 +104,7 @@ if __name__ == '__main__':
         type = str,
         choices = modules,
         help = '''Add modules to run over here. Multiple modules can be run
-        simply by adding multiple strings over here. Make sure that the 
+        simply by adding multiple strings over here. Make sure that the
         available choices are reflected in the choices section''')
 
     parser = aP.parsersAdd(parser)
@@ -134,12 +115,12 @@ if __name__ == '__main__':
         resultsDict['modules'] = results.module
     else:
         resultsDict['modules'] = None
-        
+
 
     # ---------------------------------------------------
     # We need to explicitely define the logging here
     # rather than as a decorator, bacause we have
-    # fundamentally changed the way in which logging 
+    # fundamentally changed the way in which logging
     # is done here
     # ---------------------------------------------------
     logSpecs = aP.updateArgs(logSpecs, resultsDict['config']['logging']['specs'])

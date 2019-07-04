@@ -1,4 +1,5 @@
 from lib.argParsers import config as cf
+from lib.argParsers import module2 as m2
 
 from logs import logDecorator as lD
 import jsonref, copy
@@ -9,10 +10,10 @@ logBase = config['logging']['logBase'] + '.lib.argParsers.addAllParsers'
 @lD.log(logBase + '.parsersAdd')
 def parsersAdd(logger, parser):
     '''add all available CLI arguments to the parser
-    
+
     This function is going to add all available parser
     information into the provided parser argument.
-    
+
     Parameters
     ----------
     logger : {logging.Logger}
@@ -20,31 +21,31 @@ def parsersAdd(logger, parser):
     parser : {argparse.ArgumentParser instance}
         An instance of ``argparse.ArgumentParser()`` that will be
         used for parsing the command line arguments.
-    
+
     Returns
     -------
     ``argparse.ArgumentParser()`` instance
         This is a ``argparse.ArgumentParser()`` instance that captures
-        all the optional argument options that have been passed to 
+        all the optional argument options that have been passed to
         the instance
     '''
 
     parser = cf.addParsers(parser)
-
+    parser = m2.addParsers(parser)
     return parser
 
 @lD.log(logBase + '.updateArgs')
 def updateArgs(logger, defaultDict, claDict):
     '''helper function for decoding arguments
-    
+
     This function takes the dictionary provided by the
     namespace arguments, and updates the dictionary that
     needs parsing, in a meaningful manner. This allows
-    ``str``, ``bool``, ``int``, ``float``, ``complex`` 
+    ``str``, ``bool``, ``int``, ``float``, ``complex``
     and ``dict`` arguments to be changed. Make sure that
     you use it with caution. If you are unsure what this
     is going to return, just role your own parser.
-    
+
     Parameters
     ----------
     logger : {logging.Logger}
@@ -53,7 +54,7 @@ def updateArgs(logger, defaultDict, claDict):
         [description]
     claDict : {[type]}
         [description]
-    
+
     Returns
     -------
     [type]
@@ -84,10 +85,10 @@ def updateArgs(logger, defaultDict, claDict):
 @lD.log(logBase + '.decodeParsers')
 def decodeParsers(logger, args):
     '''convert the parser namespace into a dict
-    
+
     This takes the parsed arguments and converts the values
     into a dictionary that can be used ...
-    
+
     Parameters
     ----------
     logger : {logging.Logger}
@@ -109,6 +110,5 @@ def decodeParsers(logger, args):
     configCLA['logging'] = cf.decodeParser(args)
 
     allConfigs['config'] = configCLA
-
+    allConfigs['module2'] = m2.decodeParser(args)
     return allConfigs
-
