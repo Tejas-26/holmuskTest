@@ -1,14 +1,14 @@
 [
     {
-        "moduleName" : "module1",
-        "path"       : "modules/module1/module1.py",
-        "execute"    : false,
+        "moduleName" : "dbMarkDown",
+        "path"       : "modules/dbMarkDown/dbMarkDown.py",
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "LinearRegression",
         "path"       : "modules/LinearRegression/LinearRegression.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {

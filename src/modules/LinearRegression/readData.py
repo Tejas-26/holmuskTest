@@ -3,6 +3,7 @@ import jsonref, pprint
 '''import csv'''
 import numpy as np
 import pandas as pd
+from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
 logBase = config['logging']['logBase'] + '.modules.LinearRegression.readData'
@@ -19,7 +20,7 @@ def readCSV_X(logger, fileName):
         return []
 
     return X
-    
+
 @lD.log(logBase + '.performLR')
 def readCSV_Y(logger, fileName):
     data = []
@@ -31,3 +32,23 @@ def readCSV_Y(logger, fileName):
         return []
 
     return Y
+
+@lD.log(logBase + '.test')
+def test(logger):
+    #following shows qty of each marital status group, in desc. order 
+    query = '''
+    SELECT
+        distinct marital,
+        count(marital)
+    FROM
+        raw_data.background
+    WHERE
+    	marital ~ '[^0-9]+$'
+    GROUP BY
+        marital
+    ORDER BY
+    	count(marital) DESC
+
+    '''
+    data = pgIO.getAllData(query)
+    print(data)

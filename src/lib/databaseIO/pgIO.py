@@ -8,26 +8,26 @@ logBase = config['logging']['logBase'] + '.databaseIO.pgIO'
 @lD.log(logBase + '.getAllData')
 def getAllData(logger, query, values=None, dbName=None):
     '''query data from the database
-    
-    Query the data over here. If there is a problem with the data, it is going 
-    to return the value of None, and log the error. Your program needs to check 
-    whether  there was an error with the query by checking for a None return 
+
+    Query the data over here. If there is a problem with the data, it is going
+    to return the value of None, and log the error. Your program needs to check
+    whether  there was an error with the query by checking for a None return
     value. Note that the location of the dataabses are assumed to be present
     within the file ``../config/db.json``.
-    
+
     Parameters
     ----------
     logger : {logging.logger}
-        logging element 
+        logging element
     query : {str}
         The query to be made to the databse
     values : {tuple or list-like}, optional
         Additional values to be passed to the query (the default is None)
     dbName : {str or None}, optional
-        The name of the database to use. If this is None, the function will 
-        attempt to read the name from the ``defaultDB`` item within the 
-        file ``../config/db.json``. 
-    
+        The name of the database to use. If this is None, the function will
+        attempt to read the name from the ``defaultDB`` item within the
+        file ``../config/db.json``.
+
     Returns
     -------
     list or None
@@ -37,7 +37,7 @@ def getAllData(logger, query, values=None, dbName=None):
     '''
 
     vals = None
-    
+
     try:
         db = jsonref.load(open('../config/db.json'))
 
@@ -80,38 +80,38 @@ def getAllData(logger, query, values=None, dbName=None):
     except Exception as e:
         logger.error('Unable to disconnect to the database')
         logger.error(str(e))
-        return 
+        return
 
     return vals
 
 @lD.log(logBase + '.getDataIterator')
 def getDataIterator(logger, query, values=None, chunks=100, dbName=None):
     '''Create an iterator from a largish query
-    
+
     This is a generator that returns values in chunks of chunksize ``chunks``.
-    
+
     Parameters
     ----------
     logger : {logging.logger}
-        logging element 
+        logging element
     query : {str}
         The query to be made to the databse
     values : {tuple or list-like}, optional
-        Additional values to be passed to the query (the default 
+        Additional values to be passed to the query (the default
         is None)
     chunks : {number}, optional
         This is the number of rows that the data is going to return at every call
         if __next__() to this function. (the default is 100)
     dbName : {str or None}, optional
-        The name of the database to use. If this is None, the function will 
-        attempt to read the name from the ``defaultDB`` item within the 
-        file ``../config/db.json``. 
-    
+        The name of the database to use. If this is None, the function will
+        attempt to read the name from the ``defaultDB`` item within the
+        file ``../config/db.json``.
+
     Yields
     ------
     list of tuples
         A list of tuples from the query, with a maximum of ``chunks`` tuples returned
-        at one time. 
+        at one time.
     '''
 
     try:
@@ -157,35 +157,35 @@ def getDataIterator(logger, query, values=None, chunks=100, dbName=None):
     except Exception as e:
         logger.error('Unable to disconnect to the database')
         logger.error(str(e))
-        return 
+        return
 
     return
 
 @lD.log(logBase + '.getSingleDataIterator')
 def getSingleDataIterator(logger, query, values=None, dbName=None):
     '''Create an iterator from a largish query
-    
+
     This is a generator that returns values in chunks of chunksize 1.
-    
+
     Parameters
     ----------
     logger : {logging.logger}
-        logging element 
+        logging element
     query : {str}
         The query to be made to the databse
     values : {tuple or list-like}, optional
-        Additional values to be passed to the query (the default 
+        Additional values to be passed to the query (the default
         is None)
     dbName : {str or None}, optional
-        The name of the database to use. If this is None, the function will 
-        attempt to read the name from the ``defaultDB`` item within the 
-        file ``../config/db.json``. 
-    
+        The name of the database to use. If this is None, the function will
+        attempt to read the name from the ``defaultDB`` item within the
+        file ``../config/db.json``.
+
     Yields
     ------
     list of tuples
         A list of tuples from the query, with a maximum of ``chunks`` tuples returned
-        at one time. 
+        at one time.
     '''
 
     try:
@@ -231,34 +231,34 @@ def getSingleDataIterator(logger, query, values=None, dbName=None):
     except Exception as e:
         logger.error('Unable to disconnect to the database')
         logger.error(str(e))
-        return 
+        return
 
     return
 
 @lD.log(logBase + '.commitData')
 def commitData(logger, query, values=None, dbName=None):
     '''query data from the database
-    
+
     Query the data over here. If there is a problem with
     the data, it is going to return the value of ``None``, and
-    log the error. Your program needs to check whether 
+    log the error. Your program needs to check whether
     there was an error with the query by checking for a ``None``
     return value
-    
+
     Parameters
     ----------
     logger : {logging.logger}
-        logging element 
+        logging element
     query : {str}
         The query to be made to the databse
     values : {tuple or list-like}, optional
-        Additional values to be passed to the query (the default 
+        Additional values to be passed to the query (the default
         is None)
     dbName : {str or None}, optional
-        The name of the database to use. If this is None, the function will 
-        attempt to read the name from the ``defaultDB`` item within the 
-        file ``../config/db.json``. 
-    
+        The name of the database to use. If this is None, the function will
+        attempt to read the name from the ``defaultDB`` item within the
+        file ``../config/db.json``.
+
     Returns
     -------
     True or None
@@ -268,7 +268,7 @@ def commitData(logger, query, values=None, dbName=None):
     '''
 
     vals = True
-    
+
     try:
         db = jsonref.load(open('../config/db.json'))
 
@@ -308,38 +308,38 @@ def commitData(logger, query, values=None, dbName=None):
     except Exception as e:
         logger.error('Unable to disconnect to the database')
         logger.error(str(e))
-        return 
+        return
 
     return vals
 
 @lD.log(logBase + '.commitDataList')
 def commitDataList(logger, query, values, dbName=None):
     '''query data from the database
-    
+
     Query the data over here. If there is a problem with
     the data, it is going to return the value of None, and
-    log the error. Your program needs to check whether 
+    log the error. Your program needs to check whether
     there was an error with the query by checking for a ``None``
     return value
-    
+
     Parameters
     ----------
     logger : {logging.logger}
-        logging element 
+        logging element
     query : {str}
         The query to be made to the databse
     values : {tuple or list-like}, optional
-        Additional values to be passed to the query (the default 
+        Additional values to be passed to the query (the default
         is None)
     dbName : {str or None}, optional
-        The name of the database to use. If this is None, the function will 
-        attempt to read the name from the ``defaultDB`` item within the 
-        file ``../config/db.json``. 
-    
+        The name of the database to use. If this is None, the function will
+        attempt to read the name from the ``defaultDB`` item within the
+        file ``../config/db.json``.
+
     Returns
     -------
     True or None
-        A successful completion of this function returns a ``True``. 
+        A successful completion of this function returns a ``True``.
         In case there is an error, the error will be logged, and a ``None`` will
         be returned
     '''

@@ -6,7 +6,8 @@ from matplotlib import pyplot as plt
 
 config = jsonref.load(open('../config/config.json'))
 logBase = config['logging']['logBase'] + '.modules.LinearRegression.LinearRegression'
-
+configLR = jsonref.load(open('../config/modules/LinearRegression.json'))
+filePath = configLR['inputs']['path']
 
 @lD.log(logBase + '.performLR')
 def performLR(logger):
@@ -21,15 +22,13 @@ def performLR(logger):
     '''
 
     print('We are in LinearRegression')
-
-    fileName = '../data/aircondit7.csv'
-    X = rD.readCSV_X(fileName)
-    Y = rD.readCSV_Y(fileName)
+    x = rD.readCSV_X(filePath)
+    y = rD.readCSV_Y(filePath)
     lr = lm.LinearRegression()
-    lr.fit(X,Y)
-    ypred = lr.predict(X)
-    plt.scatter(X,Y)
-    plt.plot(X, ypred, color='red')
+    lr.fit(x,y)
+    ypred = lr.predict(x)
+    plt.scatter(x,y)
+    plt.plot(x, ypred, color='red')
     plt.show()
     return
 
@@ -55,9 +54,10 @@ def main(logger, resultsDict):
     print('Main function of LinearRegression')
     print('='*30)
     print('We get a copy of the result dictionary over here ...')
-    pprint.pprint(resultsDict)
+    # pprint.pprint(resultsDict)
 
-    performLR()
+    # performLR()
+    rD.test()
 
     print('Getting out of LinearRegression')
     print('-'*30)
