@@ -83,17 +83,37 @@ def colNames(logger):
 
     return columnNames
 
+
 @lD.log(logBase + '.topValuesCol')
-def topValuesCol(logger, d, top_d):
+def topValuesCol(logger, d):
 
     try:
-        for column in d:
-            top_d[column] = dict(sorted(d[column].items(), key=operator.itemgetter(1), reverse=True)[:dbSummary_config["params"]["top_number"]])
-
+        for column in d["columns"]:
+            # top_d[column] = dict(sorted(d[column].items())[:dbSummary_config["params"]["top_number"]])
+            query = SQL('''
+            SELECT
+                distinct {},
+                count({})
+            FROM
+                raw_data.background
+            WHERE
+                {} ~ '[^0-9]+$'
+            GROUP BY
+                {}
+            ORDER BY
+            	count({}) DESC
+            ''').format(
+                Identifier(column),
+                Identifier(column),
+                Identifier(column),
+                Identifier(column),
+                Identifier(column)
+            )
+            data = pgIO.getAllData(query)
     except Exception as e:
         logger.error(f'Unable to get data for the column names: {e}')
 
-    return top_d
+    return data
 
 
 @lD.log(logBase + '.main')
@@ -128,9 +148,9 @@ def main(logger, resultsDict):
     tableInfo['totalNumColumns'] = numRowsCol()[1]
 
     colsInfo = jsonref.load(open('../config/columns.json'))
-
     topValuesColumns = {key: None for key in tableInfo['columnNames']}
-    topValuesColumns = topValuesCol(colsInfo, topValuesColumns)
+    # topValuesColumns = topValuesCol(colsInfo, topValuesColumns)
+    topValuesColumns = topValuesCol(colsInfo)
     rM.makeIntro(tableInfo)
     rM.makeCols(tableInfo)
     rM.makeTop(topValuesColumns)
