@@ -1,0 +1,87 @@
+{
+    "inputs"  : {
+      "params": {
+        "sexes":["M","F"],
+        "races":["AA","MR","NHPI"]
+      }
+    },
+    "outputs" : {},
+    "params"  : {
+      "sexes" : {
+        "M":["M","m","Male","male"],
+        "F":["F","f","Female","female"],
+        "all":["M","F","m","f","Male","Female","male","female"]
+      },
+      "races" : {
+        "AA":["Asian American","asian american","AA","Asian american",
+          "asian American", "Asian", "asian", "a", "A", "AZN", "azn", "ASIAN",
+          "ASIAN AMERICAN", "Indian", "Chinese", "Vietnamese", "Pakistani",
+          "Japanese", "Pakastani", "pakistan", "Philapino", "indian", "indain",
+          "East Indian", "Indain", "asian/indian", "Asian/india", "Korean",
+          "Hindu", "Pakistanian"],
+
+        "MR":["MR","mixed","biracial","dual heritage","Mixed","Biracial",
+          "Dual heritage", "MIXED RACE", "BIRACIAL", "White, Hispanic",
+          "White and Asian", "White and American Indian or Alaska",
+          "White/Black", "White and Black or African American", "other",
+          "OTHER", "Other","Other and Black or African American",
+          "other- mixed race","Other Non-Hispanic", "Other ,Quarter Hawaiian",
+          "Other INDIAN", "otehr", "multiracial", "MultiRacia",
+          "Irish and Hispanic", "Mexican Indian", "Hispanic/Native American",
+          "hispanic/white", "Biracial-White/Native American",
+          "Asian/ Pacific Islander","ASian or Pacific Islander",
+          "Asian and Native Hawaiian / Pacific", "White and Other and Other",
+          "Other Asian/Pacific Islander", "multiracial:Other Combination",
+          "Asian and White", "More Than One Race", "Multi Raci",
+          "asian or Pacific Islander", "Multiracial:Asian/White",
+          "Multiracial:Asian/Black-African American", "Multi-Race",
+          "Other Multi-Race", "Multiracial:Black-African American White",
+          "Asian or Pacific Island", "Asian or Pacific Islander", "MultiRacial",
+          "Multiracial:Other Combination"],
+
+        "NHPI":["NH", "PI", "Native Hawaiian","Pacific Islander",
+          "native hawaiian", "pacific islander", "Hawaiian", "Islander",
+          "hawaiian", "islander", "Native Hawaiian or Other Pacific Is",
+          "hawaiian / Pacific Islander", "Hawaiian/Pacific Islander",
+          "Hawaiian/P", "Hawaiian or other Pacific Islander",
+          "Native Hawaiian or Other Pacific Islander",
+          "Native Hawaiian/Other Pacific Islander",
+          "Hawaiian / Pacific Islander", "NativeHawaiianPacificIslander",
+          "PACIFIC ISLANDER", "NH/PI"],
+
+        "all": ["Asian American","asian american","AA","Asian american",
+          "asian American", "Asian", "asian", "a", "A", "AZN", "azn", "ASIAN",
+          "ASIAN AMERICAN", "Indian", "Chinese", "Vietnamese", "Pakistani",
+          "Japanese", "Pakastani", "pakistan", "Philapino", "indian", "indain",
+          "East Indian", "Indain", "asian/indian", "Asian/india", "Korean",
+          "Hindu", "Pakistanian", "MR","mixed","biracial","dual heritage",
+          "Mixed","Biracial","Dual heritage", "MIXED RACE", "BIRACIAL",
+          "White, Hispanic", "White and Asian",
+          "White and American Indian or Alaska", "White/Black",
+          "White and Black or African American", "other", "OTHER", "Other",
+          "Other and Black or African American", "other- mixed race",
+          "Other Non-Hispanic", "Other ,Quarter Hawaiian", "Other INDIAN",
+          "otehr", "multiracial", "MultiRacia", "Irish and Hispanic",
+          "Mexican Indian", "Hispanic/Native American", "hispanic/white",
+          "Biracial-White/Native American", "Asian/ Pacific Islander",
+          "ASian or Pacific Islander", "Asian and Native Hawaiian / Pacific",
+          "White and Other and Other", "Other Asian/Pacific Islander",
+          "multiracial:Other Combination", "Asian and White",
+          "More Than One Race", "Multi Raci", "asian or Pacific Islander",
+          "Multiracial:Asian/White", "Multiracial:Asian/Black-African American",
+          "Multi-Race", "Other Multi-Race",
+          "Multiracial:Black-African American White", "Asian or Pacific Island",
+          "Asian or Pacific Islander", "MultiRacial",
+          "Multiracial:Other Combination",
+          "NH", "PI", "Native Hawaiian","Pacific Islander", "native hawaiian",
+          "pacific islander", "Hawaiian", "Islander", "hawaiian", "islander",
+          "Native Hawaiian or Other Pacific Is", "hawaiian / Pacific Islander",
+          "Hawaiian/Pacific Islander", "Hawaiian/P",
+          "Hawaiian or other Pacific Islander",
+          "Native Hawaiian or Other Pacific Islander",
+          "Native Hawaiian/Other Pacific Islander",
+          "Hawaiian / Pacific Islander", "NativeHawaiianPacificIslander",
+          "PACIFIC ISLANDER", "NH/PI"]
+      }
+    }
+}
