@@ -86,10 +86,10 @@ def colNames(logger):
 
 @lD.log(logBase + '.topValuesCol')
 def topValuesCol(logger, d):
-
+    topVals = {}
     try:
         for column in d["columns"]:
-            # top_d[column] = dict(sorted(d[column].items())[:dbSummary_config["params"]["top_number"]])
+            topVals[column] = {}
             query = SQL('''
             SELECT
                 distinct {},
@@ -109,11 +109,16 @@ def topValuesCol(logger, d):
                 Identifier(column),
                 Identifier(column)
             )
-            data = pgIO.getAllData(query)
+            dataCol = pgIO.getAllData(query)
+            topDataCol = dataCol[:dbMarkDownConf["params"]["top_number"]]
+            for pair in topDataCol:
+                category = pair[0]
+                value = pair[1]
+                topVals[column][category] = value
     except Exception as e:
         logger.error(f'Unable to get data for the column names: {e}')
 
-    return data
+    return topVals
 
 
 @lD.log(logBase + '.main')
@@ -148,12 +153,14 @@ def main(logger, resultsDict):
     tableInfo['totalNumColumns'] = numRowsCol()[1]
 
     colsInfo = jsonref.load(open('../config/columns.json'))
-    topValuesColumns = {key: None for key in tableInfo['columnNames']}
+    #topValuesColumns = {key: None for key in tableInfo['columnNames']}
     # topValuesColumns = topValuesCol(colsInfo, topValuesColumns)
     topValuesColumns = topValuesCol(colsInfo)
     rM.makeIntro(tableInfo)
     rM.makeCols(tableInfo)
     rM.makeTop(topValuesColumns)
+    with open('../data/final/finalData.json', 'w') as outfile:
+        jsonref.dump(topValuesColumns, outfile)
     print('Getting out of dbMarkDown module')
     print('-'*30)
 

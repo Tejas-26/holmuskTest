@@ -56,8 +56,8 @@ def main(logger, resultsDict):
     print('We get a copy of the result dictionary over here ...')
     # pprint.pprint(resultsDict)
 
-    # performLR()
-    rD.test()
+    performLR()
+    # rD.test()
 
     print('Getting out of LinearRegression')
     print('-'*30)

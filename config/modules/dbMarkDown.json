@@ -1,5 +1,5 @@
 {
     "inputs"  : {},
     "outputs" : {},
-    "params"  : {}
+    "params"  : {"top_number": 10}
 }
