@@ -12,9 +12,9 @@ from tqdm import tqdm
 from multiprocessing import Pool
 from time import sleep
 
-dbMarkDownConf = jsonref.load(open('../config/modules/dbMarkDown.json'))
+comorbidAnalysisConf = jsonref.load(open('../config/modules/comorbidAnalysis.json'))
 config = jsonref.load(open('../config/config.json'))
-logBase = config['logging']['logBase'] + '.modules.dbMarkDown.reportMaker'
+logBase = config['logging']['logBase'] + '.modules.comorbidAnalysis.reportMaker'
 
 
 @lD.log(logBase + '.makeIntro')
@@ -109,28 +109,6 @@ def maritalDistParallel(logger):
     p.close()
 
     return result
-
-#How to use the above two functions with SQL Querying
-    # for col, n in zip(['marital', 'id'], [10, 20]): #create config file with column names
-
-    #     query = SQL('''
-    #         SELECT
-    #             {}
-    #         from
-    #             {}.{}
-    #         limit {}
-    #         ''').format(
-    #             Identifier(col),
-    #             Identifier('raw_data'),
-    #             Identifier('background'),
-    #             Literal(n)
-    #         )
-
-    #     data = [d[0] for d in pgIO.getAllData(query)]
-    #     print(data)
-
-    # maritalDist = utils.getMaritalDistParallel()
-    # print(maritalDist)
 
 @lD.log(logBase + '.colDistPP')
 def colDistPP(logger, data):
