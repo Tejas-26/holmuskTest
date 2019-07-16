@@ -7,9 +7,9 @@ from lib.databaseIO import pgIO
 from modules.comorbidAnalysis import reportMaker as rM
 from modules.comorbidAnalysis import comFunctions as cF
 
-comorbidAnalysisConf = jsonref.load(open('../config/modules/comorbid/comorbidAnalysis.json'))
+comorbidAnalysisConf = jsonref.load(open('../config/modules/comorbid/comorbid_table1/comorbidAnalysis.json'))
 config = jsonref.load(open('../config/config.json'))
-logBase = config['logging']['logBase'] + '.modules.comorbid.comorbidAnalysis.comorbidAnalysis'
+logBase = config['logging']['logBase'] + '.modules.comorbid.comorbidAnalysis.comorbid_table1.comorbidAnalysis'
 
 
 @lD.log(logBase + '.main')
@@ -43,10 +43,10 @@ def main(logger, resultsDict):
     tableInfo['totalNumUser'] = cF.numRowsCol()[0]
     tableInfo['totalNumColumns'] = cF.numRowsCol()[1]
 
-    colsInfo = jsonref.load(open('../config/columns.json'))
+    colsInfoBackground = jsonref.load(open('../config/columns.json'))
     #topValuesColumns = {key: None for key in tableInfo['columnNames']}
     # topValuesColumns = topValuesCol(colsInfo, topValuesColumns)
-    tvcBackground = cF.topValuesColBackground(colsInfo)
+    # tvcBackground = cF.topValuesColBackground(colsInfo)
     # rM.makeIntro(tableInfo)
     # rM.makeCols(tableInfo)
     # rM.makeTop(topValuesColumns)

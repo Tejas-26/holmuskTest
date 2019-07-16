@@ -1,12 +1,12 @@
 from logs import logDecorator as lD
-import jsonref, pprint
+import jsonref, pprint, csv
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 from psycopg2.sql import SQL, Identifier, Literal
 from lib.databaseIO import pgIO
-from collections import Counter
+from collections import Counter, defaultdict
 
 from multiprocessing import Pool
 from tqdm import tqdm
@@ -115,3 +115,14 @@ def topValuesColPatientType(logger, d):
     except Exception as e:
         logger.error(f'Unable to get data for the column names: {e}')
     return topVals
+
+#Creates a json object from CSV file in column based data 
+@lD.log(logBase + '.readCSVDictLists')
+def getCSVDictLists(logger, filePath):
+    dict_lists = {}
+    for record in csv.DictReader(open(filePath)):
+        for k, v in record.items():
+                if(len(v) > 0):
+                        dict_lists[k].append(v)
+
+    return dict_lists
