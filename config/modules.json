@@ -1,21 +1,16 @@
 [
-    {
-        "moduleName" : "dbMarkDown",
-        "path"       : "modules/dbMarkDown/dbMarkDown.py",
-        "execute"    : true,
-        "description": "",
-        "owner"      : ""
-    }, {
-        "moduleName" : "LinearRegression",
-        "path"       : "modules/LinearRegression/LinearRegression.py",
-        "execute"    : false,
-        "description": "",
-        "owner"      : ""
-    }, {
-        "moduleName" : "celeryCheck",
-        "path"       : "modules/celeryCheck/celeryCheck.py",
-        "execute"    : false,
-        "description": "",
-        "owner"      : ""
-    }
+  {
+    "moduleName" : "table1",
+    "path"       : "modules/table1/table1.py",
+    "execute"    : false,
+    "description": "",
+    "owner"      : ""
+  },
+  {
+    "moduleName" : "dbMarkDown",
+    "path"       : "modules/dbMarkDown/dbMarkDown.py",
+    "execute"    : true,
+    "description": "",
+    "owner"      : ""
+  }
 ]
