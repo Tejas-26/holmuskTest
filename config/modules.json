@@ -7,8 +7,8 @@
     "owner"      : ""
   },
   {
-    "moduleName" : "dbMarkDown",
-    "path"       : "modules/dbMarkDown/dbMarkDown.py",
+    "moduleName" : "reportMaker",
+    "path"       : "modules/reportMaker/reportMaker.py",
     "execute"    : true,
     "description": "",
     "owner"      : ""

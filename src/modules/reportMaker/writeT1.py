@@ -10,12 +10,13 @@ from multiprocessing import Pool
 from time import sleep
 
 config = jsonref.load(open('../config/config.json'))
-logBase = config['logging']['logBase'] + '.modules.reportWriter.reportWriter'
+logBase = config['logging']['logBase'] + '.modules.writeT1.writeT1'
 
 # function makes intro to paper 1
 @lD.log(logBase + '.genIntro')
 def genIntro(logger):
-    report = open('../data/comorbidMDIntro.txt')
+    report = open('../data/comorbidMDIntro.txt', 'r')
+    report = report.read()
     with open('../report/paper1markdown.md', 'w+') as f:
         f.write( report )
     return
@@ -26,13 +27,13 @@ def genRace(logger, r):
     report = f'''
 |Race     |Count          |
 |---------|---------------|
-|AA       |{r["AA"][0]}   |
-|NHPI     |{r["NHPI"][0]} |
-|MR       |{r["MR"][0]}   |
-|**Total**|{r["AA"][0]+r["NHPI"][0]+r["MR"][0]}|
+|AA       |{r["AA"]}   |
+|NHPI     |{r["NHPI"]} |
+|MR       |{r["MR"]}   |
+|**Total**|{r["AA"]+r["NHPI"]+r["MR"]}|
 '''
 
-    with open('../report/paepr1markdown.md', 'a+') as f:
+    with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
 
     return

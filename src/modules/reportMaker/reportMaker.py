@@ -4,15 +4,16 @@ import jsonref, pprint
 
 import json
 
-from modules.reportWriter import writeT1
-# from modules.reportWriter import plotFig1
-# from modules.reportWriter import writeTable2
-# from modules.reportWriter import writeTable3
-# from modules.reportWriter import writeTable4
-# from modules.reportWriter import writeAppendix
+from modules.reportMaker import writeT1
+from modules.table1 import comFunctions as cf
+# from modules.reportMaker import plotFig1
+# from modules.reportMaker import writeTable2
+# from modules.reportMaker import writeTable3
+# from modules.reportMaker import writeTable4
+# from modules.reportMaker import writeAppendix
 
 config = jsonref.load(open('../config/config.json'))
-logBase = config['logging']['logBase'] + '.modules.reportWriter.reportWriter'
+logBase = config['logging']['logBase'] + '.modules.reportMaker.reportMaker'
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
@@ -33,17 +34,16 @@ def main(logger, resultsDict):
     '''
 
     print('='*30)
-    print('Main function of reportWriter module')
+    print('Main function of reportMaker module')
     print('='*30)
 
     # Table 1 Info
-    with open("../data/final/sampleCount.json") as json_file:
-        table1Dict = json.load(json_file)
+    mainRaceDict = cf.countMainRace()
     writeT1.genIntro()
-    writeT1.genRace(table1Dict)
-    writeT1.genRaceAge(table1Dict)
-    writeT1.genRaceSex(table1Dict)
-    writeT1.genRaceSetting(table1Dict)
+    writeT1.genRace(mainRaceDict)
+    # writeT1.genRaceAge(table1Dict)
+    # writeT1.genRaceSex(table1Dict)
+    # writeT1.genRaceSetting(table1Dict)
 
     '''
     # Figure 1 Info
@@ -88,7 +88,7 @@ def main(logger, resultsDict):
     # Appendix (What databases are used)
     # writeAppendix.genAppendix()
 
-    print('Getting out of reportWriter module')
+    print('Getting out of reportMaker module')
     print('-'*30)
 
     return

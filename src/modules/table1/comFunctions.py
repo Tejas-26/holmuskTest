@@ -149,42 +149,78 @@ def createTest2(logger):
         logger.error('Failed to generate table {}'.format(e))
     return
 
+@lD.log(logBase + '.createTest3')
+def createTest3(logger):
+    '''Creates tejas.test3 table
+
+    Decorators:
+        lD.log
+
+    Arguments:
+        logger {logging.Logger} -- logs error information
+    '''
+    try:
+        query = '''
+        CREATE TABLE tejas.test3(
+            patientid text,
+            mood bool,
+            anxiety bool,
+            adjustment bool,
+            adhd bool,
+            sud bool,
+            psyc bool,
+            pers bool,
+            childhood bool,
+            impulse bool,
+            cognitive bool,
+            eating bool,
+            smtf bool,
+            disso bool,
+            sleep bool,
+            fd bool
+            )'''
+        value = pgIO.commitData(query)
+        if value == True:
+            print("tejas.test3 table has been successfully created")
+    except Exception as e:
+        logger.error('Unable to create table test3 because {}'.format(e))
+    return
+
+# for table 1 stuff #
 @lD.log(logBase + '.countMainRace')
 def countMainRace(logger):
+    '''generates a dictionary with the race str values under each race
+
+    This function generates a dict with all the str values under a race from the raceCount CSV
+
+    Decorators:
+        lD.log
+
+    Arguments:
+        logger {logging.Logger} -- The logger used for logging error information
+        inputCSV {filepath that contains the csv} -- first column "race" contains the race strings, second column "count" contains their counts, and the third column "paper_race" contains the overarching race specified in the paper
+    Returns:
+        raceDict -- dictionary that contains all the race strings under each specified race in the paper
     '''
-
-    This function queries the database and returns the counts of each main race: AA, NHPI, MR
-
-    Parameters
-    ----------
-    logger : {logging.Logger}
-        The logger used for logging error information
-    '''
-
+    inputCSV = '../data/intermediate/Tejas\' raceCount - raceCount.csv'
     try:
-        total = []
-        for race in table1_config["inputs"]["races"]:
-            query = SQL('''
-            SELECT
-                COUNT(*)
-            FROM
-                tejas.test2 t1
-            INNER JOIN
-                tejas.test3 t2
-            ON
-                t1.patientid = t2.patientid
-            WHERE
-                race = {}
-            ''').format(
-                Literal(race)
-            )
-            data = [d[0] for d in pgIO.getAllData(query)]
-            total.append(data[0])
+        raceDict = {
+                'AA': 0,
+                'NHPI': 0,
+                'MR': 0
+        }
+
+        with open(inputCSV) as f:
+            readCSV = csv.reader(f, delimiter=',')
+            for row in readCSV:
+                for race in table1_config["inputs"]["races"]:
+                    if row[2] == race:
+                        raceDict[race] += int(row[1])
 
     except Exception as e:
         logger.error('countMainRace failed because of {}'.format(e))
 
-    return total
+    return raceDict
 
 @lD.log(logBase + '.countRaceAge')
 def countRaceAge(logger):
@@ -307,6 +343,7 @@ def countRaceSetting(logger):
         logger.error('countRaceSetting failed because of {}'.format(e))
 
     return total
+# for table 1 stuff #
 
 @lD.log(logBase + '.genAllKeys')
 def genAllKeys(logger):
@@ -342,43 +379,6 @@ def genAllKeys(logger):
     except Exception as e:
         logger.error('Failed to generate list of patients because of {}'.format(e))
 
-    return
-
-@lD.log(logBase + '.createTest3')
-def createTest3(logger):
-    '''Creates tejas.test3 table
-
-    Decorators:
-        lD.log
-
-    Arguments:
-        logger {logging.Logger} -- logs error information
-    '''
-    try:
-        query = '''
-        CREATE TABLE tejas.test3(
-            patientid text,
-            mood bool,
-            anxiety bool,
-            adjustment bool,
-            adhd bool,
-            sud bool,
-            psyc bool,
-            pers bool,
-            childhood bool,
-            impulse bool,
-            cognitive bool,
-            eating bool,
-            smtf bool,
-            disso bool,
-            sleep bool,
-            fd bool
-            )'''
-        value = pgIO.commitData(query)
-        if value == True:
-            print("tejas.test3 table has been successfully created")
-    except Exception as e:
-        logger.error('Unable to create table test3 because {}'.format(e))
     return
 
 @lD.log(logBase + '.popDiagCols')
