@@ -37,11 +37,16 @@ def main(logger, resultsDict):
     print('Main function of reportMaker module')
     print('='*30)
 
-    # Table 1 Info
+    # Table 1 Report creation
     mainRaceDict = cf.countMainRace()
     writeT1.genIntro()
     writeT1.genRace(mainRaceDict)
-    # writeT1.genRaceAge(table1Dict)
+    cf.createRaceAgeT1A()
+    cf.createrestOfUsers()
+    cf.popDiagCols()
+    cf.delAllFalserestOfUsers()
+    raceAgeDict = cf.countRaceAge()
+    writeT1.genRaceAge(raceAgeDict)
     # writeT1.genRaceSex(table1Dict)
     # writeT1.genRaceSetting(table1Dict)
 
