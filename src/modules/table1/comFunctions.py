@@ -16,7 +16,20 @@ config = jsonref.load(open('../config/config.json'))
 table1_config = jsonref.load(open('../config/modules/tejasT1.json'))
 logBase = config['logging']['logBase'] + '.modules.comFunctions.comFunctions'
 
-#Creates a json object from CSV file in column based data
+max_num = 501138
+
+@lD.log(logBase + '.cleanUp')
+def cleanUp(logger):
+    dropQuery = SQL('''
+    DROP TABLE IF EXISTS tejas.raceAgeT1A;
+    DROP TABLE IF EXISTS tejas.raceAgeT1Anew;
+    DROP TABLE IF EXISTS tejas.restOfUsers;
+    ''')
+    value = pgIO.commitData(dropQuery)
+    if value == True:
+        print("All tables have been successfully deleted")
+    return
+
 @lD.log(logBase + '.getCSVDictLists')
 def getCSVDictLists(logger, filePath):
     dict_lists = {}
@@ -250,128 +263,132 @@ def popDiagCols(logger):
     Arguments:
         logger {logging.Logger} -- logs error information
     '''
-    try:
-        all_userkeys = "../data/raw_data/allUserKeys.csv"
-        with open(all_userkeys, 'w') as f:
-            filewriter = csv.writer(f, delimiter=',')
-            for cat in table1_config["params"]["categories"]:
-                for dsmNum in cat:
-                    query = SQL('''
-                    select siteid, backgroundid
-                    from raw_data.pdiagnose
-                    where dsmno LIKE '{}'
-                    group by siteid, backgroundid
-                    '''
-                    ).format(
-                    Literal(dsmNum)
-                    )
-                    print("boi bout to fetch this breeeaaaad")
-                    data = pgIO.getAllData(query)
-                    # THE DATA IS NONE, FIX THIS ASAP
-                    if data != None:
-                        print("data has stuff inside it")
-                        for x in data:
-                            print(x)
-                            filewriter.writerow([x[0], x[1]])
-
-        f.close()
-        with open(all_userkeys, 'r') as f:
-            readCSV = csv.reader(f, delimiter=",")
-
-            for user in tqdm(readCSV):
-                getQuery = SQL('''
-                INSERT INTO
-                    tejas.restOfUsers(siteid,
-                    backgroundid,
-                    dsmnos,
-                    mood,
-                    anxiety,
-                    adjustment,
-                    adhd,
-                    sud,
-                    psyc,
-                    pers,
-                    childhood,
-                    impulse,
-                    cognitive,
-                    eating,
-                    smtf,
-                    disso,
-                    sleep,
-                    fd)
-                SELECT
-                    siteid,
-                    backgroundid,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as mood,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as anxiety,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as adjustment,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as adhd,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as sud,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as psyc,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as pers,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as childhood,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as impulse,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as cognitive,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as eating,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as smtf,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as disso,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as sleep,
-                    array_agg(distinct cast(dsmno as text)) && array[{}] as fd
-                FROM
-                    raw_data.pdiagnose
-                WHERE
-                    siteid = {}
-                AND
-                    backgroundid = {}
-                GROUP BY
-                    siteid, backgroundid
-                ''').format(
-                    Literal(table1_config["params"]["categories"]["mood"]),
-                    Literal(table1_config["params"]["categories"]["anxiety"]),
-                    Literal(table1_config["params"]["categories"]["adjustment"]),
-                    Literal(table1_config["params"]["categories"]["adhd"]),
-                    Literal(table1_config["params"]["categories"]["sud"]),
-                    Literal(table1_config["params"]["categories"]["psyc"]),
-                    Literal(table1_config["params"]["categories"]["pers"]),
-                    Literal(table1_config["params"]["categories"]["childhood"]),
-                    Literal(table1_config["params"]["categories"]["impulse"]),
-                    Literal(table1_config["params"]["categories"]["cognitive"]),
-                    Literal(table1_config["params"]["categories"]["eating"]),
-                    Literal(table1_config["params"]["categories"]["smtf"]),
-                    Literal(table1_config["params"]["categories"]["disso"]),
-                    Literal(table1_config["params"]["categories"]["sleep"]),
-                    Literal(table1_config["params"]["categories"]["fd"]),
-                    Literal(user[0]),
-                    Literal(int(user[1]))
-                )
-                value = pgIO.commitData(getQuery)
-                if value == True:
-                    print("Duplicate values succesfully deleted")
-
-                deleteDupliQuery = '''
-                DELETE FROM tejas.restOfUsers
-                WHERE mood = false and
-                    anxiety = false and
-                    adjustment = false and
-                    adhd = false and
-                    sud = false and
-                    psyc = false and
-                    pers = false and
-                    childhood = false and
-                    impulse = false and
-                    cognitive = false and
-                    eating = false and
-                    smtf = false and
-                    disso = false and
-                    sleep = false and
-                    fd = false
+    print("Hi 3") ######
+    print("Hi 1") ######
+    all_userkeys = "../data/raw_data/allUserKeys.csv"
+    with open(all_userkeys, 'w') as f:
+        print("Hi 2") #########
+        filewriter = csv.writer(f, delimiter=',')
+        for race in table1_config["params"]["races"]["all"]:
+            x = 0
+            query = SQL('''
+            select t1.siteid, t2.backgroundid
+            from (
+                select siteid
+                from raw_data.background
+                where race = '{}'
+                and (cast (id as int) > '{}') and (cast (id as int) < '{}')
+            ) as t1
+            inner join raw_data.pdiagnose t2
+            on t1.siteid = t2.siteid
+            group by (t1.siteid, t2.backgroundid)
+            '''
+            ).format(
+            Literal(str(race)),
+            Literal(x),
+            Literal(x+1000)
+            )
+            data = pgIO.getAllData(query)
+            print(data)
+            while data != None:
+                for d in data:
+                    filewriter.writerow([d[0], d[1]])
+                x = x + 1000
+                query = SQL('''
+                select t1.siteid, t2.backgroundid
+                from (
+                    select siteid
+                    from raw_data.background
+                    where race = '{}'
+                    and (cast (id as int) > '{}') and (cast (id as int) < '{}')
+                ) as t1
+                inner join raw_data.pdiagnose t2
+                on t1.siteid = t2.siteid
+                group by (t1.siteid, t2.backgroundid)
                 '''
-                value = pgIO.commitData(deleteDupliQuery)
-                if value == True:
-                    print("Duplicate values succesfully deleted")
-        f.close()
+                ).format(
+                Literal(str(race)),
+                Literal(x),
+                Literal(x+1000)
+                )
+                data = pgIO.getAllData(query)
 
+    f.close()
+    with open(all_userkeys, 'r') as f:
+        readCSV = csv.reader(f, delimiter=",")
 
+        for user in tqdm(readCSV):
+            getQuery = SQL('''
+            INSERT INTO
+                tejas.restOfUsers(siteid,
+                backgroundid,
+                dsmnos,
+                mood,
+                anxiety,
+                adjustment,
+                adhd,
+                sud,
+                psyc,
+                pers,
+                childhood,
+                impulse,
+                cognitive,
+                eating,
+                smtf,
+                disso,
+                sleep,
+                fd)
+            SELECT
+                siteid,
+                backgroundid,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as mood,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as anxiety,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as adjustment,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as adhd,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as sud,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as psyc,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as pers,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as childhood,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as impulse,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as cognitive,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as eating,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as smtf,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as disso,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as sleep,
+                array_agg(distinct cast(dsmno as text)) && array[{}] as fd
+            FROM
+                raw_data.pdiagnose
+            WHERE
+                siteid = {}
+            AND
+                backgroundid = {}
+            GROUP BY
+                siteid, backgroundid
+            ''').format(
+                Literal(table1_config["params"]["categories"]["mood"]),
+                Literal(table1_config["params"]["categories"]["anxiety"]),
+                Literal(table1_config["params"]["categories"]["adjustment"]),
+                Literal(table1_config["params"]["categories"]["adhd"]),
+                Literal(table1_config["params"]["categories"]["sud"]),
+                Literal(table1_config["params"]["categories"]["psyc"]),
+                Literal(table1_config["params"]["categories"]["pers"]),
+                Literal(table1_config["params"]["categories"]["childhood"]),
+                Literal(table1_config["params"]["categories"]["impulse"]),
+                Literal(table1_config["params"]["categories"]["cognitive"]),
+                Literal(table1_config["params"]["categories"]["eating"]),
+                Literal(table1_config["params"]["categories"]["smtf"]),
+                Literal(table1_config["params"]["categories"]["disso"]),
+                Literal(table1_config["params"]["categories"]["sleep"]),
+                Literal(table1_config["params"]["categories"]["fd"]),
+                Literal(user[0]),
+                Literal(int(user[1]))
+            )
+            value = pgIO.commitData(getQuery)
+            if value == True:
+                print("Duplicate values succesfully deleted")
+    f.close()
+    try:
+        pass
     except Exception as e:
         logger.error('Failed to add columns because of {}'.format(e))
     return

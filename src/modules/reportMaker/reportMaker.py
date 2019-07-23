@@ -36,7 +36,7 @@ def main(logger, resultsDict):
     print('='*30)
     print('Main function of reportMaker module')
     print('='*30)
-
+    cf.cleanUp()
     # Table 1 Report creation
     mainRaceDict = cf.countMainRace()
     writeT1.genIntro()
