@@ -222,10 +222,9 @@ def createrestOfUsers(logger):
     '''
     try:
         query = '''
-        CREATE TABLE tejas.restOfUsers(
+        CREATE TABLE tejas.restofusers(
             siteid text,
             backgroundid text,
-            dsmnos text [],
             mood bool,
             anxiety bool,
             adjustment bool,
@@ -263,66 +262,44 @@ def popDiagCols(logger):
     Arguments:
         logger {logging.Logger} -- logs error information
     '''
-    print("Hi 3") ######
-    print("Hi 1") ######
     all_userkeys = "../data/raw_data/allUserKeys.csv"
-    with open(all_userkeys, 'w') as f:
-        print("Hi 2") #########
-        filewriter = csv.writer(f, delimiter=',')
-        for race in table1_config["params"]["races"]["all"]:
-            x = 0
-            query = SQL('''
-            select t1.siteid, t2.backgroundid
-            from (
-                select siteid
-                from raw_data.background
-                where race = '{}'
-                and (cast (id as int) > '{}') and (cast (id as int) < '{}')
-            ) as t1
-            inner join raw_data.pdiagnose t2
-            on t1.siteid = t2.siteid
-            group by (t1.siteid, t2.backgroundid)
-            '''
-            ).format(
-            Literal(str(race)),
-            Literal(x),
-            Literal(x+1000)
-            )
-            data = pgIO.getAllData(query)
-            print(data)
-            while data != None:
-                for d in data:
-                    filewriter.writerow([d[0], d[1]])
-                x = x + 1000
-                query = SQL('''
-                select t1.siteid, t2.backgroundid
-                from (
-                    select siteid
-                    from raw_data.background
-                    where race = '{}'
-                    and (cast (id as int) > '{}') and (cast (id as int) < '{}')
-                ) as t1
-                inner join raw_data.pdiagnose t2
-                on t1.siteid = t2.siteid
-                group by (t1.siteid, t2.backgroundid)
-                '''
-                ).format(
-                Literal(str(race)),
-                Literal(x),
-                Literal(x+1000)
-                )
-                data = pgIO.getAllData(query)
+    # with open(all_userkeys, 'w') as f:
+    #     filewriter = csv.writer(f, delimiter=',')
+    #     for race in table1_config["params"]["races"]["all"]:
+    #         print("currently getting data for the " + race + " race")
+    #         x = 0
+    #         # and (cast (id as int) > 0) and (cast (id as int) < 1000)
+    #         query = SQL('''
+    #         select t1.siteid, t2.backgroundid
+    #         from (
+    #             select id, siteid
+    #             from raw_data.background
+    # 	        where race = {}
+    #         ) as t1
+    #         inner join raw_data.pdiagnose t2
+    #         on t1.siteid = t2.siteid
+    #         and t1.id = t2.backgroundid
+    #         group by (t1.siteid, t2.backgroundid)
+    #         '''
+    #         ).format(
+    #         Literal(race)
+    #         )
+    #         data = pgIO.getAllData(query)
+    #         print("data is " + str(len(data)) + " items long")
+    #         if len(data) > 0:
+    #             # print("data is not none")
+    #             for d in data:
+    #                 filewriter.writerow([d[0], d[1]])
 
-    f.close()
+    # f.close()
     with open(all_userkeys, 'r') as f:
         readCSV = csv.reader(f, delimiter=",")
 
         for user in tqdm(readCSV):
             getQuery = SQL('''
             INSERT INTO
-                tejas.restOfUsers(siteid,
+                tejas.restofusers(siteid,
                 backgroundid,
-                dsmnos,
                 mood,
                 anxiety,
                 adjustment,
@@ -381,11 +358,9 @@ def popDiagCols(logger):
                 Literal(table1_config["params"]["categories"]["sleep"]),
                 Literal(table1_config["params"]["categories"]["fd"]),
                 Literal(user[0]),
-                Literal(int(user[1]))
+                Literal(user[1])
             )
             value = pgIO.commitData(getQuery)
-            if value == True:
-                print("Duplicate values succesfully deleted")
     f.close()
     try:
         pass
@@ -408,7 +383,7 @@ def delAllFalserestOfUsers(logger):
     try:
         query = '''
         DELETE FROM
-            tejas.restOfUsers
+            tejas.restofusers
         WHERE
             mood = false and
             anxiety = false and
@@ -454,7 +429,7 @@ def countRaceAge(logger):
                 FROM
                     tejas.raceAgeT1Anew t1
                 INNER JOIN
-                    tejas.restOfUsersnew t2
+                    tejas.restofusers t2
                 ON
                     t1.patientid = t2.patientid
                 WHERE
