@@ -22,8 +22,8 @@ max_num = 501138
 def cleanUp(logger):
     dropQuery = SQL('''
     DROP TABLE IF EXISTS tejas.raceAgeT1A;
-    DROP TABLE IF EXISTS tejas.raceAgeT1Anew;
-    DROP TABLE IF EXISTS tejas.restOfUsers;
+    DROP TABLE IF EXISTS tejas.raceaget1new;
+    DROP TABLE IF EXISTS tejas.restofusers;
     ''')
     value = pgIO.commitData(dropQuery)
     if value == True:
@@ -171,7 +171,7 @@ def createRaceAgeT1A(logger):
         if value == True:
             print("tejas.raceAgeT1A table has been populated")
         makeNewQry = '''
-        CREATE TABLE tejas.raceAgeT1Anew (
+        CREATE TABLE tejas.raceaget1new (
             age text,
             sex text,
             visit_type text,
@@ -183,9 +183,9 @@ def createRaceAgeT1A(logger):
 
         value = pgIO.commitData(makeNewQry)
         if value == True:
-            print("tejas.raceAgeT1Anew table has been created")
+            print("tejas.raceaget1new table has been created")
         deleteDupliQuery = '''
-        INSERT INTO tejas.raceAgeT1Anew (age, sex, visit_type, race, siteid, backgroundid)
+        INSERT INTO tejas.raceaget1new (age, sex, visit_type, race, siteid, backgroundid)
         SELECT
             (array_agg(distinct age))[1] as age,
             sex,
@@ -210,9 +210,9 @@ def createRaceAgeT1A(logger):
         logger.error('Failed to generate table {}'.format(e))
     return
 
-@lD.log(logBase + '.createrestOfUsers')
-def createrestOfUsers(logger):
-    '''Creates tejas.restOfUsers table
+@lD.log(logBase + '.createrestofusers')
+def createrestofusers(logger):
+    '''Creates tejas.restofusers table
 
     Decorators:
         lD.log
@@ -243,18 +243,18 @@ def createrestOfUsers(logger):
         )'''
         value = pgIO.commitData(query)
         if value == True:
-            print("tejas.restOfUsers table has been successfully created")
+            print("tejas.restofusers table has been successfully created")
     except Exception as e:
-        logger.error('Unable to create table restOfUsers because {}'.format(e))
+        logger.error('Unable to create table restofusers because {}'.format(e))
     return
 
 @lD.log(logBase + '.popDiagCols')
 def popDiagCols(logger):
-    '''Populates tejas.restOfUsers table
+    '''Populates tejas.restofusers table
 
     Using the .csv file of the first filtered users' [siteid, backgroundid], these users' DSM numbers are aggregated into an array and compared against the array of DSM numbers of a specific diagnosis.
     If the user's DSM numbers are found in the diagnosis array, the column representing the diagnosis is filled in with a "True" value for the user, and vice versa.
-    The columns created are stored in a new table tejas.restOfUsers, then the second filter is completed by removing users that have all their diagnosis columns set to "False" (i.e. they have no mental disorder restOfUsers that we have specified)
+    The columns created are stored in a new table tejas.restofusers, then the second filter is completed by removing users that have all their diagnosis columns set to "False" (i.e. they have no mental disorder restofusers that we have specified)
 
     Decorators:
         lD.log
@@ -263,35 +263,6 @@ def popDiagCols(logger):
         logger {logging.Logger} -- logs error information
     '''
     all_userkeys = "../data/raw_data/allUserKeys.csv"
-    # with open(all_userkeys, 'w') as f:
-    #     filewriter = csv.writer(f, delimiter=',')
-    #     for race in table1_config["params"]["races"]["all"]:
-    #         print("currently getting data for the " + race + " race")
-    #         x = 0
-    #         # and (cast (id as int) > 0) and (cast (id as int) < 1000)
-    #         query = SQL('''
-    #         select t1.siteid, t2.backgroundid
-    #         from (
-    #             select id, siteid
-    #             from raw_data.background
-    # 	        where race = {}
-    #         ) as t1
-    #         inner join raw_data.pdiagnose t2
-    #         on t1.siteid = t2.siteid
-    #         and t1.id = t2.backgroundid
-    #         group by (t1.siteid, t2.backgroundid)
-    #         '''
-    #         ).format(
-    #         Literal(race)
-    #         )
-    #         data = pgIO.getAllData(query)
-    #         print("data is " + str(len(data)) + " items long")
-    #         if len(data) > 0:
-    #             # print("data is not none")
-    #             for d in data:
-    #                 filewriter.writerow([d[0], d[1]])
-
-    # f.close()
     with open(all_userkeys, 'r') as f:
         readCSV = csv.reader(f, delimiter=",")
 
@@ -362,15 +333,11 @@ def popDiagCols(logger):
             )
             value = pgIO.commitData(getQuery)
     f.close()
-    try:
-        pass
-    except Exception as e:
-        logger.error('Failed to add columns because of {}'.format(e))
     return
 
-@lD.log(logBase + '.delAllFalserestOfUsers')
-def delAllFalserestOfUsers(logger):
-    '''Second filter of users from tejas.restOfUsers
+@lD.log(logBase + '.delAllFalserestofusers')
+def delAllFalserestofusers(logger):
+    '''Second filter of users from tejas.restofusers
 
     Deletes users who have no target mental disorder diagnoses.
 
@@ -402,9 +369,9 @@ def delAllFalserestOfUsers(logger):
             fd = false'''
         value = pgIO.commitData(query)
         if value == True:
-            print("Users with no diagnosis in tejas.restOfUsers table has been successfully deleted")
+            print("Users with no diagnosis in tejas.restofusers table has been successfully deleted")
     except Exception as e:
-        logger.error('Unable to delete from table restOfUsers because {}'.format(e))
+        logger.error('Unable to delete from table restofusers because {}'.format(e))
     return
 
 @lD.log(logBase + '.countRaceAge')
@@ -427,13 +394,15 @@ def countRaceAge(logger):
                 SELECT
                     count(*)
                 FROM
-                    tejas.raceAgeT1Anew t1
+                    tejas.raceaget1new t1
                 INNER JOIN
                     tejas.restofusers t2
                 ON
-                    t1.patientid = t2.patientid
+                    t1.siteid = t2.siteid
+                AND
+                    t1.backgroundid = t2.backgroundid
                 WHERE
-                    t1.age >= {} AND t1.age <= {} and t1.race = {}
+                    (cast (t1.age as int) >= {}) AND cast (t1.age as int) <= {} and t1.race = {}
                 ''').format(
                     Literal(lower),
                     Literal(upper),
@@ -469,11 +438,13 @@ def countRaceSex(logger):
                 SELECT
                     count(*)
                 FROM
-                    tejas.raceAgeT1A t1
+                    tejas.raceaget1new t1
                 INNER JOIN
-                    tejas.restOfUsers t2
+                    tejas.restofusers t2
                 ON
-                    t1.patientid = t2.patientid
+                    t1.siteid = t2.siteid
+                AND
+                    t1.backgroundid = t2.backgroundid
                 WHERE
                     t1.sex = {} AND t1.race = {}
                 ''').format(
@@ -511,9 +482,11 @@ def countRaceSetting(logger):
                 FROM
                     tejas.raceAgeT1A t1
                 INNER JOIN
-                    tejas.restOfUsers t2
+                    tejas.restofusers t2
                 ON
-                    t1.patientid = t2.patientid
+                    t1.siteid = t2.siteid
+                AND
+                    t1.backgroundid = t2.backgroundid
                 WHERE
                     t1.visit_type = {} AND t1.race = {}
                 ''').format(
@@ -523,12 +496,10 @@ def countRaceSetting(logger):
                 data = [d[0] for d in pgIO.getAllData(query)]
                 counts.append(data[0])
             total.append(counts)
-
     except Exception as e:
         logger.error('countRaceSetting failed because of {}'.format(e))
 
     return total
-# for table 1 stuff #
 
 @lD.log(logBase + '.genAllKeys')
 def genAllKeys(logger):
@@ -542,28 +513,35 @@ def genAllKeys(logger):
     logger : {logging.Logger}
         The logger used for logging error information
     '''
-    try:
-        query = '''
-        SELECT
-            patientid
-        FROM
-            tejas.raceAgeT1A
-        '''
-
-        data = pgIO.getAllData(query)
-
-        csvfile = "../data/raw_data/firstfilter_allkeys.csv"
-
-        with open(csvfile,'w+') as output:
-            csv_output=csv.writer(output)
-
-            for row in data:
-                csv_output.writerow(row)
-        output.close()
-
-    except Exception as e:
-        logger.error('Failed to generate list of patients because of {}'.format(e))
-
+    all_userkeys = "../data/raw_data/allUserKeys.csv"
+    with open(all_userkeys, 'w') as f:
+        filewriter = csv.writer(f, delimiter=',')
+        for race in table1_config["params"]["races"]["all"]:
+            print("currently getting data for the " + race + " race")
+            x = 0
+            # and (cast (id as int) > 0) and (cast (id as int) < 1000)
+            query = SQL('''
+            select t1.siteid, t2.backgroundid
+            from (
+                select id, siteid
+                from raw_data.background
+    	        where race = {}
+            ) as t1
+            inner join raw_data.pdiagnose t2
+            on t1.siteid = t2.siteid
+            and t1.id = t2.backgroundid
+            group by (t1.siteid, t2.backgroundid)
+            '''
+            ).format(
+            Literal(race)
+            )
+            data = pgIO.getAllData(query)
+            print("data is " + str(len(data)) + " items long")
+            if len(data) > 0:
+                # print("data is not none")
+                for d in data:
+                    filewriter.writerow([d[0], d[1]])
+    f.close()
     return
 
 @lD.log(logBase + '.relabelVar')

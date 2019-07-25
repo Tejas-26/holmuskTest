@@ -42,13 +42,15 @@ def main(logger, resultsDict):
     writeT1.genIntro()
     writeT1.genRace(mainRaceDict)
     cf.createRaceAgeT1A()
-    cf.createrestOfUsers()
+    cf.createrestofusers()
     cf.popDiagCols()
-    cf.delAllFalserestOfUsers()
+    cf.delAllFalserestofusers()
     raceAgeDict = cf.countRaceAge()
     writeT1.genRaceAge(raceAgeDict)
-    # writeT1.genRaceSex(table1Dict)
-    # writeT1.genRaceSetting(table1Dict)
+    raceSexDict = cf.countRaceSex()
+    writeT1.genRaceSex(raceSexDict)
+    raceSettingDict = cf.countRaceSetting()
+    writeT1.genRaceSetting(raceSettingDict)
 
     '''
     # Figure 1 Info
