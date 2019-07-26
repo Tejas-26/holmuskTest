@@ -123,7 +123,7 @@ def createRaceAgeT1A(logger):
 
     try:
         createTableQuery = '''
-        CREATE TABLE tejas.raceAgeT1A (
+        CREATE TABLE tejas.raceaget1a (
             age text,
             visit_type text,
             sex text,
@@ -194,7 +194,7 @@ def createRaceAgeT1A(logger):
             siteid,
             backgroundid
         FROM
-            tejas.raceAgeT1A
+            tejas.raceaget1a
         GROUP BY
         	siteid,
         	backgroundid,
@@ -262,7 +262,7 @@ def popDiagCols(logger):
     Arguments:
         logger {logging.Logger} -- logs error information
     '''
-    all_userkeys = "../data/raw_data/allUserKeys.csv"
+    all_userkeys = "../data/raw_data/smallSample.csv"
     with open(all_userkeys, 'r') as f:
         readCSV = csv.reader(f, delimiter=",")
 
@@ -386,33 +386,40 @@ def countRaceAge(logger):
     '''
 
     try:
-        total = []
-        for race in table1_config["inputs"]["races"]:
-            counts = []
-            for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
-                query = SQL('''
-                SELECT
-                    count(*)
-                FROM
-                    tejas.raceaget1new t1
-                INNER JOIN
-                    tejas.restofusers t2
-                ON
-                    t1.siteid = t2.siteid
-                AND
-                    t1.backgroundid = t2.backgroundid
-                WHERE
-                    (cast (t1.age as int) >= {}) AND cast (t1.age as int) <= {} and t1.race = {}
-                ''').format(
-                    Literal(lower),
-                    Literal(upper),
-                    Literal(race)
-                )
-                data = [d[0] for d in pgIO.getAllData(query)]
-                #print("age range: "+str(lower)+"-"+ str(upper)+" count: "+str(data))
-                counts.append(data[0])
-            total.append(counts)
-
+        total = {
+            "AA":[],
+            "NHPI":[],
+            "MR":[]
+        }
+        for raceGroup in table1_config["params"]["races"]:
+            if raceGroup != "all":
+                for race in raceGroup:
+                    counts = []
+                    for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
+                        query = SQL('''
+                        SELECT
+                            count(*)
+                        FROM
+                            tejas.raceaget1new t1
+                        INNER JOIN
+                            tejas.restofusers t2
+                        ON
+                            t1.siteid = t2.siteid
+                        AND
+                            t1.backgroundid = t2.backgroundid
+                        WHERE
+                            (cast (t1.age as int) >= {}) AND cast (t1.age as int) <= {} and t1.race = {}
+                        ''').format(
+                            Literal(lower),
+                            Literal(upper),
+                            Literal(race)
+                        )
+                        # returns pairs so we're just interested in first element
+                        data = [d[0] for d in pgIO.getAllData(query)]
+                        counts.append(data[0])
+            total[raceGroup] = counts
+            #print(total)
+        print(total)
     except Exception as e:
         logger.error('countRaceAge failed because of {}'.format(e))
 
@@ -574,7 +581,7 @@ def relabelVar(logger):
         relabel_race_success = []
         for race in table1_config["inputs"]["races"]:
             race_query = SQL('''
-            UPDATE tejas.raceAgeT1A
+            UPDATE tejas.raceget1a
             SET race = {}
             WHERE race in {}
             ''').format(
@@ -588,7 +595,7 @@ def relabelVar(logger):
         relabel_setting_success = []
         for setting in table1_config["inputs"]["settings"]:
             setting_query = SQL('''
-            UPDATE tejas.raceAgeT1A
+            UPDATE tejas.raceaget1a
             SET visit_type = {}
             WHERE visit_type in {}
             ''').format(
