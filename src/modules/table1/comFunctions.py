@@ -21,8 +21,8 @@ max_num = 501138
 @lD.log(logBase + '.cleanUp')
 def cleanUp(logger):
     dropQuery = SQL('''
-    DROP TABLE IF EXISTS tejas.raceAgeT1A;
-    DROP TABLE IF EXISTS tejas.raceaget1new;
+    DROP TABLE IF EXISTS tejas.race_age_t1;
+    DROP TABLE IF EXISTS tejas.race_age_t1new;
     DROP TABLE IF EXISTS tejas.restofusers;
     ''')
     value = pgIO.commitData(dropQuery)
@@ -109,11 +109,11 @@ def countMainRace(logger):
 
     return raceDict
 
-@lD.log(logBase + '.createRaceAgeT1A')
-def createRaceAgeT1A(logger):
-    '''Creates the table tejas.raceAgeT1A
+@lD.log(logBase + '.createrace_age_t1')
+def createrace_age_t1(logger):
+    '''Creates the table tejas.race_age_t1
 
-    This function creates the table tejas.raceAgeT1A
+    This function creates the table tejas.race_age_t1
 
     Parameters
     ----------
@@ -122,23 +122,23 @@ def createRaceAgeT1A(logger):
     '''
 
     try:
-        createTableQuery = '''
-        CREATE TABLE tejas.raceaget1a (
+        makeNewQry = '''
+        CREATE TABLE tejas.race_age_t1 (
             age text,
-            visit_type text,
             sex text,
+            visit_type text,
             race text,
             siteid text,
             backgroundid text
         )
         '''
 
-        value = pgIO.commitData(createTableQuery)
+        value = pgIO.commitData(makeNewQry)
         if value == True:
-            print("tejas.raceAgeT1A table has been created")
+            print("tejas.race_age_t1 table has been created")
 
         popTableQuery = SQL('''
-        INSERT INTO tejas.raceAgeT1A
+        INSERT INTO tejas.race_age_t1
         SELECT
         	t1.age,
         	t1.visit_type,
@@ -169,9 +169,9 @@ def createRaceAgeT1A(logger):
 
         value = pgIO.commitData(popTableQuery)
         if value == True:
-            print("tejas.raceAgeT1A table has been populated")
+            print("tejas.race_age_t1 table has been populated")
         makeNewQry = '''
-        CREATE TABLE tejas.raceaget1new (
+        CREATE TABLE tejas.race_age_t1new (
             age text,
             sex text,
             visit_type text,
@@ -183,9 +183,9 @@ def createRaceAgeT1A(logger):
 
         value = pgIO.commitData(makeNewQry)
         if value == True:
-            print("tejas.raceaget1new table has been created")
+            print("tejas.race_age_t1new table has been created")
         deleteDupliQuery = '''
-        INSERT INTO tejas.raceaget1new (age, sex, visit_type, race, siteid, backgroundid)
+        INSERT INTO tejas.race_age_t1new (age, sex, visit_type, race, siteid, backgroundid)
         SELECT
             (array_agg(distinct age))[1] as age,
             sex,
@@ -194,7 +194,7 @@ def createRaceAgeT1A(logger):
             siteid,
             backgroundid
         FROM
-            tejas.raceaget1a
+            tejas.race_age_t1
         GROUP BY
         	siteid,
         	backgroundid,
@@ -204,7 +204,7 @@ def createRaceAgeT1A(logger):
         '''
         value = pgIO.commitData(deleteDupliQuery)
         if value == True:
-            print("Duplicate values in tejas.raceAgeT1A has been deleted and the earliest age is taken")
+            print("Duplicate values in tejas.race_age_t1 has been deleted and the earliest age is taken")
 
     except Exception as e:
         logger.error('Failed to generate table {}'.format(e))
@@ -262,7 +262,7 @@ def popDiagCols(logger):
     Arguments:
         logger {logging.Logger} -- logs error information
     '''
-    all_userkeys = "../data/raw_data/smallSample.csv"
+    all_userkeys = "../data/raw_data/allUserKeys.csv"
     with open(all_userkeys, 'r') as f:
         readCSV = csv.reader(f, delimiter=",")
 
@@ -386,21 +386,24 @@ def countRaceAge(logger):
     '''
 
     try:
-        total = {
+        raceAgeDict = {
             "AA":[],
             "NHPI":[],
             "MR":[]
         }
         for raceGroup in table1_config["params"]["races"]:
             if raceGroup != "all":
-                for race in raceGroup:
-                    counts = []
+                #print(">>>>>>>>Race group: "+raceGroup)
+                counts = [0,0,0,0,0]
+                for race in table1_config["params"]["races"][raceGroup]:
+                    #print(">>>>>>>>Race: "+race)
+                    count = 0
                     for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
                         query = SQL('''
-                        SELECT
-                            count(*)
+                        WITH subQ as (
+                        SELECT *
                         FROM
-                            tejas.raceaget1new t1
+                            tejas.race_age_t1new t1
                         INNER JOIN
                             tejas.restofusers t2
                         ON
@@ -408,7 +411,11 @@ def countRaceAge(logger):
                         AND
                             t1.backgroundid = t2.backgroundid
                         WHERE
-                            (cast (t1.age as int) >= {}) AND cast (t1.age as int) <= {} and t1.race = {}
+                            (cast (t1.age as int) >= {})
+                        AND (cast (t1.age as int) <= {}) and t1.race = {}
+                        )
+                        SELECT count(*)
+                        FROM subQ
                         ''').format(
                             Literal(lower),
                             Literal(upper),
@@ -416,14 +423,17 @@ def countRaceAge(logger):
                         )
                         # returns pairs so we're just interested in first element
                         data = [d[0] for d in pgIO.getAllData(query)]
-                        counts.append(data[0])
-            total[raceGroup] = counts
+                        #print(data)
+                        #counts.append(data[0])
+                        counts[count]+=data[0]
+                        count+=1
+            raceAgeDict[raceGroup] = counts
             #print(total)
-        print(total)
+        print(raceAgeDict)
     except Exception as e:
         logger.error('countRaceAge failed because of {}'.format(e))
 
-    return total
+    return raceAgeDict
 
 @lD.log(logBase + '.countRaceSex')
 def countRaceSex(logger):
@@ -445,7 +455,7 @@ def countRaceSex(logger):
                 SELECT
                     count(*)
                 FROM
-                    tejas.raceaget1new t1
+                    tejas.race_age_t1new t1
                 INNER JOIN
                     tejas.restofusers t2
                 ON
@@ -487,7 +497,7 @@ def countRaceSetting(logger):
                 SELECT
                     count(*)
                 FROM
-                    tejas.raceAgeT1A t1
+                    tejas.race_age_t1new t1
                 INNER JOIN
                     tejas.restofusers t2
                 ON
@@ -564,20 +574,6 @@ def relabelVar(logger):
         logger {logging.Logger} -- logs error information
     '''
     try:
-        # relabel_sex_success = []
-        # for sex in table1_config["inputs"]["sexes"]:
-        #     sex_query = SQL('''
-        #     UPDATE tejas.raceAgeT1A
-        #     SET sex = {}
-        #     WHERE sex in {}
-        #     ''').format(
-        #         Literal(sex),
-        #         Literal(tuple(table1_config["params"]["sexes"][sex]))
-        #         )
-        #     relabel_sex_success.append(pgIO.commitData(sex_query))
-        # if False in relabel_sex_success:
-        #     print("Relabelling sex not successful!")
-
         relabel_race_success = []
         for race in table1_config["inputs"]["races"]:
             race_query = SQL('''
@@ -595,7 +591,7 @@ def relabelVar(logger):
         relabel_setting_success = []
         for setting in table1_config["inputs"]["settings"]:
             setting_query = SQL('''
-            UPDATE tejas.raceaget1a
+            UPDATE tejas.race_age_t1
             SET visit_type = {}
             WHERE visit_type in {}
             ''').format(
@@ -607,4 +603,4 @@ def relabelVar(logger):
             print("Relabelling setting not successful!")
 
     except Exception as e:
-        logger.error('Failed to update table raceAgeT1A because {}'.format(e))
+        logger.error('Failed to update table race_age_t1 because {}'.format(e))
