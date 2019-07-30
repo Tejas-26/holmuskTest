@@ -17,6 +17,7 @@ table1_config = jsonref.load(open('../config/modules/tejasT1.json'))
 logBase = config['logging']['logBase'] + '.modules.comFunctions.comFunctions'
 
 max_num = 501138
+all_userkeys = "../data/raw_data/smallSample.csv"
 
 @lD.log(logBase + '.cleanUp')
 def cleanUp(logger):
@@ -110,7 +111,7 @@ def countMainRace(logger):
     return raceDict
 
 @lD.log(logBase + '.createrace_age_t1')
-def createrace_age_t1(logger):
+def createrace_t1(logger):
     '''Creates the table tejas.race_age_t1
 
     This function creates the table tejas.race_age_t1
@@ -141,8 +142,8 @@ def createrace_age_t1(logger):
         INSERT INTO tejas.race_age_t1
         SELECT
         	t1.age,
+            t2.sex,
         	t1.visit_type,
-        	t2.sex,
         	t2.race,
         	t1.siteid,
         	t1.backgroundid
@@ -262,7 +263,6 @@ def popDiagCols(logger):
     Arguments:
         logger {logging.Logger} -- logs error information
     '''
-    all_userkeys = "../data/raw_data/allUserKeys.csv"
     with open(all_userkeys, 'r') as f:
         readCSV = csv.reader(f, delimiter=",")
 
@@ -386,7 +386,7 @@ def countRaceAge(logger):
     '''
 
     try:
-        raceAgeDict = {
+        rd = {
             "AA":[],
             "NHPI":[],
             "MR":[]
@@ -427,9 +427,8 @@ def countRaceAge(logger):
                         #counts.append(data[0])
                         counts[count]+=data[0]
                         count+=1
-            raceAgeDict[raceGroup] = counts
+            rd[raceGroup] = counts
             #print(total)
-        print(raceAgeDict)
     except Exception as e:
         logger.error('countRaceAge failed because of {}'.format(e))
 
@@ -447,35 +446,46 @@ def countRaceSex(logger):
     '''
 
     try:
-        total = []
-        for race in table1_config["inputs"]["races"]:
-            counts = []
-            for sex in table1_config["inputs"]["sexes"]:
-                query = SQL('''
-                SELECT
-                    count(*)
-                FROM
-                    tejas.race_age_t1new t1
-                INNER JOIN
-                    tejas.restofusers t2
-                ON
-                    t1.siteid = t2.siteid
-                AND
-                    t1.backgroundid = t2.backgroundid
-                WHERE
-                    t1.sex = {} AND t1.race = {}
-                ''').format(
-                    Literal(sex),
-                    Literal(race)
-                )
-                data = [d[0] for d in pgIO.getAllData(query)]
-                counts.append(data[0])
-            total.append(counts)
-
+        rd = {
+            "AA":[],
+            "NHPI":[],
+            "MR":[]
+        }
+        for raceGroup in table1_config["params"]["races"]:
+            if raceGroup != "all":
+                counts = [0,0]
+                for race in table1_config["params"]["races"][raceGroup]:
+                    count = 0
+                    for sex in table1_config["inputs"]["sexes"]:
+                        query = SQL('''
+                        WITH subQ AS (
+                        SELECT
+                            *
+                        FROM
+                            tejas.race_age_t1new t1
+                        INNER JOIN
+                            tejas.restofusers t2
+                        ON
+                            t1.siteid = t2.siteid
+                        AND
+                            t1.backgroundid = t2.backgroundid
+                        WHERE
+                            t1.sex = {} AND t1.race = {}
+                        )
+                        SELECT count(*) FROM subQ
+                        ''').format(
+                            Literal(sex),
+                            Literal(race)
+                        )
+                        # print(query)
+                        data = [d[0] for d in pgIO.getAllData(query)]
+                        # print(data[0])
+                        counts[count] += data[0]
+                        count+=1
+            rd[raceGroup] = counts
     except Exception as e:
         logger.error('countRaceSex failed because of {}'.format(e))
-
-    return total
+    return rd
 
 @lD.log(logBase + '.countRaceSetting')
 def countRaceSetting(logger):
@@ -489,34 +499,41 @@ def countRaceSetting(logger):
     '''
 
     try:
-        total = []
-        for race in table1_config["inputs"]["races"]:
-            counts = []
-            for setting in table1_config["inputs"]["settings"]:
-                query = SQL('''
-                SELECT
-                    count(*)
-                FROM
-                    tejas.race_age_t1new t1
-                INNER JOIN
-                    tejas.restofusers t2
-                ON
-                    t1.siteid = t2.siteid
-                AND
-                    t1.backgroundid = t2.backgroundid
-                WHERE
-                    t1.visit_type = {} AND t1.race = {}
-                ''').format(
-                    Literal(setting),
-                    Literal(race)
-                )
-                data = [d[0] for d in pgIO.getAllData(query)]
-                counts.append(data[0])
-            total.append(counts)
+        rd = {
+            "AA":[],
+            "NHPI":[],
+            "MR":[]
+        }
+        for raceGroup in table1_config["params"]["races"]:
+            if raceGroup != "all":
+                counts = [0,0]
+                for race in table1_config["params"]["races"][raceGroup]:
+                    count = 0
+                    for setting in table1_config["params"]["settings"]["all"]:
+                        query = SQL('''
+                        SELECT
+                            count(*)
+                        FROM
+                            tejas.race_age_t1new t1
+                        INNER JOIN
+                            tejas.restofusers t2
+                        ON
+                            t1.siteid = t2.siteid
+                        AND
+                            t1.backgroundid = t2.backgroundid
+                        WHERE
+                            t1.visit_type = {} AND t1.race = {}
+                        ''').format(
+                            Literal(setting),
+                            Literal(race)
+                        )
+                        data = [d[0] for d in pgIO.getAllData(query)]
+                        counts[count] += data[0]
+                        count+=1
+            rd[raceGroup] = counts
     except Exception as e:
         logger.error('countRaceSetting failed because of {}'.format(e))
-
-    return total
+    return rd
 
 @lD.log(logBase + '.genAllKeys')
 def genAllKeys(logger):

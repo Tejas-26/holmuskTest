@@ -40,9 +40,10 @@ def genRace(logger, r):
 
 @lD.log(logBase + '.genPC')
 def genPC(logger, n, d):
-    result = round((n/d)*100, 1)
-    return result
-
+    if d == 0:
+        return 0
+    else:
+        return round((n/d)*100, 1)
 
 @lD.log(logBase + '.genRaceAge')
 def genRaceAge(logger, r):
@@ -66,15 +67,16 @@ def genRaceAge(logger, r):
 
 @lD.log(logBase + '.genRaceSex')
 def genRaceSex(logger, r):
-
+    sumAsian = sum(r["AA"])
+    sumNHPI = sum(r["NHPI"])
+    sumMR = sum(r["MR"])
     report = f'''
 ### Number of patients grouped by race and sex
 |Sex|AA|%|NHPI|%|MR|%|
 |---|--|-|-----|-|--|-|
-|Male  |{r["AA"][2][0]}|{genPC(r["AA"][2][0],r["AA"][0])}|{r["NHPI"][2][0]}|{genPC(r["NHPI"][2][0],r["NHPI"][0])}|{r["MR"][2][0]}|{genPC(r["MR"][2][0],r["MR"][0])}|
-|Female|{r["AA"][2][1]}|{genPC(r["AA"][2][1],r["AA"][0])}|{r["NHPI"][2][1]}|{genPC(r["NHPI"][2][1],r["NHPI"][0])}|{r["MR"][2][1]}|{genPC(r["MR"][2][1],r["MR"][0])}|
+|Male  |{r["AA"][0]}|{genPC(r["AA"][0],sumAsian)}|{r["NHPI"][0]}|{genPC(r["NHPI"][0],sumNHPI)}|{r["MR"][0]}|{genPC(r["MR"][0],sumMR)}|
+|Female|{r["AA"][1]}|{genPC(r["AA"][1],sumAsian)}|{r["NHPI"][1]}|{genPC(r["NHPI"][1],sumNHPI)}|{r["MR"][1]}|{genPC(r["MR"][1],sumMR)}|
 '''
-
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
 
@@ -82,13 +84,15 @@ def genRaceSex(logger, r):
 
 @lD.log(logBase + '.genRaceSetting')
 def genRaceSetting(logger, r):
-
+    sumAsian = sum(r["AA"])
+    sumNHPI = sum(r["NHPI"])
+    sumMR = sum(r["MR"])
     report = f'''
 ### Number of patients grouped by race and setting
 |Setting|AA|%|NHPI|%|MR|%|
 |-------|--|-|-----|-|--|-|
-|Hospital            |{r["AA"][3][0]}|{genPC(r["AA"][3][0],r["AA"][0])}|{r["NHPI"][3][0]}|{genPC(r["NHPI"][3][0],r["NHPI"][0])}|{r["MR"][3][0]}|{genPC(r["MR"][3][0],r["MR"][0])}|
-|Mental Health Center|{r["AA"][3][1]}|{genPC(r["AA"][3][1],r["AA"][0])}|{r["NHPI"][3][1]}|{genPC(r["NHPI"][3][1],r["NHPI"][0])}|{r["MR"][3][1]}|{genPC(r["MR"][3][1],r["MR"][0])}|
+|Hospital            |{r["AA"][0]}|{genPC(r["AA"][0],sumAsian)}|{r["NHPI"][0]}|{genPC(r["NHPI"][0],sumNHPI)}|{r["MR"][0]}|{genPC(r["MR"][0],sumMR)}|
+|Mental Health Center|{r["AA"][1]}|{genPC(r["AA"][1],sumAsian)}|{r["NHPI"][1]}|{genPC(r["NHPI"][1],sumNHPI)}|{r["MR"][1]}|{genPC(r["MR"][1],sumMR)}|
 ***
 '''
 

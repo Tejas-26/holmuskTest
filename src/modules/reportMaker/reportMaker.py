@@ -14,6 +14,9 @@ from modules.table1 import comFunctions as cf
 
 config = jsonref.load(open('../config/config.json'))
 logBase = config['logging']['logBase'] + '.modules.reportMaker.reportMaker'
+raceAgeDict = {"AA":[],"NHPI":[],"MR":[]}
+raceSexDict = {"AA":[],"NHPI":[],"MR":[]}
+raceSettingDict = {"AA":[],"NHPI":[],"MR":[]}
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
@@ -38,26 +41,24 @@ def main(logger, resultsDict):
     print('='*30)
     cf.cleanUp()
     # Table 1 Report creation
-    # print("making the main race dict")
-    mainRaceDict = cf.countMainRace()
-    # print("generating report intro")
     writeT1.genIntro()
-    # print("generating racial stats")
+    #main race information
+    mainRaceDict = cf.countMainRace()
     writeT1.genRace(mainRaceDict)
-    cf.createrace_age_t1()
-    # print("going into users creation form small sample")
+    #gathering data for the following three subsections of report
+    cf.createrace_t1()
     cf.createrestofusers()
     cf.popDiagCols()
     cf.delAllFalserestofusers()
-    print("create the race and age dict now")
+    #race vs age groups
     raceAgeDict = cf.countRaceAge()
-    print("now write that shit to the mf paper")
-    print(raceAgeDict)
     writeT1.genRaceAge(raceAgeDict)
-    # raceSexDict = cf.countRaceSex()
-    # writeT1.genRaceSex(raceSexDict)
-    # raceSettingDict = cf.countRaceSetting()
-    # writeT1.genRaceSetting(raceSettingDict)
+    #race vs sex (M/F) splits
+    raceSexDict = cf.countRaceSex()
+    writeT1.genRaceSex(raceSexDict)
+    #race vs patient_type splits (in/out)
+    raceSettingDict = cf.countRaceSetting()
+    writeT1.genRaceSetting(raceSettingDict)
 
     '''
     # Figure 1 Info
