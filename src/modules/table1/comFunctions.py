@@ -17,7 +17,7 @@ table1_config = jsonref.load(open('../config/modules/tejasT1.json'))
 logBase = config['logging']['logBase'] + '.modules.comFunctions.comFunctions'
 
 max_num = 501138
-all_userkeys = "../data/raw_data/smallSample.csv"
+all_userkeys = "../data/raw_data/allUserKeys.csv"
 
 @lD.log(logBase + '.cleanUp')
 def cleanUp(logger):
@@ -432,7 +432,7 @@ def countRaceAge(logger):
     except Exception as e:
         logger.error('countRaceAge failed because of {}'.format(e))
 
-    return raceAgeDict
+    return rd
 
 @lD.log(logBase + '.countRaceSex')
 def countRaceSex(logger):
