@@ -7,6 +7,13 @@
     "owner"      : ""
   },
   {
+    "moduleName" : "figure1",
+    "path"       : "modules/figure1/figure1.py",
+    "execute"    : false,
+    "description": "",
+    "owner"      : ""
+  },
+  {
     "moduleName" : "reportMaker",
     "path"       : "modules/reportMaker/reportMaker.py",
     "execute"    : true,

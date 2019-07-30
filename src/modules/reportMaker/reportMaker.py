@@ -6,10 +6,10 @@ import json
 
 from modules.reportMaker import writeT1
 from modules.table1 import comFunctions as cf
-# from modules.reportMaker import plotFig1
-# from modules.reportMaker import writeTable2
-# from modules.reportMaker import writeTable3
-# from modules.reportMaker import writeTable4
+from modules.reportMaker import plotF1
+# from modules.reportMaker import writeT2
+# from modules.reportMaker import writeT3
+# from modules.reportMaker import writeT4
 # from modules.reportMaker import writeAppendix
 
 config = jsonref.load(open('../config/config.json'))
@@ -60,13 +60,15 @@ def main(logger, resultsDict):
     raceSettingDict = cf.countRaceSetting()
     writeT1.genRaceSetting(raceSettingDict)
 
-    '''
+
     # Figure 1 Info
+    '''
     with open("../data/final/diagnosesCount.json") as json_file:
         fig1Dict = json.load(json_file)
     plotFig1.genIntro()
     plotFig1.genFig(fig1Dict)
-
+    '''
+    '''
     # Table 2 Info
     with open("../data/final/allAgesGeneralSUD.json") as json_file:
         table2_dict1 = json.load(json_file)
