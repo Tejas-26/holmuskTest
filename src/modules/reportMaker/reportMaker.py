@@ -68,6 +68,7 @@ def main(logger, resultsDict):
     plotFig1.genIntro()
     plotFig1.genFig(fig1Dict)
     '''
+    writeTable2.genIntro()
     '''
     # Table 2 Info
     with open("../data/final/allAgesGeneralSUD.json") as json_file:
@@ -78,7 +79,6 @@ def main(logger, resultsDict):
         table2_dict3 = json.load(json_file)
     with open("../data/final/ageBinnedCategorisedSUD.json") as json_file:
         table2_dict4 = json.load(json_file)
-    writeTable2.genIntro()
     writeTable2.genTotalPrev(table2_dict1,table2_dict2,table1Dict)
     writeTable2.genAAAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
     writeTable2.genNHPIAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)

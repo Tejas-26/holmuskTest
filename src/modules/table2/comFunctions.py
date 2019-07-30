@@ -13,9 +13,10 @@ from tqdm import tqdm
 from multiprocessing import Pool
 
 config = jsonref.load(open('../config/config.json'))
-table1_config = jsonref.load(open('../config/modules/tejasT1.json'))
+table1_config = jsonref.load(open('../config/modules/tejasT2.json'))
 logBase = config['logging']['logBase'] + '.modules.comFunctions.comFunctions'
 
+#NO NEED TO USE THIS FUNCTION AGAIN AFTER KEYS HAVE BEEN GENERATED
 @lD.log(logBase + '.genSUDUserKeys')
 def genSUDUserKeys(logger):
     '''
@@ -53,11 +54,11 @@ def genSUDUserKeys(logger):
 
     return
 
-@lD.log(logBase + '.createtest4Table')
-def createTest4Table(logger):
-    '''Creates test4
+@lD.log(logBase + '.createsudusersTable')
+def createsudusersTable(logger):
+    '''Creates sudusers
 
-    This function creates the table sarah.test4, which contains boolean columns
+    This function creates the table tejas.sudusers, which contains boolean columns
     for each mental disorder.
 
     Decorators:
@@ -68,8 +69,9 @@ def createTest4Table(logger):
     '''
     try:
         create_query = '''
-        CREATE TABLE sarah.test4(
-        patientid integer,
+        CREATE TABLE tejas.sudusers(
+        siteid integer,
+        background integer,
         alc bool,
         cannabis bool,
         amphe bool,
@@ -87,14 +89,14 @@ def createTest4Table(logger):
         print(pgIO.commitData(create_query))
 
     except Exception as e:
-        logger. error('Failed to create test4 table because of {}'.format(e))
+        logger. error('Failed to create sudusers table because of {}'.format(e))
     return
 
-@lD.log(logBase + '.popTest4')
-def popTest4(logger):
-    '''Populates test4
+@lD.log(logBase + '.popsudusers')
+def popsudusers(logger):
+    '''Populates sudusers
 
-    This function populates the table sarah.test4, which contains boolean columns
+    This function populates the table tejas.sudusers, which contains boolean columns
     for each mental disorder. If a user's row has True for that column, it means
     that he/she has that disorder, and vice versa.
 
@@ -115,7 +117,8 @@ def popTest4(logger):
 
                 getQuery = SQL('''
                 SELECT
-                    patientid,
+                    siteid,
+                    backgroundid,
                     array_agg(distinct cast(dsmno as text)) && array[{}] as alc,
                     array_agg(distinct cast(dsmno as text)) && array[{}] as cannabis,
                     array_agg(distinct cast(dsmno as text)) && array[{}] as amphe,
@@ -128,11 +131,13 @@ def popTest4(logger):
                     array_agg(distinct cast(dsmno as text)) && array[{}] as polysub,
                     array_agg(distinct cast(dsmno as text)) && array[{}] as inhalant
                 FROM
-                    rwe_version1_1.pdiagnose
+                    raw_data.pdiagnose
                 WHERE
-                    patientid = {}
+                    siteid = {}
+                AND
+                    backgroundid = {}
                 GROUP BY
-                    patientid
+                    siteid, backgroundid
                 ''').format(
                     Literal(table2_config["params"]["sudcats"]["alc"]),
                     Literal(table2_config["params"]["sudcats"]["cannabis"]),
@@ -145,22 +150,23 @@ def popTest4(logger):
                     Literal(table2_config["params"]["sudcats"]["others"]),
                     Literal(table2_config["params"]["sudcats"]["polysub"]),
                     Literal(table2_config["params"]["sudcats"]["inhalant"]),
-                    Literal(int(user[0]))
+                    Literal(int(user[0])),
+                    Literal(int(user[1]))
                 )
 
                 data = pgIO.getAllData(getQuery)
 
                 pushQuery = '''
                 INSERT INTO
-                    sarah.test4(patientid, alc, cannabis, amphe, halluc, nicotin, cocaine, opioids, sedate, others, polysub, inhalant)
+                    tejas.sudusers(siteid, backgroundid, alc, cannabis, amphe, halluc, nicotin, cocaine, opioids, sedate, others, polysub, inhalant)
                 VALUES
                     %s
                 '''
 
                 deleteDupliQuery = '''
-                DELETE FROM sarah.test4 a USING (
+                DELETE FROM tejas.sudusers a USING (
                     SELECT MAX(ctid) as ctid, patientid
-                    FROM sarah.test4
+                    FROM tejas.sudusers
                     GROUP BY patientid HAVING count(*) > 1
                     ) b
                 WHERE a.patientid = b.patientid
@@ -174,7 +180,7 @@ def popTest4(logger):
 
 
     except Exception as e:
-        logger. error('Failed to populate test4 table because of {}'.format(e))
+        logger. error('Failed to populate sudusers table because of {}'.format(e))
     return
 
 @lD.log(logBase + '.divByAllAges')
@@ -234,7 +240,7 @@ def allAgesGeneralSUD(logger):
             FROM
                 sarah.test2 t1
             INNER JOIN
-                sarah.test4 t2
+                tejas.sudusers t2
             ON
                 t1.patientid = t2.patientid
             WHERE
@@ -269,7 +275,7 @@ def allAgesGeneralSUD(logger):
             FROM
                 sarah.test2 t1
             INNER JOIN
-                sarah.test4 t2
+                tejas.sudusers t2
             ON
                 t1.patientid = t2.patientid
             WHERE
@@ -330,7 +336,7 @@ def allAgesCategorisedSUD(logger):
                 FROM
                     sarah.test2 t1
                 INNER JOIN
-                    sarah.test4 t2
+                    tejas.sudusers t2
                 ON
                     t1.patientid = t2.patientid
                 WHERE
@@ -471,7 +477,7 @@ def ageBinnedGeneralSUD(logger):
                 FROM
                     sarah.test2 t1
                 INNER JOIN
-                    sarah.test4 t2
+                    tejas.sudusers t2
                 ON
                     t1.patientid = t2.patientid
                 WHERE
@@ -528,7 +534,7 @@ def ageBinnedCategorisedSUD(logger):
                     FROM
                         sarah.test2 t1
                     INNER JOIN
-                        sarah.test4 t2
+                        tejas.sudusers t2
                     ON
                         t1.patientid = t2.patientid
                     WHERE
