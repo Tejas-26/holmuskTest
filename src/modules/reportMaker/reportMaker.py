@@ -61,7 +61,7 @@ def main(logger, resultsDict):
     writeT1.genRaceSetting(raceSettingDict)
 
 
-    # Figure 1 Info - use later 
+    # Figure 1 Info - use later
     '''
     with open("../data/final/diagnosesCount.json") as json_file:
         fig1Dict = json.load(json_file)
