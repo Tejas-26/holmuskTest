@@ -1,5 +1,5 @@
 from logs import logDecorator as lD
-import jsonref, pprint
+import jsonref, pprint, json
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
@@ -13,8 +13,9 @@ from tqdm import tqdm
 from multiprocessing import Pool
 
 config = jsonref.load(open('../config/config.json'))
-table1_config = jsonref.load(open('../config/modules/tejasT2.json'))
-logBase = config['logging']['logBase'] + '.modules.comFunctions.comFunctions'
+table2_config = jsonref.load(open('../config/modules/tejasT2.json'))
+logBase = config['logging']['logBase'] + '.modules.table2.comFunctions'
+all_userkeys = "../data/raw_data/SUDUser_keys.csv"
 
 #NO NEED TO USE THIS FUNCTION AGAIN AFTER KEYS HAVE BEEN GENERATED
 @lD.log(logBase + '.genSUDUserKeys')
@@ -54,11 +55,11 @@ def genSUDUserKeys(logger):
 
     return
 
-@lD.log(logBase + '.createsudusersTable')
-def createsudusersTable(logger):
-    '''Creates sudusers
+@lD.log(logBase + '.createsud_usersTable')
+def createsud_usersTable(logger):
+    '''Creates sud_users
 
-    This function creates the table tejas.sudusers, which contains boolean columns
+    This function creates the table tejas.sud_users, which contains boolean columns
     for each mental disorder.
 
     Decorators:
@@ -69,9 +70,9 @@ def createsudusersTable(logger):
     '''
     try:
         create_query = '''
-        CREATE TABLE tejas.sudusers(
-        siteid integer,
-        background integer,
+        CREATE TABLE tejas.sud_users(
+        siteid text,
+        backgroundid text,
         alc bool,
         cannabis bool,
         amphe bool,
@@ -86,17 +87,19 @@ def createsudusersTable(logger):
         morethan2sud bool
         )
         '''
-        print(pgIO.commitData(create_query))
+        value = pgIO.commitData(create_query)
+        if value == True:
+            print("tejas.sud_users table has been created")
 
     except Exception as e:
-        logger. error('Failed to create sudusers table because of {}'.format(e))
+        logger. error('Failed to create sud_users table because of {}'.format(e))
     return
 
-@lD.log(logBase + '.popsudusers')
-def popsudusers(logger):
-    '''Populates sudusers
+@lD.log(logBase + '.popsud_users')
+def popsud_users(logger):
+    '''Populates sud_users
 
-    This function populates the table tejas.sudusers, which contains boolean columns
+    This function populates the table tejas.sud_users, which contains boolean columns
     for each mental disorder. If a user's row has True for that column, it means
     that he/she has that disorder, and vice versa.
 
@@ -107,15 +110,14 @@ def popsudusers(logger):
         logger {logging.Logger} -- logs error information
     '''
     try:
-
-        all_userkeys = "../data/raw_data/SUDUser_keys.csv"
-
         with open(all_userkeys) as f:
             readCSV = csv.reader(f, delimiter=",")
 
             for user in tqdm(readCSV):
-
-                getQuery = SQL('''
+                # print(user)
+                popTableQuery = SQL('''
+                INSERT INTO
+                    tejas.sud_users(siteid, backgroundid, alc, cannabis, amphe, halluc, nicotin, cocaine, opioids, sedate, others, polysub, inhalant)
                 SELECT
                     siteid,
                     backgroundid,
@@ -150,37 +152,74 @@ def popsudusers(logger):
                     Literal(table2_config["params"]["sudcats"]["others"]),
                     Literal(table2_config["params"]["sudcats"]["polysub"]),
                     Literal(table2_config["params"]["sudcats"]["inhalant"]),
-                    Literal(int(user[0])),
-                    Literal(int(user[1]))
+                    Literal(user[0]),
+                    Literal(user[1])
                 )
-
-                data = pgIO.getAllData(getQuery)
-
-                pushQuery = '''
-                INSERT INTO
-                    tejas.sudusers(siteid, backgroundid, alc, cannabis, amphe, halluc, nicotin, cocaine, opioids, sedate, others, polysub, inhalant)
-                VALUES
-                    %s
-                '''
-
-                deleteDupliQuery = '''
-                DELETE FROM tejas.sudusers a USING (
-                    SELECT MAX(ctid) as ctid, patientid
-                    FROM tejas.sudusers
-                    GROUP BY patientid HAVING count(*) > 1
-                    ) b
-                WHERE a.patientid = b.patientid
-                AND a.ctid <> b.ctid
-                '''
-                value = pgIO.commitData(deleteDupliQuery)
-                if value == True:
-                    print("Duplicate values succesfully deleted")
-
-                print(pgIO.commitDataList(pushQuery, data))
-
-
+                value = pgIO.commitData(popTableQuery)
     except Exception as e:
-        logger. error('Failed to populate sudusers table because of {}'.format(e))
+        logger. error('Failed to populate sud_users table because of {}'.format(e))
+    return
+
+@lD.log(logBase + '.delAllFalseSUDusers')
+def delAllFalseSUDusers(logger):
+    makeNewQry = '''
+    CREATE TABLE tejas.sud_users_new (
+        siteid text,
+        backgroundid text,
+        alc bool,
+        cannabis bool,
+        amphe bool,
+        halluc bool,
+        nicotin bool,
+        cocaine bool,
+        opioids bool,
+        sedate bool,
+        others bool,
+        polysub bool,
+        inhalant bool,
+        morethan2sud bool
+    )
+    '''
+    value = pgIO.commitData(makeNewQry)
+    if value == True:
+        print("tejas.sud_users_new table has been created")
+
+    deleteDupliQuery = '''
+    INSERT INTO tejas.sud_users_new (siteid, backgroundid, alc, cannabis, amphe, halluc, nicotin, cocaine, opioids, sedate, others, polysub, inhalant)
+    SELECT
+        siteid,
+        backgroundid,
+        alc,
+        cannabis,
+        amphe,
+        halluc,
+        nicotin,
+        cocaine,
+        opioids,
+        sedate,
+        others,
+        polysub,
+        inhalant
+    FROM
+        tejas.sud_users
+    GROUP BY
+        siteid,
+        backgroundid,
+        alc,
+        cannabis,
+        amphe,
+        halluc,
+        nicotin,
+        cocaine,
+        opioids,
+        sedate,
+        others,
+        polysub,
+        inhalant
+    '''
+    value = pgIO.commitData(deleteDupliQuery)
+    if value == True:
+        print("Duplicate values succesfully deleted")
     return
 
 @lD.log(logBase + '.divByAllAges')
@@ -200,9 +239,9 @@ def divByAllAges(logger, l):
     with open("../data/final/sampleCount.json") as json_file:
         table1results = json.load(json_file)
 
-    allAA = table1results['AA'][0]
-    allNHPI = table1results['NHPI'][0]
-    allMR = table1results['MR'][0]
+    allAA = table1results['AA']
+    allNHPI = table1results['NHPI']
+    allMR = table1results['MR']
 
     resultList.append(round((l[0]/allAA)*100,1))
     resultList.append(round((l[1]/allNHPI)*100,1))
@@ -233,23 +272,31 @@ def allAgesGeneralSUD(logger):
 
         # Find number of users in each race who have any SUD
         any_sud = []
-        for race in table2_config["inputs"]["races"]:
-            query = SQL('''
-            SELECT
-                count(*)
-            FROM
-                sarah.test2 t1
-            INNER JOIN
-                tejas.sudusers t2
-            ON
-                t1.patientid = t2.patientid
-            WHERE
-                t1.race = {}
-            ''').format(
-                Literal(race)
-            )
-            data = [d[0] for d in pgIO.getAllData(query)]
-            countDict["any_sud"].append(data[0])
+        for raceGroup in table2_config["params"]["races"]:
+            if raceGroup != "all":
+                raceCount = 0
+                for race in table2_config["params"]["races"][raceGroup]:
+                    query = SQL('''
+                    WITH subQ AS (
+                    SELECT *
+                    FROM
+                        tejas.race_age_t1new t1
+                    INNER JOIN
+                        tejas.sud_users t2
+                    ON
+                        t1.siteid = t2.siteid
+                    AND
+                        t1.backgroundid = t2.backgroundid
+                    WHERE
+                        t1.race = {}
+                    )
+                    SELECT count(*) FROM subQ
+                    ''').format(
+                        Literal(race)
+                    )
+                    data = [d[0] for d in pgIO.getAllData(query)]
+                    raceCount += data[0]
+                countDict["any_sud"].append(raceCount)
 
         # Find number of users in each race who have >2 SUD
         count = {
@@ -258,35 +305,41 @@ def allAgesGeneralSUD(logger):
             "MR": 0
         }
 
-        for race in table2_config["inputs"]["races"]:
-            query = SQL('''
-            SELECT
-                t2.alc,
-                t2.cannabis,
-                t2.amphe,
-                t2.halluc,
-                t2.nicotin,
-                t2.cocaine,
-                t2.opioids,
-                t2.sedate,
-                t2.others,
-                t2.polysub,
-                t2.inhalant
-            FROM
-                sarah.test2 t1
-            INNER JOIN
-                tejas.sudusers t2
-            ON
-                t1.patientid = t2.patientid
-            WHERE
-                t1.race = {}
-            ''').format(
-                Literal(race)
-            )
-            data = pgIO.getAllData(query)
-            for tuple in data:
-                if sum(list(tuple))>=2:
-                    count[race]+=1
+        for raceGroup in table2_config["params"]["races"]:
+            if raceGroup != "all":
+                for race in table2_config["params"]["races"][raceGroup]:
+                    query = SQL('''
+                    SELECT
+                        t2.alc,
+                        t2.cannabis,
+                        t2.amphe,
+                        t2.halluc,
+                        t2.nicotin,
+                        t2.cocaine,
+                        t2.opioids,
+                        t2.sedate,
+                        t2.others,
+                        t2.polysub,
+                        t2.inhalant
+                    FROM
+                        tejas.race_age_t1new t1
+                    INNER JOIN
+                        tejas.sud_users t2
+                    ON
+                        t1.siteid = t2.siteid
+                    AND
+                        t1.backgroundid = t2.backgroundid
+                    WHERE
+                        t1.race = {}
+                    ''').format(
+                        Literal(race)
+                    )
+                    data = pgIO.getAllData(query)
+                    for tuple in data:
+                        if sum(list(tuple))>=2:
+                            count[raceGroup]+=1
+
+
         for race in count:
             countDict["morethan2_sud"].append(count[race])
 
@@ -297,7 +350,6 @@ def allAgesGeneralSUD(logger):
 
     except Exception as e:
         logger.error('Failed to find general SUD counts because of {}'.format(e))
-
     return resultsDict
 
 @lD.log(logBase + '.allAgesCategorisedSUD')
@@ -336,7 +388,7 @@ def allAgesCategorisedSUD(logger):
                 FROM
                     sarah.test2 t1
                 INNER JOIN
-                    tejas.sudusers t2
+                    tejas.sud_users t2
                 ON
                     t1.patientid = t2.patientid
                 WHERE
@@ -477,7 +529,7 @@ def ageBinnedGeneralSUD(logger):
                 FROM
                     sarah.test2 t1
                 INNER JOIN
-                    tejas.sudusers t2
+                    tejas.sud_users t2
                 ON
                     t1.patientid = t2.patientid
                 WHERE
@@ -534,7 +586,7 @@ def ageBinnedCategorisedSUD(logger):
                     FROM
                         sarah.test2 t1
                     INNER JOIN
-                        tejas.sudusers t2
+                        tejas.sud_users t2
                     ON
                         t1.patientid = t2.patientid
                     WHERE

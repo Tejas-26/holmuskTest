@@ -5,18 +5,16 @@ import jsonref, pprint
 import json
 
 from modules.reportMaker import writeT1
-from modules.table1 import comFunctions as cf
+from modules.table1 import comFunctions as cfT1
+from modules.table2 import comFunctions as cfT2
 from modules.reportMaker import plotF1
-# from modules.reportMaker import writeT2
+from modules.reportMaker import writeT2
 # from modules.reportMaker import writeT3
 # from modules.reportMaker import writeT4
 # from modules.reportMaker import writeAppendix
 
 config = jsonref.load(open('../config/config.json'))
 logBase = config['logging']['logBase'] + '.modules.reportMaker.reportMaker'
-raceAgeDict = {"AA":[],"NHPI":[],"MR":[]}
-raceSexDict = {"AA":[],"NHPI":[],"MR":[]}
-raceSettingDict = {"AA":[],"NHPI":[],"MR":[]}
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
@@ -35,32 +33,32 @@ def main(logger, resultsDict):
         command line arguments. These can be used for
         overwriting command line arguments as needed.
     '''
+    cfT1.cleanUp()
 
     print('='*30)
     print('Main function of reportMaker module')
     print('='*30)
-    cf.cleanUp()
+    '''
     # Table 1 Report creation
     writeT1.genIntro()
     #main race information
-    mainRaceDict = cf.countMainRace()
+    mainRaceDict = cfT1.countMainRace()
     writeT1.genRace(mainRaceDict)
     #gathering data for the following three subsections of report
-    cf.createrace_t1()
-    cf.createrestofusers()
-    cf.popDiagCols()
-    cf.delAllFalserestofusers()
+    cfT1.createrace_t1()
+    cfT1.createrestofusers()
+    cfT1.popDiagCols()
+    cfT1.delAllFalserestofusers()
     #race vs age groups
-    raceAgeDict = cf.countRaceAge()
+    raceAgeDict = cfT1.countRaceAge()
     writeT1.genRaceAge(raceAgeDict)
     #race vs sex (M/F) splits
-    raceSexDict = cf.countRaceSex()
+    raceSexDict = cfT1.countRaceSex()
     writeT1.genRaceSex(raceSexDict)
     #race vs patient_type splits (in/out)
-    raceSettingDict = cf.countRaceSetting()
+    raceSettingDict = cfT1.countRaceSetting()
     writeT1.genRaceSetting(raceSettingDict)
-
-
+    '''
     # Figure 1 Info - use later
     '''
     with open("../data/final/diagnosesCount.json") as json_file:
@@ -68,7 +66,12 @@ def main(logger, resultsDict):
     plotFig1.genIntro()
     plotFig1.genFig(fig1Dict)
     '''
-    writeTable2.genIntro()
+    writeT2.genIntro()
+    cfT2.createsud_usersTable()
+    cfT2.popsud_users()
+    cfT2.delAllFalseSUDusers()
+    agesGeneral = cfT2.allAgesGeneralSUD()
+    print(agesGeneral)
     '''
     # Table 2 Info
     with open("../data/final/allAgesGeneralSUD.json") as json_file:
@@ -79,10 +82,10 @@ def main(logger, resultsDict):
         table2_dict3 = json.load(json_file)
     with open("../data/final/ageBinnedCategorisedSUD.json") as json_file:
         table2_dict4 = json.load(json_file)
-    writeTable2.genTotalPrev(table2_dict1,table2_dict2,table1Dict)
-    writeTable2.genAAAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
-    writeTable2.genNHPIAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
-    writeTable2.genMRAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
+    writeT2.genTotalPrev(table2_dict1,table2_dict2,table1Dict)
+    writeT2.genAAAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
+    writeT2.genNHPIAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
+    writeT2.genMRAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
 
     # Table 3 Info
     with open("../data/final/oddsratios_allRaces.json") as json_file:

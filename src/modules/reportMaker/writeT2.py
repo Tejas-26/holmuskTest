@@ -32,7 +32,7 @@ Other drugs - others
 Polysubstance - polysub
 Inhalants - inhalant
         '''
-    with open('../report/paper1Report.md', 'a+') as f:
+    with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
 
     return
@@ -57,7 +57,7 @@ def genTotalPrev(logger, r1, r2, r3):
     report = report + '''
 ***'''
 
-    with open('../report/paper1Report.md', 'a+') as f:
+    with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
 
     return
@@ -82,7 +82,7 @@ def genAAAgeBinnedPrev(logger, r1, r2, r3):
     report = report + '''
 ***'''
 
-    with open('../report/paper1Report.md', 'a+') as f:
+    with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
 
     return
@@ -107,7 +107,7 @@ def genNHPIAgeBinnedPrev(logger, r1, r2, r3):
     report = report + '''
 ***'''
 
-    with open('../report/paper1Report.md', 'a+') as f:
+    with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
 
     return
@@ -132,7 +132,7 @@ def genMRAgeBinnedPrev(logger, r1, r2, r3):
     report = report + '''
 ***'''
 
-    with open('../report/paper1Report.md', 'a+') as f:
+    with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
 
     return
