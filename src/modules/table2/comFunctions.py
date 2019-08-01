@@ -222,6 +222,71 @@ def delAllFalseSUDusers(logger):
         print("Duplicate values succesfully deleted")
     return
 
+@lD.log(logBase + '.createJoined')
+def createJoined(logger):
+    makeNew = '''
+    CREATE TABLE tejas.sud_race_age (
+    siteid text,
+    backgroundid text,
+    age text,
+    sex text,
+    visit_type text,
+    race text,
+    alc bool,
+    cannabis bool,
+    amphe bool,
+    halluc bool,
+    nicotin bool,
+    cocaine bool,
+    opioids bool,
+    sedate bool,
+    others bool,
+    polysub bool,
+    inhalant bool,
+    morethan2sud bool
+    )
+    '''
+    value = pgIO.commitData(makeNew)
+    if value == True:
+        print("tejas.sud_race_age table has been created")
+    return
+
+@lD.log(logBase + '.popJoined')
+def popJoined(logger):
+    popQry = '''
+    INSERT INTO tejas.sud_race_age (
+    siteid, backgroundid, age, sex, visit_type, race, alc, cannabis, amphe,
+    halluc, nicotin, cocaine, opioids, sedate, others, polysub, inhalant,
+    morethan2sud)
+    SELECT
+        t1.siteid as siteid,
+        t1.backgroundid as backgroundid,
+        age, sex, visit_type, race,
+        alc,
+        cannabis,
+        amphe,
+        halluc,
+        nicotin,
+        cocaine,
+        opioids,
+        sedate,
+        others,
+        polysub,
+        inhalant
+    FROM
+        tejas.race_age_t1new t1
+    INNER JOIN
+        tejas.sud_users_new t2
+    ON
+        t1.siteid = t2.siteid
+    AND
+        t1.backgroundid = t2.backgroundid
+    '''
+    value = pgIO.commitData(popQry)
+    if value == True:
+        print("tejas.sud_race_age joined table has been populated")
+    return
+
 @lD.log(logBase + '.divByAllAges')
 def divByAllAges(logger, l):
     '''Divides by total sample of each race
@@ -380,28 +445,35 @@ def allAgesCategorisedSUD(logger):
             "inhalant":[]
         }
 
-        for race in table2_config["inputs"]["races"]:
-            for sudcat in table2_config["params"]["sudcats"]:
-                query = SQL('''
-                SELECT
-                    count(*)
-                FROM
-                    sarah.test2 t1
-                INNER JOIN
-                    tejas.sud_users t2
-                ON
-                    t1.patientid = t2.patientid
-                WHERE
-                    t1.race = {}
-                AND
-                    t2.{} = true
-                ''').format(
-                    Literal(race),
-                    Identifier(sudcat)
-                )
-                data = [d[0] for d in pgIO.getAllData(query)]
-                countDict[sudcat].append(data[0])
-
+        for raceGroup in table2_config["params"]["races"]:
+            if raceGroup != "all":
+                raceCount = 0
+                for sudcat in table2_config["params"]["sudcats"]:
+                    for race in table2_config["params"]["races"][raceGroup]:
+                        query = SQL('''
+                        WITH subQ AS (
+                        SELECT *
+                        FROM
+                            tejas.race_age_t1new t1
+                        INNER JOIN
+                            tejas.sud_users_new t2
+                        ON
+                            t1.siteid = t2.siteid
+                        AND
+                            t1.backgroundid = t2.backgroundid
+                        WHERE
+                            t1.race = {}
+                        AND
+                            t2.{} = true
+                        )
+                        SELECT count(*) from subQ
+                        ''').format(
+                            Literal(race),
+                            Identifier(sudcat)
+                        )
+                        data = [d[0] for d in pgIO.getAllData(query)]
+                        raceCount += data[0]
+                    countDict[sudcat].append(raceCount)
         # Change counts to percentage of the race sample
         resultsDict = {}
         for row in countDict:
@@ -427,9 +499,9 @@ def divByAgeBins(logger, lol):
     with open("../data/final/sampleCount.json") as json_file:
         table1results = json.load(json_file)
 
-    ageBinsAA = table1results['AA'][1]
-    ageBinsNHPI = table1results['NHPI'][1]
-    ageBinsMR = table1results['MR'][1]
+    ageBinsAA = table1results['AA']
+    ageBinsNHPI = table1results['NHPI']
+    ageBinsMR = table1results['MR']
 
     resultLoL.append([round((x/y)*100, 1) for x, y in zip(lol[0], ageBinsAA)])
     resultLoL.append([round((x/y)*100, 1) for x, y in zip(lol[1], ageBinsNHPI)])
@@ -457,33 +529,40 @@ def ageBinnedGeneralSUD(logger):
         }
 
         # Find number of users in each race who have any SUD, separated into age bins
-        any_sud = []
-        for race in table2_config["inputs"]["races"]:
-            counts = []
-            for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
-                query = SQL('''
-                SELECT
-                    count(*)
-                FROM
-                    sarah.test2 t1
-                INNER JOIN
-                    sarah.test3 t2
-                ON
-                    t1.patientid = t2.patientid
-                WHERE
-                    t1.race = {}
-                AND
-                    t1.age BETWEEN {} AND {}
-                AND
-                    t2.sud = true
-                ''').format(
-                    Literal(race),
-                    Literal(lower),
-                    Literal(upper)
-                )
-                data = [d[0] for d in pgIO.getAllData(query)]
-                counts.append(data[0])
-            countDict["any_sud"].append(counts)
+        for raceGroup in table2_config["params"]["races"]:
+            if raceGroup != "all":
+                raceCount = 0
+                for race in table2_config["params"]["races"][raceGroup]:
+                    for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
+                        query = SQL('''
+                        WITH subQ AS (
+                        SELECT
+                            count(*)
+                        FROM
+                            tejas.race_age_t1new t1
+                        INNER JOIN
+                            tejas.restofusers t2
+                        ON
+                            t1.siteid = t2.siteid
+                        AND
+                            t1.backgroundid = t2.backgroundid
+                        WHERE
+                            t1.race = {}
+                        AND
+                            t1.age BETWEEN {} AND {}
+                        AND
+                            t2.sud = true
+                        )
+                        SELECT count(*) FROM subQ
+                        ''').format(
+                            Literal(race),
+                            Literal(lower),
+                            Literal(upper)
+                        )
+                        data = [d[0] for d in pgIO.getAllData(query)]
+                        raceCount += data[0]
+                countDict["any_sud"].append(raceCount)
+
 
         # Find number of users in each race who have >2 SUD, separated into age bins
         count = {
@@ -510,42 +589,48 @@ def ageBinnedGeneralSUD(logger):
             }
         }
 
-        for race in table2_config["inputs"]["races"]:
-            for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
-
-                query = SQL('''
-                SELECT
-                    t2.alc,
-                    t2.cannabis,
-                    t2.amphe,
-                    t2.halluc,
-                    t2.nicotin,
-                    t2.cocaine,
-                    t2.opioids,
-                    t2.sedate,
-                    t2.others,
-                    t2.polysub,
-                    t2.inhalant
-                FROM
-                    sarah.test2 t1
-                INNER JOIN
-                    tejas.sud_users t2
-                ON
-                    t1.patientid = t2.patientid
-                WHERE
-                    t1.race = {}
-                AND
-                    t1.age BETWEEN {} AND {}
-                ''').format(
-                    Literal(race),
-                    Literal(lower),
-                    Literal(upper)
-                )
-                data = pgIO.getAllData(query)
-                for tuple in data:
-                    if sum(list(tuple))>=2:
-                        count[race][lower]+=1
-
+        for race in table2_config["params"]["races"]:
+            if raceGroup != "all":
+                raceCount = 0
+                for race in table2_config["params"]["races"][raceGroup]:
+                    for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
+                        query = SQL('''
+                        SELECT
+                            t2.alc,
+                            t2.cannabis,
+                            t2.amphe,
+                            t2.halluc,
+                            t2.nicotin,
+                            t2.cocaine,
+                            t2.opioids,
+                            t2.sedate,
+                            t2.others,
+                            t2.polysub,
+                            t2.inhalant
+                        FROM
+                            tejas.race_age_t1new t1
+                        INNER JOIN
+                            tejas.sud_users_new t2
+                        ON
+                            t1.siteid = t2.siteid
+                        AND
+                            t1.backgroundid = t2.backgroundid
+                        WHERE
+                            (cast (t1.age as int) >= {})
+                        AND
+                            (cast (t1.age as int) <= {})
+                        AND
+                            t1.race = {}
+                        ''').format(
+                            Literal(race),
+                            Literal(lower),
+                            Literal(upper)
+                        )
+                        data = pgIO.getAllData(query)
+                        for tuple in data:
+                            if sum(list(tuple))>=2:
+                                raceCount += 1
+                        count[race][lower]+=raceCount
         for race in count:
             countDict["morethan2_sud"].append(list(count[race].values()))
 
@@ -584,7 +669,7 @@ def ageBinnedCategorisedSUD(logger):
                     SELECT
                         count(*)
                     FROM
-                        sarah.test2 t1
+                        tejas.race_age_t1new t1
                     INNER JOIN
                         tejas.sud_users t2
                     ON

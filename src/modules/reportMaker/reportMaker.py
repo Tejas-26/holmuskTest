@@ -1,8 +1,5 @@
-
 from logs import logDecorator as lD
-import jsonref, pprint
-
-import json
+import jsonref, pprint, json
 
 from modules.reportMaker import writeT1
 from modules.table1 import comFunctions as cfT1
@@ -33,22 +30,24 @@ def main(logger, resultsDict):
         command line arguments. These can be used for
         overwriting command line arguments as needed.
     '''
-    cfT1.cleanUp()
-
     print('='*30)
     print('Main function of reportMaker module')
     print('='*30)
+    # mainRaceDict = cfT1.countMainRace()
     '''
+    cfT1.cleanUp()
     # Table 1 Report creation
     writeT1.genIntro()
     #main race information
-    mainRaceDict = cfT1.countMainRace()
+
     writeT1.genRace(mainRaceDict)
     #gathering data for the following three subsections of report
     cfT1.createrace_t1()
     cfT1.createrestofusers()
     cfT1.popDiagCols()
     cfT1.delAllFalserestofusers()
+
+
     #race vs age groups
     raceAgeDict = cfT1.countRaceAge()
     writeT1.genRaceAge(raceAgeDict)
@@ -58,31 +57,29 @@ def main(logger, resultsDict):
     #race vs patient_type splits (in/out)
     raceSettingDict = cfT1.countRaceSetting()
     writeT1.genRaceSetting(raceSettingDict)
-    '''
-    # Figure 1 Info - use later
-    '''
-    with open("../data/final/diagnosesCount.json") as json_file:
-        fig1Dict = json.load(json_file)
-    plotFig1.genIntro()
-    plotFig1.genFig(fig1Dict)
-    '''
+
     writeT2.genIntro()
     cfT2.createsud_usersTable()
     cfT2.popsud_users()
     cfT2.delAllFalseSUDusers()
-    agesGeneral = cfT2.allAgesGeneralSUD()
-    print(agesGeneral)
+    '''
+    cfT2.createJoined()
+    cfT2.popJoined()
     '''
     # Table 2 Info
-    with open("../data/final/allAgesGeneralSUD.json") as json_file:
-        table2_dict1 = json.load(json_file)
-    with open("../data/final/allAgesCategorisedSUD.json") as json_file:
-        table2_dict2 = json.load(json_file)
-    with open("../data/final/ageBinnedGeneralSUD.json") as json_file:
-        table2_dict3 = json.load(json_file)
+    table2_dict1 = jsonref.load(open("../data/final/allAgesGeneralSUD.json"))
+    # print("All ages general SUD: " + str(table2_dict1))
+    table2_dict2 = jsonref.load(open("../data/final/allAgesCategorisedSUD.json"))
+    # print("All ages categorised SUD: " + str(table2_dict2))
+    writeT2.genTotalPrev(table2_dict1,table2_dict2,mainRaceDict)
+
+    cfT2.ageBinnedGeneralSUD()
+    # with open("../data/final/ageBinnedGeneralSUD.json") as json_file:
+        # table2_dict3 = json.load(json_file)
+
     with open("../data/final/ageBinnedCategorisedSUD.json") as json_file:
         table2_dict4 = json.load(json_file)
-    writeT2.genTotalPrev(table2_dict1,table2_dict2,table1Dict)
+
     writeT2.genAAAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
     writeT2.genNHPIAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
     writeT2.genMRAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
