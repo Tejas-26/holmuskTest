@@ -10,7 +10,7 @@ from multiprocessing import Pool
 from time import sleep
 
 config = jsonref.load(open('../config/config.json'))
-logBase = config['logging']['logBase'] + '.modules.writeT1.writeT1'
+logBase = config['logging']['logBase'] + '.modules.reportMaker.writeT2'
 
 @lD.log(logBase + '.genIntro')
 def genIntro(logger):
@@ -44,7 +44,7 @@ def genTotalPrev(logger, r1, r2, r3):
 ### Total Sample
 |Prevalence, %       |AA          |NHPI        |MR          |
 |--------------------|------------|------------|------------|
-|**DSM-IV diagnosis**|**Total = {r3['AA'][0]}**|**Total = {r3['NHPI'][0]}**|**Total = {r3['MR'][0]}**|'''
+|**DSM-IV diagnosis**|**Total = {r3['AA']}**|**Total = {r3['NHPI']}**|**Total = {r3['MR']}**|'''
 
     for row in r1:
         report = report + f'''

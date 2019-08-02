@@ -14,7 +14,7 @@ from multiprocessing import Pool
 
 config = jsonref.load(open('../config/config.json'))
 table1_config = jsonref.load(open('../config/modules/tejasT1.json'))
-logBase = config['logging']['logBase'] + '.modules.comFunctions.comFunctions'
+logBase = config['logging']['logBase'] + '.modules.table1.comFunctions'
 
 max_num = 501138
 all_userkeys = "../data/raw_data/smallSample.csv"
