@@ -57,7 +57,6 @@ def main(logger, resultsDict):
     #race vs patient_type splits (in/out)
     raceSettingDict = cfT1.countRaceSetting()
     writeT1.genRaceSetting(raceSettingDict)
-<<<<<<< HEAD
     '''
 
     # Table 2 Info
@@ -66,38 +65,18 @@ def main(logger, resultsDict):
     # table2_dict2 = jsonref.load(open("../data/final/allAgesCategorisedSUD.json"))
     # print("All ages categorised SUD: " + str(table2_dict2))
     # writeT2.genTotalPrev(table2_dict1,table2_dict2,mainRaceDict)
-
-    result = cfT2.ageBinnedGeneralSUD()
-    '''
-
-=======
-
     writeT2.genIntro()
-    cfT2.createsud_usersTable()
-    cfT2.popsud_users()
-    cfT2.delAllFalseSUDusers()
-    '''
-    cfT2.createJoined()
-    cfT2.popJoined()
-    '''
-    # Table 2 Info
+    #result = cfT2.ageBinnedCategorisedSUD()
+    #print(result)
     table2_dict1 = jsonref.load(open("../data/final/allAgesGeneralSUD.json"))
-    # print("All ages general SUD: " + str(table2_dict1))
     table2_dict2 = jsonref.load(open("../data/final/allAgesCategorisedSUD.json"))
-    # print("All ages categorised SUD: " + str(table2_dict2))
-    writeT2.genTotalPrev(table2_dict1,table2_dict2,mainRaceDict)
-
-    cfT2.ageBinnedGeneralSUD()
->>>>>>> 8b934bd607f1c159cf4f525310f5843a01ca281e
-    # with open("../data/final/ageBinnedGeneralSUD.json") as json_file:
-        # table2_dict3 = json.load(json_file)
-
+    table2_dict3 = jsonref.load(open("../data/final/ageBinnedGeneralSUD.json"))
+    writeT2.genAllAgesOverallSUD(table2_dict1)
+    writeT2.genAllAgesCategorySUD(table2_dict2, table2_dict1)
+    writeT2.genAllAgesBinnedSUD(table2_dict3, table2_dict1)
+    '''
     with open("../data/final/ageBinnedCategorisedSUD.json") as json_file:
         table2_dict4 = json.load(json_file)
-
-    writeT2.genAAAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
-    writeT2.genNHPIAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
-    writeT2.genMRAgeBinnedPrev(table2_dict3,table2_dict4,table1Dict)
 
     # Table 3 Info
     with open("../data/final/oddsratios_allRaces.json") as json_file:

@@ -14,125 +14,71 @@ logBase = config['logging']['logBase'] + '.modules.reportMaker.writeT2'
 
 @lD.log(logBase + '.genIntro')
 def genIntro(logger):
-
-    report = f'''
-## Description of Table 2:
-This table measures the prevalance of the below among the 3 races, as a percentage of the total or of the various ages:
-Any SUD - any_sud
-\>=2 SUD - morethan2_sud
-Alcohol - alc
-Cannabis - cannabis
-Amphetamine - amphe
-Hallucinogen - halluc
-Nicotine - nicotin
-Cocaine - cocaine
-Opioids - opioids
-Sedatives/tranquilizers - sedate
-Other drugs - others
-Polysubstance - polysub
-Inhalants - inhalant
-        '''
+    report = open('../data/comorbidMDTable2Intro.txt', 'r')
+    report = report.read()
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
-
-    return
-
-@lD.log(logBase + '.genTotalPrev')
-def genTotalPrev(logger, r1, r2, r3):
-
-    report = f'''
-### Total Sample
-|Prevalence, %       |AA          |NHPI        |MR          |
-|--------------------|------------|------------|------------|
-|**DSM-IV diagnosis**|**Total = {r3['AA']}**|**Total = {r3['NHPI']}**|**Total = {r3['MR']}**|'''
-
-    for row in r1:
-        report = report + f'''
-|{row}               |{r1[row][0]}|{r1[row][1]}|{r1[row][2]}|'''
-
-    for row in r2:
-        report = report + f'''
-|{row}               |{r2[row][0]}|{r2[row][1]}|{r2[row][2]}|'''
-
-    report = report + '''
-***'''
-
-    with open('../report/paper1markdown.md', 'a+') as f:
-        f.write( report )
-
     return
 
 @lD.log(logBase + '.genAAAgeBinnedPrev')
-def genAAAgeBinnedPrev(logger, r1, r2, r3):
+def genAllAgesOverallSUD(logger, r):
 
     report = f'''
-### Asian Americans, separated into age bins
-|Prevalence, %       |1-11 y/o            |12-17 y/o           |18-34 y/o           |35-49 y/o           |50+ y/o             |
-|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-|**DSM-IV diagnosis**|**Total: {r3['AA'][1][0]}**|**Total: {r3['AA'][1][1]}**|**Total: {r3['AA'][1][2]}**|**Total: {r3['AA'][1][3]}**|**Total: {r3['AA'][1][4]}**|'''
-
-    for row in r1:
-        report = report + f'''
-|{row}               |{r1[row][0][0]}|{r1[row][0][1]}|{r1[row][0][2]}|{r1[row][0][3]}|{r1[row][0][4]}|'''
-
-    for row in r2:
-        report = report + f'''
-|{row}               |{r2[row][0][0]}|{r2[row][0][1]}|{r2[row][0][2]}|{r2[row][0][3]}|{r2[row][0][4]}|'''
-
+### Quantities of patients with SUDs, by race
+|Quantity            |Asian Americans     |NHPI                |Multi-Ethnic        |
+|--------------------|--------------------|--------------------|--------------------|
+|**any SUD**|**Total: {r['any_sud'][0]}**|**Total: {r['any_sud'][1]}**|**Total: {r['any_sud'][2]}**|
+|**at least 2 SUDs**|**Total: {r['morethan2_sud'][0]}**|**Total: {r['morethan2_sud'][1]}**|**Total: {r['morethan2_sud'][2]}**|
+'''
     report = report + '''
 ***'''
-
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
-
     return
 
+@lD.log(logBase + '.genPC')
+def genPC(logger, n, d):
+    if d == 0:
+        return 0
+    else:
+        return round((n/d)*100, 1)
+
 @lD.log(logBase + '.genNHPIAgeBinnedPrev')
-def genNHPIAgeBinnedPrev(logger, r1, r2, r3):
+def genAllAgesCategorySUD(logger, r1, r2):
 
     report = f'''
-### Native Hawaiians/Pacific Islanders, separated into age bins
-|Prevalence, %       |1-11 y/o            |12-17 y/o           |18-34 y/o           |35-49 y/o           |50+ y/o             |
-|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-|**DSM-IV diagnosis**|**Total: {r3['NHPI'][1][0]}**|**Total: {r3['NHPI'][1][1]}**|**Total: {r3['NHPI'][1][2]}**|**Total: {r3['NHPI'][1][3]}**|**Total: {r3['NHPI'][1][4]}**|'''
+### Categorised percentages of SUD patients, via race
+|Quantity, %         |Asian Americans     |NHPI                |Multi-Ethnic        |
+|--------------------|--------------------|--------------------|--------------------|
+'''
 
     for row in r1:
         report = report + f'''
-|{row}               |{r1[row][1][0]}|{r1[row][1][1]}|{r1[row][1][2]}|{r1[row][1][3]}|{r1[row][1][4]}|'''
-
-    for row in r2:
-        report = report + f'''
-|{row}               |{r2[row][1][0]}|{r2[row][1][1]}|{r2[row][1][2]}|{r2[row][1][3]}|{r2[row][1][4]}|'''
+|{row}               |{genPC(r1[row][0],r2['any_sud'][0])}|{genPC(r1[row][1],r2['any_sud'][1])}|{genPC(r1[row][2],r2['any_sud'][2])}|'''
 
     report = report + '''
 ***'''
 
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
-
     return
 
 @lD.log(logBase + '.genMRAgeBinnedPrev')
-def genMRAgeBinnedPrev(logger, r1, r2, r3):
-
+def genAllAgesBinnedSUD(logger, r1):
+    a = "any_sud"
     report = f'''
-### Mixed-Race, separated into age bins
-|Prevalence, %       |1-11 y/o            |12-17 y/o           |18-34 y/o           |35-49 y/o           |50+ y/o             |
+### Categorised percentages of all SUD patients, via race, separated into age bins
+|Race, qty           |1-11 y/o            |12-17 y/o           |18-34 y/o           |35-49 y/o           |50+ y/o             |
 |--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
-|**DSM-IV diagnosis**|**Total: {r3['MR'][1][0]}**|**Total: {r3['MR'][1][1]}**|**Total: {r3['MR'][1][2]}**|**Total: {r3['MR'][1][3]}**|**Total: {r3['MR'][1][4]}**|'''
-
-    for row in r1:
+'''
+    for row in r1[a]:
         report = report + f'''
-|{row}               |{r1[row][2][0]}|{r1[row][2][1]}|{r1[row][2][2]}|{r1[row][2][3]}|{r1[row][2][4]}|'''
-
-    for row in r2:
-        report = report + f'''
-|{row}               |{r2[row][2][0]}|{r2[row][2][1]}|{r2[row][2][2]}|{r2[row][2][3]}|{r2[row][2][4]}|'''
+|{row}               |{r1[row][0])}|{r1[row][1]}|{r1[row][2]}|{r1[row][3]}|{r1[row][4]}|
+'''
 
     report = report + '''
 ***'''
 
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
-
     return
