@@ -47,26 +47,24 @@ def main(logger, resultDict):
     #cfT1.popDiagCols()
     #cfT1.delAllFalserestofusers()
     #race vs age groups
-    #raceAgeDict = cfT1.countRaceAge()
-    #writeT1.genRaceAge(raceAgeDict)
+    raceAgeDict = cfT1.countRaceAge()
+    writeT1.genRaceAge(raceAgeDict)
     #race vs sex (M/F) splits
-    #raceSexDict = cfT1.countRaceSex()
-    #writeT1.genRaceSex(raceSexDict)
+    raceSexDict = cfT1.countRaceSex()
+    writeT1.genRaceSex(raceSexDict)
     #race vs patient_type splits (in/out)
-    #raceSettingDict = cfT1.countRaceSetting()
-    #writeT1.genRaceSetting(raceSettingDict)
+    raceSettingDict = cfT1.countRaceSetting()
+    writeT1.genRaceSetting(raceSettingDict)
 
 
     # Table 2 Info
-    print("hello1")
     writeT2.genIntro()
     #result = cfT2.ageBinnedCategorisedSUD()
     #print(result)
-    print("hello2")
     table2_dict1 = jsonref.load(open("../data/final/allAgesGeneralSUD.json"))
     table2_dict2 = jsonref.load(open("../data/final/allAgesCategorisedSUD.json"))
     table2_dict3 = jsonref.load(open("../data/final/ageBinnedGeneralSUD.json"))
-    print("hello3")
+    
     writeT2.genAllAgesOverallSUD(table2_dict1)
     writeT2.genAllAgesCategorySUD(table2_dict2, table2_dict1)
     writeT2.genAllAgesBinnedSUD(table2_dict3)

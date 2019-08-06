@@ -75,10 +75,8 @@ def genAllAgesBinnedSUD(logger, r1):
 |--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
 '''
     any = r1['any_sud']
-    print(any)
     for row in any:
-        print(any[row][1])
-        report += f'''|{row}|{any[row][0]}|{any[row][1]}|{any[row][2]}|{any[row][3]}|{any[row][4]}|'''
+        report = report + f'''|{row}|{any[row][0]}|{any[row][1]}|{any[row][2]}|{any[row][3]}|{any[row][4]}|'''
 
     report = report + '''
 ***'''

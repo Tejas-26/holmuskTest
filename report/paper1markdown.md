@@ -1,16 +1,25 @@
-# Report: Comorbidity in Substance Use Disorders
-## Abstract:
-This report will generate information needed for Paper 1's figures and tables.
-The report considers three main ethnic groups: Asian Americans (AA), Native
-Hawaiian/Pacific Islander (NH/PI), MultiRacial (MR)
-## Description of Table 1: (null values not considered)
 
-|Race     |Count          |
-|---------|---------------|
-|AA       |2679   |
-|NHPI     |4564 |
-|MR       |13431   |
-|**Total**|20674|
+### Number of patients grouped by race and age
+|Age  |AA|%|NHPI|%|MR|%|
+|-----|--|-|-----|-|--|-|
+|1-11 |66|8.5|0|0|0|0|
+|12-17|110|14.1|0|0|0|0|
+|18-34|302|38.8|0|0|0|0|
+|35-49|170|21.8|0|0|0|0|
+|50+  |131|16.8|0|0|0|0|
+
+### Number of patients grouped by race and sex
+|Sex|AA|%|NHPI|%|MR|%|
+|---|--|-|-----|-|--|-|
+|Male  |344|44.0|0|0|0|0|
+|Female|437|56.0|0|0|0|0|
+
+### Number of patients grouped by race and setting
+|Setting|AA|%|NHPI|%|MR|%|
+|-------|--|-|-----|-|--|-|
+|Hospital            |165|21.1|0|0|0|0|
+|Mental Health Center|616|78.9|0|0|0|0|
+***
 ## Description of Table 2:
 This table measures the prevalance of the below among the 3 races, as a percentage of the total or of the various ages:
 Any SUD - any_sud
