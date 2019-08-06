@@ -11,7 +11,6 @@ Hawaiian/Pacific Islander (NH/PI), MultiRacial (MR)
 |NHPI     |4564 |
 |MR       |13431   |
 |**Total**|20674|
-
 ## Description of Table 2:
 This table measures the prevalance of the below among the 3 races, as a percentage of the total or of the various ages:
 Any SUD - any_sud
@@ -27,58 +26,21 @@ Sedatives/tranquilizers - sedate
 Other drugs - others
 Polysubstance - polysub
 Inhalants - inhalant
-        
-### Total Sample
-|Prevalence, %       |AA          |NHPI        |MR          |
-|--------------------|------------|------------|------------|
-|**DSM-IV diagnosis**|**Total = 2679**|**Total = 4564**|**Total = 13431**|
-|any_sud               |12.7|15.0|13.4|
-|morethan2_sud               |3.4|3.3|4.1|
-|alc               |6.9|6.0|4.7|
-|cannabis               |11.1|11.7|9.3|
-|amphe               |11.8|12.0|9.8|
-|halluc               |11.9|12.2|9.8|
-|nicotin               |13.0|12.5|11.3|
-|cocaine               |14.4|14.0|13.5|
-|opioids               |16.0|15.5|16.7|
-|sedate               |16.3|15.7|17.2|
-|others               |16.5|15.8|17.4|
-|polysub               |16.5|15.8|17.4|
-|inhalant               |16.8|16.3|17.7|
+
+### Quantities of patients with SUDs, by race
+|Quantity            |Asian Americans     |NHPI                |Multi-Ethnic        |
+|--------------------|--------------------|--------------------|--------------------|
+|**any SUD**|**Total:341**|**Total:684**|**Total:1802**|
+|**at least 2 SUDs**|**Total:91**|**Total:152**|**Total:556**|
+
 ***
-### Total Sample
-|Prevalence, %       |AA          |NHPI        |MR          |
-|--------------------|------------|------------|------------|
-|**DSM-IV diagnosis**|**Total = 2679**|**Total = 4564**|**Total = 13431**|
-|any_sud               |12.7|15.0|13.4|
-|morethan2_sud               |3.4|3.3|4.1|
-|alc               |6.9|6.0|4.7|
-|cannabis               |11.1|11.7|9.3|
-|amphe               |11.8|12.0|9.8|
-|halluc               |11.9|12.2|9.8|
-|nicotin               |13.0|12.5|11.3|
-|cocaine               |14.4|14.0|13.5|
-|opioids               |16.0|15.5|16.7|
-|sedate               |16.3|15.7|17.2|
-|others               |16.5|15.8|17.4|
-|polysub               |16.5|15.8|17.4|
-|inhalant               |16.8|16.3|17.7|
+### Categorised percentages of SUD patients, via race
+|Quantity, %         |Asian Americans     |NHPI                |Multi-Ethnic        |
+|--------------------|--------------------|--------------------|--------------------|
+|alc|54.5|40.2|35.2||cannabis|32.8|38.2|34.3||amphe|5.3|1.9|3.2||halluc|1.2|0.9|0.6||nicotin|8.5|2.5|11.2||cocaine|10.6|9.6|15.9||opioids|12.6|10.1|24.4||sedate|2.3|1.5|3.8||others|1.5|0.6|1.4||polysub|0.0|0.0|0.0||inhalant|2.6|3.2|2.4|
 ***
-### Total Sample
-|Prevalence, %       |AA          |NHPI        |MR          |
-|--------------------|------------|------------|------------|
-|**DSM-IV diagnosis**|**Total = 2679**|**Total = 4564**|**Total = 13431**|
-|any_sud               |12.7|15.0|13.4|
-|morethan2_sud               |3.4|3.3|4.1|
-|alc               |6.9|6.0|4.7|
-|cannabis               |11.1|11.7|9.3|
-|amphe               |11.8|12.0|9.8|
-|halluc               |11.9|12.2|9.8|
-|nicotin               |13.0|12.5|11.3|
-|cocaine               |14.4|14.0|13.5|
-|opioids               |16.0|15.5|16.7|
-|sedate               |16.3|15.7|17.2|
-|others               |16.5|15.8|17.4|
-|polysub               |16.5|15.8|17.4|
-|inhalant               |16.8|16.3|17.7|
+### Categorised percentages of all SUD patients, via race, separated into age bins
+|Race, qty           |1-11 y/o            |12-17 y/o           |18-34 y/o           |35-49 y/o           |50+ y/o             |
+|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+|AA|0|44|187|80|30||NHPI|4|176|252|166|85||MR|10|112|697|591|392|
 ***
