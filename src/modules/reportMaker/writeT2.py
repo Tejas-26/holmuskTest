@@ -1,5 +1,6 @@
 from logs import logDecorator as lD
-import jsonref, pprint
+import jsonref
+import pprint
 import statistics as stats
 from psycopg2.sql import SQL, Identifier, Literal
 from lib.databaseIO import pgIO
@@ -18,22 +19,24 @@ def genIntro(logger):
     report = report.read()
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
+
     return
 
 @lD.log(logBase + '.genAAAgeBinnedPrev')
 def genAllAgesOverallSUD(logger, r):
-
     report = f'''
 ### Quantities of patients with SUDs, by race
 |Quantity            |Asian Americans     |NHPI                |Multi-Ethnic        |
 |--------------------|--------------------|--------------------|--------------------|
-|**any SUD**|**Total: {r['any_sud'][0]}**|**Total: {r['any_sud'][1]}**|**Total: {r['any_sud'][2]}**|
-|**at least 2 SUDs**|**Total: {r['morethan2_sud'][0]}**|**Total: {r['morethan2_sud'][1]}**|**Total: {r['morethan2_sud'][2]}**|
+|**any SUD**|**Total:{r['any_sud'][0]}**|**Total:{r['any_sud'][1]}**|**Total:{r['any_sud'][2]}**|
+|**at least 2 SUDs**|**Total:{r['morethan2_sud'][0]}**|**Total:{r['morethan2_sud'][1]}**|**Total:{r['morethan2_sud'][2]}**|
 '''
+    print(report)
     report = report + '''
 ***'''
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
+
     return
 
 @lD.log(logBase + '.genPC')
@@ -53,32 +56,34 @@ def genAllAgesCategorySUD(logger, r1, r2):
 '''
 
     for row in r1:
-        report = report + f'''
-|{row}               |{genPC(r1[row][0],r2['any_sud'][0])}|{genPC(r1[row][1],r2['any_sud'][1])}|{genPC(r1[row][2],r2['any_sud'][2])}|'''
+        report = report + f'''|{row}|{genPC(r1[row][0],r2['any_sud'][0])}|{genPC(r1[row][1],r2['any_sud'][1])}|{genPC(r1[row][2],r2['any_sud'][2])}|'''
 
     report = report + '''
 ***'''
 
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
+
     return
 
 @lD.log(logBase + '.genMRAgeBinnedPrev')
 def genAllAgesBinnedSUD(logger, r1):
-    a = "any_sud"
+    #a = "any_sud"
     report = f'''
 ### Categorised percentages of all SUD patients, via race, separated into age bins
 |Race, qty           |1-11 y/o            |12-17 y/o           |18-34 y/o           |35-49 y/o           |50+ y/o             |
 |--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
 '''
-    for row in r1[a]:
-        report = report + f'''
-|{row}               |{r1[row][0])}|{r1[row][1]}|{r1[row][2]}|{r1[row][3]}|{r1[row][4]}|
-'''
+    any = r1['any_sud']
+    print(any)
+    for row in any:
+        print(any[row][1])
+        report += f'''|{row}|{any[row][0]}|{any[row][1]}|{any[row][2]}|{any[row][3]}|{any[row][4]}|'''
 
     report = report + '''
 ***'''
 
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
+
     return
