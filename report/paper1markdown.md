@@ -128,3 +128,12 @@ Inhalants - inhalant
 |inhalant|0.0|11.6|48.8|30.2|9.3|
 
 ***
+## Description of Table 3:
+This table contains the odds ratios and confidence intervals after a logistic regression is performed for the following samples:
+* All races, aged 12 and older
+* Asian Americans, aged 12 and older
+* Native Hawaiian, aged 12 and older
+* Mixed Race, aged 12 and older
+Logistic regression is performed for:
+* Any SUD
+* 2 or more SUDs

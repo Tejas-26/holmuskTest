@@ -14,6 +14,13 @@
     "owner"      : ""
   },
   {
+    "moduleName" : "table3",
+    "path"       : "modules/table2/table3.py",
+    "execute"    : false,
+    "description": "",
+    "owner"      : ""
+  },
+  {
     "moduleName" : "figure1",
     "path"       : "modules/figure1/figure1.py",
     "execute"    : false,
