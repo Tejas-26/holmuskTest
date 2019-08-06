@@ -31,12 +31,9 @@ def genAllAgesOverallSUD(logger, r):
 |**any SUD**|**Total:{r['any_sud'][0]}**|**Total:{r['any_sud'][1]}**|**Total:{r['any_sud'][2]}**|
 |**at least 2 SUDs**|**Total:{r['morethan2_sud'][0]}**|**Total:{r['morethan2_sud'][1]}**|**Total:{r['morethan2_sud'][2]}**|
 '''
-    print(report)
-    report = report + '''
-***'''
+    report = report + '''\n***'''
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
-
     return
 
 @lD.log(logBase + '.genPC')
@@ -56,10 +53,8 @@ def genAllAgesCategorySUD(logger, r1, r2):
 '''
 
     for row in r1:
-        report = report + f'''|{row}|{genPC(r1[row][0],r2['any_sud'][0])}|{genPC(r1[row][1],r2['any_sud'][1])}|{genPC(r1[row][2],r2['any_sud'][2])}|'''
-
-    report = report + '''
-***'''
+        report = report + f'''|{row}|{genPC(r1[row][0],r2['any_sud'][0])}|{genPC(r1[row][1],r2['any_sud'][1])}|{genPC(r1[row][2],r2['any_sud'][2])}|\n'''
+    report = report + '''\n***'''
 
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
@@ -76,10 +71,12 @@ def genAllAgesBinnedSUD(logger, r1):
 '''
     any = r1['any_sud']
     for row in any:
-        report = report + f'''|{row}|{any[row][0]}|{any[row][1]}|{any[row][2]}|{any[row][3]}|{any[row][4]}|'''
+        report = report + f'''|{row}|{any[row][0]}|{any[row][1]}|{any[row][2]}|{any[row][3]}|{any[row][4]}|\n'''
 
-    report = report + '''
-***'''
+    more = r1['morethan2_sud']
+    for row in any:
+        report = report + f'''|{row}|{more[row][0]}|{more[row][1]}|{more[row][2]}|{more[row][3]}|{more[row][4]}|\n'''
+    report = report + '''\n***'''
 
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
