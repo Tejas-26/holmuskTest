@@ -14,10 +14,10 @@ from multiprocessing import Pool
 
 config = jsonref.load(open('../config/config.json'))
 table1_config = jsonref.load(open('../config/modules/tejasT1.json'))
-logBase = config['logging']['logBase'] + '.modules.comFunctions.comFunctions'
+logBase = config['logging']['logBase'] + '.modules.table1.comFunctions'
 
 max_num = 501138
-all_userkeys = "../data/raw_data/allUserKeys.csv"
+all_userkeys = "../data/raw_data/smallSample.csv"
 
 @lD.log(logBase + '.cleanUp')
 def cleanUp(logger):
@@ -25,6 +25,8 @@ def cleanUp(logger):
     DROP TABLE IF EXISTS tejas.race_age_t1;
     DROP TABLE IF EXISTS tejas.race_age_t1new;
     DROP TABLE IF EXISTS tejas.restofusers;
+    DROP TABLE IF EXISTS tejas.sud_users;
+    DROP TABLE IF EXISTS tejas.sud_users_new;
     ''')
     value = pgIO.commitData(dropQuery)
     if value == True:
