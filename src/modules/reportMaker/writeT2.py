@@ -78,13 +78,6 @@ def genAllAgesBinnedSUD(logger, r1, r2):
         report = report + f'''|{row}|{genPC(any[row][0],aL[i])}|{genPC(any[row][1],aL[i])}|{genPC(any[row][2],aL[i])}|{genPC(any[row][3],aL[i])}|{genPC(any[row][4],aL[i])}|\n'''
         i+=1
 
-    i = 0
-    more = r1['morethan2_sud']
-    for row in more:
-        report = report + f'''|{row}|{genPC(more[row][0],mL[i])}|{genPC(more[row][1],mL[i])}|{genPC(more[row][2],mL[i])}|{genPC(more[row][3],mL[i])}|{genPC(more[row][4],mL[i])}|\n'''
-        i+=1
-    report = report + '''\n***'''
-
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
 
