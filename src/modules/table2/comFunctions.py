@@ -538,8 +538,16 @@ def ageBinnedGeneralSUD(logger):
     #print(resultsDict)
     return countDict
 
+@lD.log(logBase + '.genPC')
+def genPC(logger, n, d):
+    if d == 0:
+        return 0
+    else:
+        return round((n/d)*100, 1)
+
+#attempt to automatically get percentages here
 @lD.log(logBase + '.ageBinnedCategorisedSUD')
-def ageBinnedCategorisedSUD(logger):
+def ageBinnedCategorisedSUD(logger, raceGroup):
     '''
 
     Finds percentage of the age-binned sample that has
@@ -551,12 +559,19 @@ def ageBinnedCategorisedSUD(logger):
     Arguments:
         logger {logging.Logger} -- logs error information
     '''
+    if raceGroup == "AA":
+        x = 0
+    elif raceGroup == "NHPI":
+        x = 1
+    elif raceGroup == "MR":
+        x = 2
+    allAgesCatSUD = json.load(open("../data/final/allAgesCategorisedSUD.json"))
     try:
         countDict = {}
         for sudcat in table2_config["params"]["sudcats"].keys():
-            list1 = []
-            for race in table2_config["inputs"]["races"]:
-                list2 = []
+            l = [0,0,0,0,0]
+            for race in table2_config["params"]["races"][raceGroup]:
+                i = 0
                 for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
                     query = SQL('''
                     WITH subQ AS (
@@ -573,16 +588,12 @@ def ageBinnedCategorisedSUD(logger):
                         Identifier(sudcat)
                     )
                     data = [d[0] for d in pgIO.getAllData(query)]
-                    list2.append(data[0])
-                list1.append(list2)
-            countDict[sudcat] = list1
-
-        # Change counts to percentage of the race sample
-        resultsDict = {}
-        for row in countDict:
-            resultsDict[row] = divByAgeBins(countDict[row])
-
+                    l[i] += data[0]
+                    i+=1
+            for j in range(0,len(l)):
+                l[j] = genPC(l[j], allAgesCatSUD[sudcat][x])
+            countDict[sudcat] = l
     except Exception as e:
         logger.error('Failed to find categorised SUD counts because of {}'.format(e))
 
-    return resultsDict
+    return countDict

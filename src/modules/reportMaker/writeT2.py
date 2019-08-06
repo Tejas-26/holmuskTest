@@ -48,7 +48,7 @@ def genAllAgesCategorySUD(logger, r1, r2):
 
     report = f'''
 ### Categorised percentages of SUD patients, via race
-|Quantity, %         |Asian Americans     |NHPI                |Multi-Ethnic        |
+|Substance, %        |Asian Americans     |NHPI                |Multi-Ethnic        |
 |--------------------|--------------------|--------------------|--------------------|
 '''
 
@@ -62,23 +62,44 @@ def genAllAgesCategorySUD(logger, r1, r2):
     return
 
 @lD.log(logBase + '.genMRAgeBinnedPrev')
-def genAllAgesBinnedSUD(logger, r1):
+def genAllAgesBinnedSUD(logger, r1, r2):
     #a = "any_sud"
+    #lists of races via any and morethan2 sud separations
+    aL = r2['any_sud']
+    mL = r2['morethan2_sud']
     report = f'''
 ### Categorised percentages of all SUD patients, via race, separated into age bins
 |Race, qty           |1-11 y/o            |12-17 y/o           |18-34 y/o           |35-49 y/o           |50+ y/o             |
 |--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
 '''
     any = r1['any_sud']
+    i = 0
     for row in any:
-        report = report + f'''|{row}|{any[row][0]}|{any[row][1]}|{any[row][2]}|{any[row][3]}|{any[row][4]}|\n'''
+        report = report + f'''|{row}|{genPC(any[row][0],aL[i])}|{genPC(any[row][1],aL[i])}|{genPC(any[row][2],aL[i])}|{genPC(any[row][3],aL[i])}|{genPC(any[row][4],aL[i])}|\n'''
+        i+=1
 
+    i = 0
     more = r1['morethan2_sud']
-    for row in any:
-        report = report + f'''|{row}|{more[row][0]}|{more[row][1]}|{more[row][2]}|{more[row][3]}|{more[row][4]}|\n'''
+    for row in more:
+        report = report + f'''|{row}|{genPC(more[row][0],mL[i])}|{genPC(more[row][1],mL[i])}|{genPC(more[row][2],mL[i])}|{genPC(more[row][3],mL[i])}|{genPC(more[row][4],mL[i])}|\n'''
+        i+=1
     report = report + '''\n***'''
 
     with open('../report/paper1markdown.md', 'a+') as f:
         f.write( report )
 
+    return
+
+@lD.log(logBase + '.genBC')
+def genBC(logger, r, race):
+    report = f'''
+### Categorised percentages of {race} patients separated into age bins
+|Substance, %        |1-11 y/o            |12-17 y/o           |18-34 y/o           |35-49 y/o           |50+ y/o             |
+|--------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+'''
+    for row in r:
+        report = report + f'''|{row}|{r[row][0]}|{r[row][1]}|{r[row][2]}|{r[row][3]}|{r[row][4]}|\n'''
+    report = report + '''\n***'''
+    with open('../report/paper1markdown.md', 'a+') as f:
+        f.write( report )
     return

@@ -56,7 +56,6 @@ def main(logger, resultDict):
     # raceSettingDict = cfT1.countRaceSetting()
     # writeT1.genRaceSetting(raceSettingDict)
 
-
     # Table 2 Info
     writeT2.genIntro()
     table2_dict1 = jsonref.load(open("../data/final/allAgesGeneralSUD.json"))
@@ -65,8 +64,13 @@ def main(logger, resultDict):
 
     writeT2.genAllAgesOverallSUD(table2_dict1)
     writeT2.genAllAgesCategorySUD(table2_dict2, table2_dict1)
-    writeT2.genAllAgesBinnedSUD(table2_dict3)
-
+    writeT2.genAllAgesBinnedSUD(table2_dict3, table2_dict1)
+    table2_dict4AA = jsonref.load(open("../data/final/ageAABinnedCategorisedSUD.json"))
+    writeT2.genBC(table2_dict4AA, "Asian American")
+    table2_dict4NHPI = jsonref.load(open("../data/final/ageNHPIBinnedCategorisedSUD.json"))
+    writeT2.genBC(table2_dict4NHPI, "Native Hawaiian")
+    table2_dict4MR = jsonref.load(open("../data/final/ageMRBinnedCategorisedSUD.json"))
+    writeT2.genBC(table2_dict4MR, "Multi-ethnic")
     print('Getting out of reportMaker module')
     print('-'*30)
     return
