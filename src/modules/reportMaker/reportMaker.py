@@ -62,8 +62,8 @@ def main(logger, resultDict):
     # writeT2.genBC(table2_dict4MR, "Multi-ethnic")
 
     # Table 3 Report Creation
-    writeT3.genIntro()
-    cfT3.addmorethan2sudcolumn()
+    #writeT3.genIntro()
+    r = cfT3.createDF_allRaces_anySUD()
     print('Getting out of reportMaker module')
     print('-'*30)
     return

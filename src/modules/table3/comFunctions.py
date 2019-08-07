@@ -78,42 +78,36 @@ def addmorethan2sudcolumn(logger):
         '''
         data = pgIO.getAllData(query)
 
-        csvfile = '../data/raw_data/morethan2suduser_keys.csv'
+        csvfile = '../data/raw_data/atleast2suduser_keys.csv'
 
-        with open(csvfile, 'w+') as output:
-            csv_output = csv.writer(output)
-
-            for row in data:
-                if sum(list(row[6:17])) >=2:
-                    csv_output.writerow(row)
-        output.close()
-
-        with open(csvfile) as f:
-            readCSV = csv.reader(f, delimiter=",")
-
-            for user in tqdm(readCSV):
-                updateQuery = '''
-                UPDATE tejas.sud_race_age
-                SET morethan2sud = True
-                WHERE sud_race_age.siteid = {}
-                AND sud_race_age.backgroundid = {}
-                '''.format(user[0], user[1])
-                value = pgIO.commitData(updateQuery)
-                if value == True:
-                    print("patients with >2 suds sucessfully recognised")
-                # print(type(user[0]))
+        count = 0
+        output = open(csvfile, 'w+')
+        csv_output = csv.writer(output)
+        for row in data:
+            if sum(list(row[6:17])) >=2:
+                csv_output.writerow(row)
+        readCSV = csv.reader(open(csvfile), delimiter=",")
+        for user in tqdm(readCSV):
+            updateQuery = SQL('''
+            UPDATE tejas.sud_race_age
+            SET morethan2sud = true
+            WHERE siteid = {}
+            AND backgroundid = {}
+            ''').format(Literal(user[0]), Literal(str(user[1])))
+            value = pgIO.commitData(updateQuery)
+            # print(type(user[0]))
 
         #Update column's null values to false
         updateQuery2 = '''
         UPDATE tejas.sud_race_age
-        SET morethan2sud = False
+        SET morethan2sud = false
         WHERE morethan2sud is null
         '''
         print(pgIO.commitData(updateQuery2))
 
 
     except Exception as e:
-        logger.error('adding morethan2sud column to the databse failed because of {}'.format(e))
+        logger.error('adding morethan2sud column to the database failed because of {}'.format(e))
 
     return
 
@@ -135,21 +129,15 @@ def createDF_allRaces_anySUD(logger):
     try:
 
         query = '''
-        SELECT
-            t2.sud,
-            t1.race,
-            t1.age,
-            t1.sex,
-            t1.visit_type
-
-        FROM
-            sarah.test2 t1
-        INNER JOIN
-            sarah.test3 t2
-        ON
-            t1.patientid = t2.patientid
-        WHERE
-            t1.age BETWEEN 12 AND 100
+        SELECT t2.sud, t1.race, t1.age, t1.sex, t1.visit_type
+        FROM tejas.sud_race_age t1
+        INNER JOIN tejas.restofusers t2
+        ON t1.siteid = t2.siteid
+        AND t1.backgroundid = t2.backgroundid
+        WHERE (cast (age as int) >= 12)
+        AND (cast (age as int) <= 100)
+        GROUP BY (t1.siteid, t1.backgroundid, t2.sud, t1.race, t1.age, t1.sex,
+        t1.visit_type)
         '''
 
         data = pgIO.getAllData(query)
@@ -174,24 +162,27 @@ def createDF_allRaces_anySUD(logger):
         main.replace(to_replace=list(range(35, 50)), value="35-49", inplace=True)
         main.replace(to_replace=list(range(50, 100)), value="50+", inplace=True)
         dummy_ages = pd.get_dummies(main['age'])
+        df = df.reindex(columns = list(df) + ['MR','NHPI'])
         df = df[['sud', 'MR', 'NHPI']].join(dummy_ages.ix[:, :'35-49'])
 
         dummy_sexes = pd.get_dummies(main['sex'])
+        df = df.reindex(columns = list(df) + ['12-17', '18-34', '35-49'])
         df = df[['sud', 'MR', 'NHPI', '12-17', '18-34', '35-49']].join(dummy_sexes.ix[:, 'M':])
 
         dummy_setting = pd.get_dummies(main['setting'])
+        df = df.reindex(columns = list(df) + ['M'])
         df = df[['sud', 'MR', 'NHPI', '12-17', '18-34', '35-49', 'M']].join(dummy_setting.ix[:, :'Hospital'])
 
         df['intercept'] = 1.0
 
     except Exception as e:
         logger.error('createDF_allRaces_anySUD failed because of {}'.format(e))
-
+    print(df)
     return df
 
 @lD.log(logBase + '.createDF_allRaces_morethan2SUD')
 def createDF_allRaces_morethan2SUD(logger):
-    '''Creates dataframe for total sample, dependent variable = more than 2 sud
+    '''Creates dataframe for total sample, dependent variable = at least 2 sud
 
     This function creates a dataframe for the total sample, where the
     dependent variable is >=2 sud and the independent variables are:
@@ -207,21 +198,10 @@ def createDF_allRaces_morethan2SUD(logger):
     try:
 
         query = '''
-        SELECT
-            t2.morethan2sud,
-            t1.race,
-            t1.age,
-            t1.sex,
-            t1.visit_type
-
-        FROM
-            sarah.test2 t1
-        INNER JOIN
-            tejas.sud_race_age t2
-        ON
-            t1.patientid = t2.patientid
-        WHERE
-            t1.age BETWEEN 12 AND 100
+        SELECT morethan2sud, race, age, sex, visit_type
+        FROM tejas.sud_race_age
+        WHERE (cast (age as int) >= 12)
+        AND (cast (age as int) <= 100)
         '''
 
         data = pgIO.getAllData(query)
@@ -282,21 +262,24 @@ def createDF_byRace_anySUD(logger, race):
 
         query = SQL('''
         SELECT
-            t2.sud,
-            t1.age,
-            t1.sex,
-            t1.visit_type
-
+            t2.sud, t1.age, t1.sex, t1.visit_type
         FROM
-            sarah.test2 t1
+            tejas.sud_race_age t1
         INNER JOIN
-            sarah.test3 t2
+            tejas.restofusers t2
         ON
-            t1.patientid = t2.patientid
-        WHERE
-            t1.age BETWEEN 12 AND 100
+            t1.siteid = t2.siteid
         AND
+            t1.backgroundid = t2.backgroundid
+        WHERE
             t1.race = {}
+        AND
+            (cast (age as int) >= 12)
+        AND
+            (cast (age as int) <= 100)
+        GROUP BY
+            (t1.siteid, t1.backgroundid, t2.sud, t1.age, t1.sex,
+            t1.visit_type)
         ''').format(
             Literal(race)
         )
@@ -337,7 +320,7 @@ def createDF_byRace_anySUD(logger, race):
 @lD.log(logBase + '.createDF_byRace_morethan2SUD')
 def createDF_byRace_morethan2SUD(logger, race):
     '''Creates dataframe for a sample from a specified race,
-    dependent variable = more than 2 sud
+    dependent variable = at least 2 sud
 
     This function creates a dataframe for a sample from a specified race,
     where the  dependent variable is >=2 sud and the independent variables
@@ -354,22 +337,11 @@ def createDF_byRace_morethan2SUD(logger, race):
     try:
 
         query = SQL('''
-        SELECT
-            t2.morethan2sud,
-            t1.age,
-            t1.sex,
-            t1.visit_type
-
-        FROM
-            sarah.test2 t1
-        INNER JOIN
-            tejas.sud_race_age t2
-        ON
-            t1.patientid = t2.patientid
-        WHERE
-            t1.age BETWEEN 12 AND 100
-        AND
-            t1.race = {}
+        SELECT morethan2sud,age,sex,visit_type
+        FROM tejas.sud_race_age
+        WHERE (cast (age as int) >= 12)
+        AND (cast (age as int) <= 100)
+        AND race = {}
         ''').format(
             Literal(race)
         )
