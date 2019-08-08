@@ -63,7 +63,8 @@ def main(logger, resultDict):
 
     # Table 3 Report Creation
     #writeT3.genIntro()
-    r = cfT3.createDF_allRaces_anySUD()
+    r1 = cfT3.createDF_allRaces_anySUD()
+    print(r1)
     print('Getting out of reportMaker module')
     print('-'*30)
     return
