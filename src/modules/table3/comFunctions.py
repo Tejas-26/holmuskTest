@@ -51,6 +51,7 @@ def logRegress(logger, df):
         conf.columns = ['2.5%', '97.5%', 'OR']
         CI_OR_df = np.exp(conf)
         resultsDF = CI_OR_df[['OR']].join(CI_OR_df.ix[:,:'97.5%'])
+        resultsDF = resultsDF.to_dict()
 
     except Exception as e:
         logger.error('logRegress failed because of {}'.format(e))
@@ -86,7 +87,7 @@ def addmorethan2sudcolumn(logger):
         output = open(csvfile, 'w+')
         csv_output = csv.writer(output)
         for row in data:
-            if sum(list(row[6:17])) >=2:
+            if sum(list(row[2:])) >= 2:
                 csv_output.writerow(row)
         readCSV = csv.reader(open(csvfile), delimiter=",")
         for user in tqdm(readCSV):
@@ -150,6 +151,17 @@ def poprestofusersT3part1(logger):
         print("successfully populated tejas.restofusers_t3")
     return
 
+@lD.log(logBase + '.alterTable')
+def alterTable(logger):
+    alter = '''
+    ALTER TABLE tejas.race_age_t1new
+    ALTER COLUMN age TYPE INTEGER USING (age::integer)
+    '''
+    value = pgIO.commitData(alter)
+    if value == True:
+        print("successfully altered the age column")
+    return
+
 @lD.log(logBase + '.createDF_allRaces_anySUD')
 def createDF_allRaces_anySUD(logger):
     '''Creates dataframe for total sample, dependent variable = any sud
@@ -193,11 +205,10 @@ def createDF_allRaces_anySUD(logger):
         dummy_ages = pd.get_dummies(main['age'])
         df = df[['sud', 'MR', 'NHPI']].join(dummy_ages.ix[:, :'50+'])
         dummy_sexes = pd.get_dummies(main['sex'])
-        df = df[['sud', 'AA', 'MR', 'NHPI', '12-17', '18-34', '35-49', '50+']].join(dummy_sexes.ix[:, 'M':])
-        # dummy_setting = pd.get_dummies(main['setting'])
-        # df = df[['sud', 'MR', 'NHPI', '12-17', '18-34', '35-49', 'M']].join(dummy_setting.ix[:, :'Hospital'])
-        #
-        # df['intercept'] = 1.0
+        df = df[['sud', 'MR', 'NHPI', '12-17', '18-34', '35-49', '50+']].join(dummy_sexes.ix[:, 'M':])
+        dummy_setting = pd.get_dummies(main['setting'])
+        df = df[['sud', 'MR', 'NHPI', '12-17', '18-34', '35-49', 'M']].join(dummy_setting.ix[:, :'Inpatient'])
+        df['intercept'] = 1.0
 
     except Exception as e:
         logger.error('createDF_allRaces_anySUD failed because of {}'.format(e))
@@ -223,8 +234,7 @@ def createDF_allRaces_morethan2SUD(logger):
         query = '''
         SELECT morethan2sud, race, age, sex, visit_type
         FROM tejas.sud_race_age
-        WHERE (cast (age as int) >= 12)
-        AND (cast (age as int) <= 100)
+        WHERE age BETWEEN 12 AND 100
         '''
 
         data = pgIO.getAllData(query)
@@ -249,16 +259,13 @@ def createDF_allRaces_morethan2SUD(logger):
         main.replace(to_replace=list(range(35, 50)), value="35-49", inplace=True)
         main.replace(to_replace=list(range(50, 100)), value="50+", inplace=True)
         dummy_ages = pd.get_dummies(main['age'])
-        df = df.reindex(columns = list(df) + ['MR','NHPI'])
         df = df[['sud', 'MR', 'NHPI']].join(dummy_ages.ix[:, :'35-49'])
 
         dummy_sexes = pd.get_dummies(main['sex'])
-        df = df.reindex(columns = list(df) + ['12-17', '18-34', '35-49'])
         df = df[['sud', 'MR', 'NHPI', '12-17', '18-34', '35-49']].join(dummy_sexes.ix[:, 'M':])
 
         dummy_setting = pd.get_dummies(main['setting'])
-        df = df.reindex(columns = list(df) + ['M'])
-        df = df[['sud', 'MR', 'NHPI', '12-17', '18-34', '35-49', 'M']].join(dummy_setting.ix[:, :'Hospital'])
+        df = df[['sud', 'MR', 'NHPI', '12-17', '18-34', '35-49', 'M']].join(dummy_setting.ix[:, :'Inpatient'])
 
         df['intercept'] = 1.0
 
@@ -287,25 +294,10 @@ def createDF_byRace_anySUD(logger, race):
     try:
 
         query = SQL('''
-        SELECT
-            t2.sud, t1.age, t1.sex, t1.visit_type
-        FROM
-            tejas.sud_race_age t1
-        INNER JOIN
-            tejas.restofusers t2
-        ON
-            t1.siteid = t2.siteid
-        AND
-            t1.backgroundid = t2.backgroundid
-        WHERE
-            t1.race = {}
-        AND
-            (cast (age as int) >= 12)
-        AND
-            (cast (age as int) <= 100)
-        GROUP BY
-            (t1.siteid, t1.backgroundid, t2.sud, t1.age, t1.sex,
-            t1.visit_type)
+        SELECT sud, age, sex, visit_type
+        FROM tejas.restofusers_t3_p1
+        WHERE race = {}
+        AND age BETWEEN 12 AND 100
         ''').format(
             Literal(race)
         )
@@ -328,16 +320,13 @@ def createDF_byRace_anySUD(logger, race):
         main.replace(to_replace=list(range(35, 50)), value="35-49", inplace=True)
         main.replace(to_replace=list(range(50, 100)), value="50+", inplace=True)
         dummy_ages = pd.get_dummies(main['age'])
-        df = df.reindex(columns = list(df) + ['MR','NHPI'])
         df = df[['sud']].join(dummy_ages.ix[:, :'35-49'])
 
         dummy_sexes = pd.get_dummies(main['sex'])
-        df = df.reindex(columns = list(df) + ['12-17', '18-34', '35-49'])
         df = df[['sud', '12-17', '18-34', '35-49']].join(dummy_sexes.ix[:, 'M':])
 
         dummy_setting = pd.get_dummies(main['setting'])
-        df = df.reindex(columns = list(df) + ['M'])
-        df = df[['sud', '12-17', '18-34', '35-49', 'M']].join(dummy_setting.ix[:, :'Hospital'])
+        df = df[['sud', '12-17', '18-34', '35-49', 'M']].join(dummy_setting.ix[:, :'Inpatient'])
 
         df['intercept'] = 1.0
 
@@ -368,8 +357,7 @@ def createDF_byRace_morethan2SUD(logger, race):
         query = SQL('''
         SELECT morethan2sud,age,sex,visit_type
         FROM tejas.sud_race_age
-        WHERE (cast (age as int) >= 12)
-        AND (cast (age as int) <= 100)
+        WHERE age BETWEEN 12 AND 100
         AND race = {}
         ''').format(
             Literal(race)
@@ -393,16 +381,13 @@ def createDF_byRace_morethan2SUD(logger, race):
         main.replace(to_replace=list(range(35, 50)), value="35-49", inplace=True)
         main.replace(to_replace=list(range(50, 100)), value="50+", inplace=True)
         dummy_ages = pd.get_dummies(main['age'])
-        df = df.reindex(columns = list(df) + ['MR','NHPI'])
         df = df[['sud']].join(dummy_ages.ix[:, :'35-49'])
 
         dummy_sexes = pd.get_dummies(main['sex'])
-        df = df.reindex(columns = list(df) + ['12-17', '18-34', '35-49'])
         df = df[['sud', '12-17', '18-34', '35-49']].join(dummy_sexes.ix[:, 'M':])
 
         dummy_setting = pd.get_dummies(main['setting'])
-        df = df.reindex(columns = list(df) + ['M'])
-        df = df[['sud', '12-17', '18-34', '35-49', 'M']].join(dummy_setting.ix[:, :'Hospital'])
+        df = df[['sud', '12-17', '18-34', '35-49', 'M']].join(dummy_setting.ix[:, :'Inpatient'])
 
         df['intercept'] = 1.0
 
@@ -410,3 +395,27 @@ def createDF_byRace_morethan2SUD(logger, race):
         logger.error('createDF_byRace_morethan2SUD failed because of {}'.format(e))
 
     return df
+
+@lD.log(logBase + 'allTheOtherStuff')
+def allTheOtherStuff(logger):
+    allOthers = {
+        "AA":{
+            "anySUD":{},
+            "atleast2":{}
+        },
+        "NHPI":{
+            "anySUD":{},
+            "atleast2":{}
+        },
+        "MR":{
+            "anySUD":{},
+            "atleast2":{}
+        }
+    }
+    for race in table3_config["inputs"]["races"]:
+        logged_df1 = logRegress(createDF_byRace_anySUD(race))
+        allOthers[race]["anySUD"] = logged_df1
+        logged_df2 = logRegress(createDF_byRace_morethan2SUD(race))
+        allOthers[race]["atleast2"] = logged_df2
+    print(allOthers)
+    return allOthers
