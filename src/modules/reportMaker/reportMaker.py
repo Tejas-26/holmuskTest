@@ -66,7 +66,7 @@ def main(logger, resultDict):
     t3Patients = jsonref.load(open("../data/final/t3PatientCount.json"))
     table3_dict1 = jsonref.load(open("../data/final/oddsratios_allRaces_anySUD.json"))
     table3_dict2 = jsonref.load(open("../data/final/oddsratios_allRaces_2SUDormore.json"))
-    # writeT3.oddsRatiosAllRaces(table3_dict1, table3_dict2, t3Patients)
+    writeT3.oddsRatiosAllRaces(table3_dict1, table3_dict2, t3Patients)
     table3_dict3 = jsonref.load(open("../data/final/oddsratios_byRace.json"))
     writeT3.oddsRatiosByRace(table3_dict3, t3Patients)
     print('Getting out of reportMaker module')
