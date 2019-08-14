@@ -14,6 +14,10 @@ config = jsonref.load(open('../config/config.json'))
 table4_config = jsonref.load(open('../config/modules/tejasT4.json'))
 logBase = config['logging']['logBase'] + '.modules.reportMaker.writeT4'
 
+@lD.log(logBase + '.rd')
+def rd(logger, x):
+    return round(x, 2)
+
 @lD.log(logBase + '.genIntro')
 def genIntro(logger):
 
@@ -58,7 +62,7 @@ def oddsRatiosByRace(logger, aa, nh, mr, sampleabove12):
 
     for disorder in suds:
         report = report + f'''
-|{disorder}                  |{aa["OR"][disorder]}|{aa["2.5%"][disorder]} - {aa["97.5%"][disorder]}|'''
+|{disorder}                  |{rd(aa["OR"][disorder])}|{rd(aa["2.5%"][disorder])} - {rd(aa["97.5%"][disorder])}|'''
 
     report = report + f'''
 ***'''
@@ -73,7 +77,7 @@ def oddsRatiosByRace(logger, aa, nh, mr, sampleabove12):
 
     for disorder in suds:
         report = report + f'''
-|{disorder}                  |{nh["OR"][disorder]}|{nh["2.5%"][disorder]} - {nh["97.5%"][disorder]}|'''
+|{disorder}                  |{rd(nh["OR"][disorder])}|{rd(nh["2.5%"][disorder])} - {rd(nh["97.5%"][disorder])}|'''
 
     report = report + f'''
 ***'''
@@ -88,7 +92,7 @@ def oddsRatiosByRace(logger, aa, nh, mr, sampleabove12):
 
     for disorder in suds:
         report = report + f'''
-|{disorder}                  |{mr["OR"][disorder]}|{mr["2.5%"][disorder]} - {mr["97.5%"][disorder]}|'''
+|{disorder}                  |{rd(mr["OR"][disorder])}|{rd(mr["2.5%"][disorder])} - {rd(mr["97.5%"][disorder])}|'''
 
     report = report + f'''
 ***'''

@@ -69,13 +69,13 @@ def main(logger, resultDict):
     # writeT2.genBC(table2_dict4MR, "Multi-ethnic")
 
     # Table 3 Report Creation
-    writeT3.genIntro()
+    # writeT3.genIntro()
     t3Patients = jsonref.load(open("../data/final/t3PatientCount.json"))
-    table3_dict1 = jsonref.load(open("../data/final/oddsratios_allRaces_anySUD.json"))
-    table3_dict2 = jsonref.load(open("../data/final/oddsratios_allRaces_2SUDormore.json"))
-    writeT3.oddsRatiosAllRaces(table3_dict1, table3_dict2, t3Patients)
-    table3_dict3 = jsonref.load(open("../data/final/oddsratios_byRace.json"))
-    writeT3.oddsRatiosByRace(table3_dict3, t3Patients)
+    # table3_dict1 = jsonref.load(open("../data/final/oddsratios_allRaces_anySUD.json"))
+    # table3_dict2 = jsonref.load(open("../data/final/oddsratios_allRaces_2SUDormore.json"))
+    # writeT3.oddsRatiosAllRaces(table3_dict1, table3_dict2, t3Patients)
+    # table3_dict3 = jsonref.load(open("../data/final/oddsratios_byRace.json"))
+    # writeT3.oddsRatiosByRace(table3_dict3, t3Patients)
 
     # Table 4 Report Creation
     aa, nh, mr = cfT4.allTheOtherStuff()

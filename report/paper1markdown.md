@@ -140,3 +140,184 @@ Inhalants - inhalant
 |others|0.0|8.0|28.0|48.0|16.0|
 |polysub|0|0|0|0|0|
 |inhalant|0.0|11.6|48.8|30.2|9.3|
+## Description of Table 3:
+This table contains the odds ratios and confidence intervals after a logistic regression is performed for the following samples:
+* All races, aged 12 and older
+* Asian Americans, aged 12 and older
+* Native Hawaiian, aged 12 and older
+* Mixed Race, aged 12 and older
+Logistic regression is performed for:
+* Any SUD
+* 2 or more SUDs
+
+### All races, aged 12 or older
+|Logistic Regression, Any SUD|N = 11162    |          |
+|----------------------------|----------------------------|----------|
+|**Any SUD**                 |**Odds Ratio**              |**95% CI**|
+|*Race*                      |                            |          |
+|NHPI vs AA                  |1.25          |1.07 - 1.46|
+|MR vs AA                    |1.98            |1.73 - 2.27|
+|*Age in years*              |                            |          |
+|12 - 17 vs 50+              |0.39         |0.34 - 0.46|
+|18 - 34 vs 50+              |1.37         |1.21 - 1.55|
+|35 - 49 vs 50+              |1.4         |1.23 - 1.6|
+|*Sex*                       |                            |          |
+|Male vs Female              |2.74             |2.5 - 3.0|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|1.89      |1.69 - 2.11|
+|**at least 2 SUDs**               |**Odds Ratio**              |**95% CI**|
+|*Race*                            |                            |          |
+|NHPI vs AA                        |0.2          |0.08 - 0.5|
+|MR vs AA                          |1.24            |0.76 - 2.04|
+|*Age in years*                    |                            |          |
+|12 - 17 vs 50+                    |0.12         |0.04 - 0.39|
+|18 - 34 vs 50+                    |0.47         |0.31 - 0.7|
+|35 - 49 vs 50+                    |0.97         |0.68 - 1.4|
+|*Sex*                             |                            |          |
+|Male vs Female                    |1.07             |0.79 - 1.45|
+|*Treatment Setting*               |                            |          |
+|Hospital vs Mental Health Center  |0.57      |0.37 - 0.87|
+***
+***
+### Asian Americans, aged 12 or older
+|Logistic Regression, Any SUD|N = 1783   |          |
+|----------------------------|----------------------------|----------|
+|**Any SUD**                 |**Odds Ratio**              |**95% CI**|
+|*Age in years*              |                            |          |
+|12 - 17 vs 50+              |1.64|0.99 - 2.72|
+|18 - 34 vs 50+              |3.5|2.3 - 5.32|
+|35 - 49 vs 50+              |2.03|1.29 - 3.19|
+|*Sex*                       |                            |          |
+|Male vs Female              |2.85|2.22 - 3.66|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|1.91  |1.46 - 2.51|
+|**2 or more SUDs**                |**Odds Ratio**        |**95% CI**|
+|*Age in years*                    |                      |          |
+|12 - 17 vs 50+              |2.28|0.76 - 6.87|
+|18 - 34 vs 50+              |1.57|0.6 - 4.11|
+|35 - 49 vs 50+              |1.19|0.42 - 3.4|
+|*Sex*                       |                            |          |
+|Male vs Female              |1.4|0.84 - 2.35|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|0.67  |0.39 - 1.14|
+***
+### Native Hawaiians/Pacific Islanders, aged 12 or older
+|Logistic Regression, Any SUD|N = 2906 |          |
+|----------------------------|----------------------------|----------|
+|**Any SUD**                 |**Odds Ratio**              |**95% CI**|
+|*Age in years*              |                            |          |
+|12 - 17 vs 50+              |0.61|0.45 - 0.82|
+|18 - 34 vs 50+              |1.3|0.97 - 1.75|
+|35 - 49 vs 50+              |1.29|0.94 - 1.75|
+|*Sex*                       |                            |          |
+|Male vs Female              |2.74|2.29 - 3.28|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|1.94  |1.6 - 2.36|
+|**2 or more SUDs**                |**Odds Ratio**        |**95% CI**|
+|*Age in years*                    |                      |          |
+|12 - 17 vs 50+              |1.89|0.91 - 3.89|
+|18 - 34 vs 50+              |2.08|1.05 - 4.12|
+|35 - 49 vs 50+              |1.43|0.69 - 2.98|
+|*Sex*                       |                            |          |
+|Male vs Female              |0.92|0.63 - 1.36|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|0.54  |0.37 - 0.81|
+***
+### Mixed Race, aged 12 or older
+|Logistic Regression, Any SUD|N = 6473   |          |
+|----------------------------|----------------------------|----------|
+|**Any SUD**                 |**Odds Ratio**              |**95% CI**|
+|*Age in years*              |                            |          |
+|12 - 17 vs 50+              |0.2|0.16 - 0.26|
+|18 - 34 vs 50+              |1.2|1.03 - 1.4|
+|35 - 49 vs 50+              |1.42|1.21 - 1.66|
+|*Sex*                       |                            |          |
+|Male vs Female              |2.78|2.47 - 3.12|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|1.64  |1.39 - 1.94|
+|**2 or more SUDs**                |**Odds Ratio**        |**95% CI**|
+|*Age in years*                    |                      |          |
+|12 - 17 vs 50+              |0.76|0.46 - 1.25|
+|18 - 34 vs 50+              |1.22|0.92 - 1.61|
+|35 - 49 vs 50+              |1.44|1.09 - 1.9|
+|*Sex*                       |                            |          |
+|Male vs Female              |1.22|0.99 - 1.49|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|0.9  |0.69 - 1.18|
+***
+
+
+***
+
+***
+## Description of Table 4:
+This table contains the odds ratios and confidence intervals after a logistic regression is performed for each race:
+* Asian Americans, aged 12 and older
+* Native Hawaiian, aged 12 and older
+* Mixed Race, aged 12 and older
+Logistic regression is performed for comorbidity of any SUD with other mental health disorders in the list below:
+Mood - mood
+Anxiety - anxiety
+Adjustment - adjustment
+ADHD/CD/ODD/DBD - adhd
+Substance Use Disorder - sud
+Psychotic - psyc
+Personality - pers
+Childhood-onset - childhood
+Impulse-control - impulse
+Cognitive - cognitive
+Eating - eating
+Somatoform - smtf
+Dissociation - disso
+Sleep - sleep
+Factitious Disorders - fd
+
+### Asian Americans, aged 12 or older
+|Logistic Regression, Any SUD|N = 1783   |          |
+|----------------------------|----------------------------|----------|
+|**DSM-IV Diagnosis**        |**Odds Ratio**              |**95% CI**|
+|mood                  |0.49|0.38 - 0.63|
+|anxiety                  |0.56|0.41 - 0.77|
+|adjustment                  |0.37|0.27 - 0.51|
+|adhd                  |0.83|0.5 - 1.37|
+|psyc                  |0.51|0.37 - 0.71|
+|pers                  |1.71|1.12 - 2.61|
+|childhood                  |0.33|0.14 - 0.75|
+|impulse                  |1.94|0.83 - 4.51|
+|cognitive                  |0.0|0.0 - inf|
+|eating                  |0.48|0.21 - 1.11|
+|smtf                  |0.0|0.0 - inf|
+|sleep                  |0.18|0.04 - 0.77|
+***
+### Native Hawaiians/Pacific Islanders, aged 12 or older
+|Logistic Regression, Any SUD|N = 2906 |          |
+|----------------------------|----------------------------|----------|
+|**DSM-IV Diagnosis**        |**Odds Ratio**              |**95% CI**|
+|mood                  |1.3|1.04 - 1.63|
+|anxiety                  |0.59|0.45 - 0.78|
+|adjustment                  |0.72|0.6 - 0.86|
+|adhd                  |1.05|0.79 - 1.4|
+|psyc                  |1.42|1.15 - 1.76|
+|pers                  |2.31|1.84 - 2.9|
+|childhood                  |0.31|0.19 - 0.5|
+|impulse                  |1.35|1.01 - 1.82|
+|cognitive                  |0.61|0.25 - 1.51|
+|eating                  |0.87|0.45 - 1.68|
+|disso                  |1.53|0.59 - 3.94|
+***
+### Mixed Race, aged 12 or older
+|Logistic Regression, Any SUD|N = 6473   |          |
+|----------------------------|----------------------------|----------|
+|**DSM-IV Diagnosis**        |**Odds Ratio**              |**95% CI**|
+|mood                  |0.83|0.73 - 0.94|
+|anxiety                  |0.68|0.59 - 0.77|
+|adjustment                  |0.6|0.53 - 0.68|
+|adhd                  |0.42|0.33 - 0.52|
+|psyc                  |1.39|1.2 - 1.6|
+|pers                  |2.61|2.26 - 3.02|
+|childhood                  |0.61|0.45 - 0.83|
+|impulse                  |1.24|0.9 - 1.71|
+|cognitive                  |0.7|0.35 - 1.39|
+|eating                  |0.69|0.41 - 1.17|
+|sleep                  |0.63|0.42 - 0.95|
+***
