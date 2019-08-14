@@ -293,24 +293,18 @@ def popJoined(logger):
 @lD.log(logBase + '.countRaceSUDppl')
 def countRaceSUDppl(logger):
     result = {"AA":0, "NHPI":0, "MR":0}
-    for raceGroup in table2_config["params"]["races"]:
-        if raceGroup != "all":
-            raceCount = 0
-            for race in table2_config["params"]["races"][raceGroup]:
-                query = SQL('''
-                WITH subQ AS (
-                SELECT *
-                FROM
-                    tejas.sud_race_age
-                WHERE
-                    sud_race_age.race = {}
-                )
-                SELECT count(*) FROM subQ
-                ''').format(Literal(race))
-                data = [d[0] for d in pgIO.getAllData(query)]
-                if data != None:
-                    raceCount += data[0]
-            result[raceGroup] = raceCount
+    for race in table2_config["inputs"]["races"]:
+        query = SQL('''
+        WITH subQ AS (
+        SELECT *
+        FROM tejas.sud_race_age
+        WHERE sud_race_age.race = {}
+        )
+        SELECT count(*) FROM subQ
+        ''').format(Literal(race))
+        data = [d[0] for d in pgIO.getAllData(query)]
+        if data != None:
+            result[race] = data[0]
     return result
 
 @lD.log(logBase + '.allAgesGeneralSUD')
@@ -334,25 +328,21 @@ def allAgesGeneralSUD(logger):
 
         # Find number of users in each race who have any SUD
         any_sud = []
-        for raceGroup in table2_config["params"]["races"]:
-            if raceGroup != "all":
-                raceCount = 0
-                for race in table2_config["params"]["races"][raceGroup]:
-                    query = SQL('''
-                    WITH subQ AS (
-                    SELECT *
-                    FROM
-                        tejas.sud_race_age
-                    WHERE
-                        sud_race_age.race = {}
-                    )
-                    SELECT count(*) FROM subQ
-                    ''').format(
-                        Literal(race)
-                    )
-                    data = [d[0] for d in pgIO.getAllData(query)]
-                    raceCount += data[0]
-                countDict["any_sud"].append(raceCount)
+        for race in table2_config["inputs"]["races"]:
+            query = SQL('''
+            WITH subQ AS (
+            SELECT *
+            FROM
+                tejas.sud_race_age
+            WHERE
+                sud_race_age.race = {}
+            )
+            SELECT count(*) FROM subQ
+            ''').format(
+                Literal(race)
+            )
+            data = [d[0] for d in pgIO.getAllData(query)]
+            countDict["any_sud"].append(data[0])
 
         # Find number of users in each race who have >2 SUD
         count = {
@@ -361,28 +351,21 @@ def allAgesGeneralSUD(logger):
             "MR": 0
         }
 
-        for raceGroup in table2_config["params"]["races"]:
-            if raceGroup != "all":
-                for race in table2_config["params"]["races"][raceGroup]:
-                    query = SQL('''
-                    SELECT alc, cannabis, amphe, halluc, nicotin, cocaine,
-                    opioids, sedate, others, polysub, inhalant
-                    FROM tejas.sud_race_age
-                    WHERE sud_race_age.race = {}
-                    ''').format(
-                        Literal(race)
-                    )
-                    data = pgIO.getAllData(query)
-                    for tuple in data:
-                        if sum(list(tuple))>=2:
-                            count[raceGroup]+=1
+        for race in table2_config["inputs"]["races"]:
+            query = SQL('''
+            SELECT alc, cannabis, amphe, halluc, nicotin, cocaine,
+            opioids, sedate, others, polysub, inhalant
+            FROM tejas.sud_race_age
+            WHERE sud_race_age.race = {}
+            ''').format(
+                Literal(race)
+            )
+            data = pgIO.getAllData(query)
+            for tuple in data:
+                if sum(list(tuple))>=2:
+                    count[race]+=1
         for race in count:
             countDict["morethan2_sud"].append(count[race])
-        # Change counts to percentage of the race sample
-        resultsDict = {}
-        #for row in countDict:
-            #resultsDict[row] = divByAllAges(countDict[row])
-
     except Exception as e:
         logger.error('Cannot find general SUD counts because of {}'.format(e))
     return countDict
@@ -415,28 +398,23 @@ def allAgesCategorisedSUD(logger):
             "inhalant":[]
         }
 
-        for raceGroup in table2_config["params"]["races"]:
-            if raceGroup != "all":
-                for sudcat in table2_config["params"]["sudcats"]:
-                    raceCount = 0
-                    for race in table2_config["params"]["races"][raceGroup]:
-                        query = SQL('''
-                        WITH subQ AS (
-                        SELECT * FROM tejas.sud_race_age
-                        WHERE sud_race_age.race = {}
-                        AND sud_race_age.{} = true
-                        ) SELECT count(*) from subQ
-                        ''').format(
-                            Literal(race),
-                            Identifier(sudcat)
-                        )
-                        data = [d[0] for d in pgIO.getAllData(query)]
-                        raceCount += data[0]
-                    countDict[sudcat].append(raceCount)
+        for sudcat in table2_config["params"]["sudcats"]:
+            for race in table2_config["inputs"]["races"]:
+                query = SQL('''
+                WITH subQ AS (
+                SELECT * FROM tejas.sud_race_age
+                WHERE sud_race_age.race = {}
+                AND sud_race_age.{} = true
+                ) SELECT count(*) from subQ
+                ''').format(
+                    Literal(race),
+                    Identifier(sudcat)
+                )
+                data = [d[0] for d in pgIO.getAllData(query)]
+                countDict[sudcat].append(data[0])
+
         # Change counts to percentage of the race sample
         resultsDict = {}
-        #for row in countDict:
-            #resultsDict[row] = divByAllAges(countDict[row])
 
     except Exception as e:
         logger.error('Failed to find categorised SUD counts because of {}'.format(e))
@@ -467,30 +445,27 @@ def ageBinnedGeneralSUD(logger):
         }
 
         # Find number of users in each race who have any SUD, separated into age bins
-        for raceGroup in table2_config["params"]["races"]:
-            if raceGroup != "all":
-                ageCounts = [0,0,0,0,0]
-                for race in table2_config["params"]["races"][raceGroup]:
-                    ageCount = 0
-                    for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
-                        query = SQL('''
-                        WITH subQ AS (
-                        SELECT * FROM tejas.sud_race_age
-                        WHERE sud_race_age.race = {}
-                        AND (cast (sud_race_age.age as int) >= {})
-                        AND (cast (sud_race_age.age as int) <= {})
-                        ) SELECT count(*) FROM subQ
-                        ''').format(
-                            Literal(race),
-                            Literal(lower),
-                            Literal(upper)
-                        )
-                        data = [d[0] for d in pgIO.getAllData(query)]
-                        if data != None:
-                            # print(race + ": " + str(data))
-                            ageCounts[ageCount] += data[0]
-                        ageCount+=1
-                countDict["any_sud"][raceGroup] = ageCounts
+        for race in table2_config["inputs"]["races"]:
+            ageCount = 0
+            ageCounts = [0,0,0,0,0]
+            for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
+                query = SQL('''
+                WITH subQ AS (
+                SELECT * FROM tejas.sud_race_age
+                WHERE sud_race_age.race = {}
+                AND (cast (sud_race_age.age as int) >= {})
+                AND (cast (sud_race_age.age as int) <= {})
+                ) SELECT count(*) FROM subQ
+                ''').format(
+                    Literal(race),
+                    Literal(lower),
+                    Literal(upper)
+                )
+                data = [d[0] for d in pgIO.getAllData(query)]
+                ageCounts[ageCount] = data[0]
+                ageCount+=1
+            countDict["any_sud"][race] = ageCounts
+
         # Find number of users in each race who have >2 SUD, separated into age bins
         count = {
             "AA": [],
@@ -498,41 +473,29 @@ def ageBinnedGeneralSUD(logger):
             "MR": []
         }
 
-        for raceGroup in table2_config["params"]["races"]:
-            if raceGroup != "all":
-                ageCounts = [0,0,0,0,0]
-                for race in table2_config["params"]["races"][raceGroup]:
-                    ageCount = 0
-                    for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
-                        ageRaceNum = 0
-                        query = SQL('''
-                        SELECT
-                            alc, cannabis, amphe, halluc, nicotin, cocaine,
-                            opioids, sedate, others, polysub, inhalant
-                        FROM
-                            tejas.sud_race_age
-                        WHERE
-                            (cast (sud_race_age.age as int) >= {})
-                        AND
-                            (cast (sud_race_age.age as int) <= {})
-                        AND
-                            sud_race_age.race = {}
-                        ''').format(
-                            Literal(lower),
-                            Literal(upper),
-                            Literal(race)
-                        )
-                        data = pgIO.getAllData(query)
-                        if data != None:
-                            for tuple in data:
-                                if sum(list(tuple))>=2:
-                                    ageRaceNum += 1
-                            ageCounts[ageCount] += ageRaceNum
-                        ageCount+=1
-                count[raceGroup] = ageCounts
+        for race in table2_config["inputs"]["races"]:
+            ageCount = 0
+            ageCounts = [0,0,0,0,0]
+            for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
+                query = SQL('''
+                SELECT alc, cannabis, amphe, halluc, nicotin, cocaine,
+                    opioids, sedate, others, polysub, inhalant
+                FROM tejas.sud_race_age
+                WHERE sud_race_age.age >= {}
+                AND sud_race_age.age <= {}
+                AND sud_race_age.race = {}
+                ''').format(
+                    Literal(lower),
+                    Literal(upper),
+                    Literal(race)
+                )
+                data = pgIO.getAllData(query)
+                for tuple in data:
+                    if sum(list(tuple))>=2:
+                        ageCounts[ageCount]+=1
+                ageCount+=1
+            count[race] = ageCounts
         countDict["morethan2_sud"] = count
-        # Change counts to percentage of the race sample
-        #resultsDict = divByAgeBins(countDict)
     except Exception as e:
         logger.error('Failed to find general SUD counts because of {}'.format(e))
     #print(resultsDict)
@@ -547,7 +510,7 @@ def genPC(logger, n, d):
 
 #attempt to automatically get percentages here
 @lD.log(logBase + '.ageBinnedCategorisedSUD')
-def ageBinnedCategorisedSUD(logger, raceGroup):
+def ageBinnedCategorisedSUD(logger, race):
     '''
 
     Finds percentage of the age-binned sample that has
@@ -559,41 +522,39 @@ def ageBinnedCategorisedSUD(logger, raceGroup):
     Arguments:
         logger {logging.Logger} -- logs error information
     '''
-    if raceGroup == "AA":
+    if race == "AA":
         x = 0
-    elif raceGroup == "NHPI":
+    elif race == "NHPI":
         x = 1
-    elif raceGroup == "MR":
+    elif race == "MR":
         x = 2
-    allAgesCatSUD = json.load(open("../data/final/allAgesCategorisedSUD.json"))
+    allAgesCatSUD = allAgesCategorisedSUD()
     try:
         countDict = {}
         for sudcat in table2_config["params"]["sudcats"].keys():
             l = [0,0,0,0,0]
-            for race in table2_config["params"]["races"][raceGroup]:
-                i = 0
-                for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
-                    query = SQL('''
-                    WITH subQ AS (
-                    SELECT * FROM tejas.sud_race_age
-                    WHERE sud_race_age.race = {}
-                    AND (cast (sud_race_age.age as int) >= {})
-                    AND (cast (sud_race_age.age as int) <= {})
-                    AND sud_race_age.{} = true )
-                    SELECT count(*) from subQ
-                    ''').format(
-                        Literal(race),
-                        Literal(lower),
-                        Literal(upper),
-                        Identifier(sudcat)
-                    )
-                    data = [d[0] for d in pgIO.getAllData(query)]
-                    l[i] += data[0]
-                    i+=1
+            i = 0
+            for lower, upper in zip(['1', '12', '18', '35', '50'], ['11', '17', '34', '49', '100']):
+                query = SQL('''
+                WITH subQ AS (
+                SELECT * FROM tejas.sud_race_age
+                WHERE sud_race_age.race = {}
+                AND sud_race_age.age >= {}
+                AND sud_race_age.age <= {}
+                AND sud_race_age.{} = true )
+                SELECT count(*) from subQ
+                ''').format(
+                    Literal(race),
+                    Literal(lower),
+                    Literal(upper),
+                    Identifier(sudcat)
+                )
+                data = [d[0] for d in pgIO.getAllData(query)]
+                l[i] = data[0]
+                i+=1
             for j in range(0,len(l)):
                 l[j] = genPC(l[j], allAgesCatSUD[sudcat][x])
             countDict[sudcat] = l
     except Exception as e:
         logger.error('Failed to find categorised SUD counts because of {}'.format(e))
-
     return countDict
