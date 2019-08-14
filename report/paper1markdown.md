@@ -334,3 +334,46 @@ Factitious Disorders - fd
 |eating                  |0.6900664669218972|0.40604716245907163 - 1.1727498005064096|
 |sleep                  |0.6284258033843348|0.41672326222240963 - 0.9476768545463974|
 ***
+
+
+## Description of Figure 1:
+The Axis I/II disorders that are considered and their abbreviations are as follows:
+Mood - mood
+Anxiety - anxiety
+Adjustment - adjustment
+ADHD/CD/ODD/DBD - adhd
+Substance Use Disorder - sud
+Psychotic - psyc
+Personality - pers
+Childhood-onset - childhood
+Impulse-control - impulse
+Cognitive - cognitive
+Eating - eating
+Somatoform - smtf
+Dissociation - disso
+Sleep - sleep
+Factitious Disorders - fd
+Disorders with less than 3% prevalence are not shown in the figure
+        
+
+## Description of Figure 1:
+The Axis I/II disorders that are considered and their abbreviations are as follows:
+Mood - mood
+Anxiety - anxiety
+Adjustment - adjustment
+ADHD/CD/ODD/DBD - adhd
+Substance Use Disorder - sud
+Psychotic - psyc
+Personality - pers
+Childhood-onset - childhood
+Impulse-control - impulse
+Cognitive - cognitive
+Eating - eating
+Somatoform - smtf
+Dissociation - disso
+Sleep - sleep
+Factitious Disorders - fd
+Disorders with less than 3% prevalence are not shown in the figure
+        
+![](../results/diagnosesPercentageGraph.png)
+***

@@ -1,6 +1,7 @@
 from logs import logDecorator as lD
 import jsonref
 from modules.reportMaker import writeT1
+from modules.figure1 import comFunctions as cfF1
 from modules.table1 import comFunctions as cfT1
 from modules.table2 import comFunctions as cfT2
 from modules.table3 import comFunctions as cfT3
@@ -45,7 +46,11 @@ def main(logger, resultDict):
     # #race vs patient_type splits (in/out)
     # raceSettingDict = cfT1.countRaceSetting()
     # writeT1.genRaceSetting(raceSettingDict)
-    #
+
+    # Figure 1 Info
+    plotF1.genIntro()
+    rd = cfF1.genDiagCount("../data/final/t3PatientCount.json")
+    plotF1.genFig(rd)
     # # Table 2 Info
     # writeT2.genIntro()
     # table2_dict1 = jsonref.load(open("../data/final/allAgesGeneralSUD.json"))
@@ -64,7 +69,7 @@ def main(logger, resultDict):
 
     # Table 3 Report Creation
     #writeT3.genIntro()
-    t3Patients = jsonref.load(open("../data/final/t3PatientCount.json"))
+    # t3Patients = jsonref.load(open("../data/final/t3PatientCount.json"))
     # table3_dict1 = jsonref.load(open("../data/final/oddsratios_allRaces_anySUD.json"))
     # table3_dict2 = jsonref.load(open("../data/final/oddsratios_allRaces_2SUDormore.json"))
     # writeT3.oddsRatiosAllRaces(table3_dict1, table3_dict2, t3Patients)
@@ -72,9 +77,9 @@ def main(logger, resultDict):
     # writeT3.oddsRatiosByRace(table3_dict3, t3Patients)
 
     # Table 4 Report Creation
-    aa, nh, mr = cfT4.allTheOtherStuff()
-    writeT4.genIntro()
-    writeT4.oddsRatiosByRace(aa, nh, mr, t3Patients)
+    # aa, nh, mr = cfT4.allTheOtherStuff()
+    # writeT4.genIntro()
+    # writeT4.oddsRatiosByRace(aa, nh, mr, t3Patients)
     print('Getting out of reportMaker module')
     print('-'*30)
     return
