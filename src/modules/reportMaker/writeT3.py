@@ -65,73 +65,82 @@ def oddsRatiosAllRaces(logger, r1, r2, r3):
     return
 
 @lD.log(logBase + '.oddsRatiosByRace')
-def oddsRatiosByRace(logger, r2, r3):
+def oddsRatiosByRace(logger, r1, r3):
+    aa = r1["AA"]
+    nh = r1["NHPI"]
+    mr = r1["MR"]
+    aa_any = aa["anySUD"]
+    nh_any = nh["anySUD"]
+    mr_any = mr["anySUD"]
+    aa_al2 = aa["atleast2"]
+    nh_al2 = nh["atleast2"]
+    mr_al2 = mr["atleast2"]
     report = f'''
 ### Asian Americans, aged 12 or older
 |Logistic Regression, Any SUD|N = {r3["AA"]}   |          |
 |----------------------------|----------------------------|----------|
 |**Any SUD**                 |**Odds Ratio**              |**95% CI**|
 |*Age in years*              |                            |          |
-|12 - 17 vs 50+              |{r1["12-17"][0][0]}         |{r1["12-17"][0][1]} - {r1["12-17"][0][2]}|
-|18 - 34 vs 50+              |{r1["18-34"][0][0]}         |{r1["18-34"][0][1]} - {r1["18-34"][0][2]}|
-|35 - 49 vs 50+              |{r1["35-49"][0][0]}         |{r1["35-49"][0][1]} - {r1["35-49"][0][2]}|
+|12 - 17 vs 50+              |{aa_any["OR"]["12-17"]}|{aa_any["2.5%"]["12-17"]} - {aa_any["97.5%"]["12-17"]}|
+|18 - 34 vs 50+              |{aa_any["OR"]["18-34"]}|{aa_any["2.5%"]["18-34"]} - {aa_any["97.5%"]["18-34"]}|
+|35 - 49 vs 50+              |{aa_any["OR"]["35-49"]}|{aa_any["2.5%"]["35-49"]} - {aa_any["97.5%"]["35-49"]}|
 |*Sex*                       |                            |          |
-|Male vs Female              |{r1["M"][0][0]}             |{r1["M"][0][1]} - {r1["M"][0][2]}|
+|Male vs Female              |{aa_any["OR"]["M"]}|{aa_any["2.5%"]["M"]} - {aa_any["97.5%"]["M"]}|
 |*Treatment Setting*         |                            |          |
-|Hospital vs Mental Health Center|{r1["Hospital"][0][0]}  |{r1["Hospital"][0][1]} - {r1["Hospital"][0][2]}|
+|Hospital vs Mental Health Center|{aa_any["OR"]["Inpatient"]}  |{aa_any["2.5%"]["Inpatient"]} - {aa_any["97.5%"]["Inpatient"]}|
 |**2 or more SUDs**                |**Odds Ratio**        |**95% CI**|
 |*Age in years*                    |                      |          |
-|12 - 17 vs 50+                    |{r2["12-17"][0][0]}   |{r2["12-17"][0][1]} - {r2["12-17"][0][2]}|
-|18 - 34 vs 50+                    |{r2["18-34"][0][0]}   |{r2["18-34"][0][1]} - {r2["18-34"][0][2]}|
-|35 - 49 vs 50+                    |{r2["35-49"][0][0]}   |{r2["35-49"][0][1]} - {r2["35-49"][0][2]}|
-|*Sex*                             |                      |          |
-|Male vs Female                    |{r2["M"][0][0]}       |{r2["M"][0][1]} - {r2["M"][0][2]}|
-|*Treatment Setting*               |                      |          |
-|Hospital vs Mental Health Center  |{r2["Hospital"][0][0]}|{r2["Hospital"][0][1]} - {r2["Hospital"][0][2]}|
+|12 - 17 vs 50+              |{aa_al2["OR"]["12-17"]}|{aa_al2["2.5%"]["12-17"]} - {aa_al2["97.5%"]["12-17"]}|
+|18 - 34 vs 50+              |{aa_al2["OR"]["18-34"]}|{aa_al2["2.5%"]["18-34"]} - {aa_al2["97.5%"]["18-34"]}|
+|35 - 49 vs 50+              |{aa_al2["OR"]["35-49"]}|{aa_al2["2.5%"]["35-49"]} - {aa_al2["97.5%"]["35-49"]}|
+|*Sex*                       |                            |          |
+|Male vs Female              |{aa_al2["OR"]["M"]}|{aa_al2["2.5%"]["M"]} - {aa_al2["97.5%"]["M"]}|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|{aa_al2["OR"]["Inpatient"]}  |{aa_al2["2.5%"]["Inpatient"]} - {aa_al2["97.5%"]["Inpatient"]}|
 ***
 ### Native Hawaiians/Pacific Islanders, aged 12 or older
 |Logistic Regression, Any SUD|N = {r3["NHPI"]} |          |
 |----------------------------|----------------------------|----------|
 |**Any SUD**                 |**Odds Ratio**              |**95% CI**|
 |*Age in years*              |                            |          |
-|12 - 17 vs 50+              |{r1["12-17"][1][0]}         |{r1["12-17"][1][1]} - {r1["12-17"][1][2]}|
-|18 - 34 vs 50+              |{r1["18-34"][1][0]}         |{r1["18-34"][1][1]} - {r1["18-34"][1][2]}|
-|35 - 49 vs 50+              |{r1["35-49"][1][0]}         |{r1["35-49"][1][1]} - {r1["35-49"][1][2]}|
+|12 - 17 vs 50+              |{nh_any["OR"]["12-17"]}|{nh_any["2.5%"]["12-17"]} - {nh_any["97.5%"]["12-17"]}|
+|18 - 34 vs 50+              |{nh_any["OR"]["18-34"]}|{nh_any["2.5%"]["18-34"]} - {nh_any["97.5%"]["18-34"]}|
+|35 - 49 vs 50+              |{nh_any["OR"]["35-49"]}|{nh_any["2.5%"]["35-49"]} - {nh_any["97.5%"]["35-49"]}|
 |*Sex*                       |                            |          |
-|Male vs Female              |{r1["M"][1][0]}             |{r1["M"][1][1]} - {r1["M"][1][2]}|
+|Male vs Female              |{nh_any["OR"]["M"]}|{nh_any["2.5%"]["M"]} - {nh_any["97.5%"]["M"]}|
 |*Treatment Setting*         |                            |          |
-|Hospital vs Mental Health Center|{r1["Hospital"][1][0]}  |{r1["Hospital"][1][1]} - {r1["Hospital"][1][2]}|
+|Hospital vs Mental Health Center|{nh_any["OR"]["Inpatient"]}  |{nh_any["2.5%"]["Inpatient"]} - {nh_any["97.5%"]["Inpatient"]}|
 |**2 or more SUDs**                |**Odds Ratio**        |**95% CI**|
 |*Age in years*                    |                      |          |
-|12 - 17 vs 50+                    |{r2["12-17"][1][0]}   |{r2["12-17"][1][1]} - {r2["12-17"][1][2]}|
-|18 - 34 vs 50+                    |{r2["18-34"][1][0]}   |{r2["18-34"][1][1]} - {r2["18-34"][1][2]}|
-|35 - 49 vs 50+                    |{r2["35-49"][1][0]}   |{r2["35-49"][1][1]} - {r2["35-49"][1][2]}|
-|*Sex*                             |                      |          |
-|Male vs Female                    |{r2["M"][1][0]}       |{r2["M"][1][1]} - {r2["M"][1][2]}|
-|*Treatment Setting*               |                      |          |
-|Hospital vs Mental Health Center  |{r2["Hospital"][1][0]}|{r2["Hospital"][1][1]} - {r2["Hospital"][1][2]}|
+|12 - 17 vs 50+              |{nh_al2["OR"]["12-17"]}|{nh_al2["2.5%"]["12-17"]} - {nh_al2["97.5%"]["12-17"]}|
+|18 - 34 vs 50+              |{nh_al2["OR"]["18-34"]}|{nh_al2["2.5%"]["18-34"]} - {nh_al2["97.5%"]["18-34"]}|
+|35 - 49 vs 50+              |{nh_al2["OR"]["35-49"]}|{nh_al2["2.5%"]["35-49"]} - {nh_al2["97.5%"]["35-49"]}|
+|*Sex*                       |                            |          |
+|Male vs Female              |{nh_al2["OR"]["M"]}|{nh_al2["2.5%"]["M"]} - {nh_al2["97.5%"]["M"]}|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|{nh_al2["OR"]["Inpatient"]}  |{nh_al2["2.5%"]["Inpatient"]} - {nh_al2["97.5%"]["Inpatient"]}|
 ***
 ### Mixed Race, aged 12 or older
 |Logistic Regression, Any SUD|N = {r3["MR"]}   |          |
 |----------------------------|----------------------------|----------|
 |**Any SUD**                 |**Odds Ratio**              |**95% CI**|
 |*Age in years*              |                            |          |
-|12 - 17 vs 50+              |{r1["12-17"][2][0]}         |{r1["12-17"][2][1]} - {r1["12-17"][2][2]}|
-|18 - 34 vs 50+              |{r1["18-34"][2][0]}         |{r1["18-34"][2][1]} - {r1["18-34"][2][2]}|
-|35 - 49 vs 50+              |{r1["35-49"][2][0]}         |{r1["35-49"][2][1]} - {r1["35-49"][2][2]}|
+|12 - 17 vs 50+              |{mr_any["OR"]["12-17"]}|{mr_any["2.5%"]["12-17"]} - {mr_any["97.5%"]["12-17"]}|
+|18 - 34 vs 50+              |{mr_any["OR"]["18-34"]}|{mr_any["2.5%"]["18-34"]} - {mr_any["97.5%"]["18-34"]}|
+|35 - 49 vs 50+              |{mr_any["OR"]["35-49"]}|{mr_any["2.5%"]["35-49"]} - {mr_any["97.5%"]["35-49"]}|
 |*Sex*                       |                            |          |
-|Male vs Female              |{r1["M"][2][0]}             |{r1["M"][2][1]} - {r1["M"][2][2]}|
+|Male vs Female              |{mr_any["OR"]["M"]}|{mr_any["2.5%"]["M"]} - {mr_any["97.5%"]["M"]}|
 |*Treatment Setting*         |                            |          |
-|Hospital vs Mental Health Center|{r1["Hospital"][2][0]}  |{r1["Hospital"][2][1]} - {r1["Hospital"][2][2]}|
+|Hospital vs Mental Health Center|{mr_any["OR"]["Inpatient"]}  |{mr_any["2.5%"]["Inpatient"]} - {mr_any["97.5%"]["Inpatient"]}|
 |**2 or more SUDs**                |**Odds Ratio**        |**95% CI**|
 |*Age in years*                    |                      |          |
-|12 - 17 vs 50+                    |{r2["12-17"][2][0]}   |{r2["12-17"][2][1]} - {r2["12-17"][2][2]}|
-|18 - 34 vs 50+                    |{r2["18-34"][2][0]}   |{r2["18-34"][2][1]} - {r2["18-34"][2][2]}|
-|35 - 49 vs 50+                    |{r2["35-49"][2][0]}   |{r2["35-49"][2][1]} - {r2["35-49"][2][2]}|
-|*Sex*                             |                      |          |
-|Male vs Female                    |{r2["M"][2][0]}       |{r2["M"][2][1]} - {r2["M"][2][2]}|
-|*Treatment Setting*               |                      |          |
-|Hospital vs Mental Health Center  |{r2["Hospital"][2][0]}|{r2["Hospital"][2][1]} - {r2["Hospital"][2][2]}|
+|12 - 17 vs 50+              |{mr_al2["OR"]["12-17"]}|{mr_al2["2.5%"]["12-17"]} - {mr_al2["97.5%"]["12-17"]}|
+|18 - 34 vs 50+              |{mr_al2["OR"]["18-34"]}|{mr_al2["2.5%"]["18-34"]} - {mr_al2["97.5%"]["18-34"]}|
+|35 - 49 vs 50+              |{mr_al2["OR"]["35-49"]}|{mr_al2["2.5%"]["35-49"]} - {mr_al2["97.5%"]["35-49"]}|
+|*Sex*                       |                            |          |
+|Male vs Female              |{mr_al2["OR"]["M"]}|{mr_al2["2.5%"]["M"]} - {mr_al2["97.5%"]["M"]}|
+|*Treatment Setting*         |                            |          |
+|Hospital vs Mental Health Center|{mr_al2["OR"]["Inpatient"]}  |{mr_al2["2.5%"]["Inpatient"]} - {mr_al2["97.5%"]["Inpatient"]}|
 '''
 
     with open('../report/paper1markdown.md', 'a+') as f:
