@@ -37,26 +37,26 @@ def main(logger, resultDict):
     print('Main function of reportMaker module')
     print('='*30)
     # Table 1 Report creation
-    # writeT1.genIntro()
-    # raceAgeDict = cfT1.countRaceAge()
-    # writeT1.genRaceAge(raceAgeDict)
-    # #race vs sex (M/F) splits
-    # raceSexDict = cfT1.countRaceSex()
-    # writeT1.genRaceSex(raceSexDict)
-    # #race vs patient_type splits (in/out)
-    # raceSettingDict = cfT1.countRaceSetting()
-    # writeT1.genRaceSetting(raceSettingDict)
+    writeT1.genIntro()
+    raceAgeDict = cfT1.countRaceAge()
+    writeT1.genRaceAge(raceAgeDict)
+    #race vs sex (M/F) splits
+    raceSexDict = cfT1.countRaceSex()
+    writeT1.genRaceSex(raceSexDict)
+    # race vs patient_type splits (in/out)
+    raceSettingDict = cfT1.countRaceSetting()
+    writeT1.genRaceSetting(raceSettingDict)
 
     # Figure 1 Info
-    plotF1.genIntro()
-    rd = cfF1.genDiagCount("../data/final/t3PatientCount.json")
-    plotF1.genFig(rd)
+    # plotF1.genIntro()
+    # rd = cfF1.genDiagCount("../data/final/t3PatientCount.json")
+    # plotF1.genFig(rd)
+
     # # Table 2 Info
     # writeT2.genIntro()
     # table2_dict1 = jsonref.load(open("../data/final/allAgesGeneralSUD.json"))
     # table2_dict2 = jsonref.load(open("../data/final/allAgesCategorisedSUD.json"))
     # table2_dict3 = jsonref.load(open("../data/final/ageBinnedGeneralSUD.json"))
-    #
     # writeT2.genAllAgesOverallSUD(table2_dict1)
     # writeT2.genAllAgesCategorySUD(table2_dict2, table2_dict1)
     # writeT2.genAllAgesBinnedSUD(table2_dict3, table2_dict1)
