@@ -4,10 +4,11 @@ from modules.reportMaker import writeT1
 from modules.table1 import comFunctions as cfT1
 from modules.table2 import comFunctions as cfT2
 from modules.table3 import comFunctions as cfT3
+from modules.table4 import comFunctions as cfT4
 from modules.reportMaker import plotF1
 from modules.reportMaker import writeT2
 from modules.reportMaker import writeT3
-# from modules.reportMaker import writeT4
+from modules.reportMaker import writeT4
 # from modules.reportMaker import writeAppendix
 
 config = jsonref.load(open('../config/config.json'))
@@ -64,11 +65,16 @@ def main(logger, resultDict):
     # Table 3 Report Creation
     #writeT3.genIntro()
     t3Patients = jsonref.load(open("../data/final/t3PatientCount.json"))
-    table3_dict1 = jsonref.load(open("../data/final/oddsratios_allRaces_anySUD.json"))
-    table3_dict2 = jsonref.load(open("../data/final/oddsratios_allRaces_2SUDormore.json"))
-    writeT3.oddsRatiosAllRaces(table3_dict1, table3_dict2, t3Patients)
-    table3_dict3 = jsonref.load(open("../data/final/oddsratios_byRace.json"))
-    writeT3.oddsRatiosByRace(table3_dict3, t3Patients)
+    # table3_dict1 = jsonref.load(open("../data/final/oddsratios_allRaces_anySUD.json"))
+    # table3_dict2 = jsonref.load(open("../data/final/oddsratios_allRaces_2SUDormore.json"))
+    # writeT3.oddsRatiosAllRaces(table3_dict1, table3_dict2, t3Patients)
+    # table3_dict3 = jsonref.load(open("../data/final/oddsratios_byRace.json"))
+    # writeT3.oddsRatiosByRace(table3_dict3, t3Patients)
+
+    # Table 4 Report Creation
+    aa, nh, mr = cfT4.allTheOtherStuff()
+    writeT4.genIntro()
+    writeT4.oddsRatiosByRace(aa, nh, mr, t3Patients)
     print('Getting out of reportMaker module')
     print('-'*30)
     return
