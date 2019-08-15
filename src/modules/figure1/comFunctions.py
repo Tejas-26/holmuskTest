@@ -1,5 +1,6 @@
 from logs import logDecorator as lD
 import jsonref, pprint
+import json
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
@@ -13,8 +14,8 @@ from tqdm import tqdm
 from multiprocessing import Pool
 
 config = jsonref.load(open('../config/config.json'))
-table1_config = jsonref.load(open('../config/modules/tejasT1.json'))
-logBase = config['logging']['logBase'] + '.modules.comFunctions.comFunctions'
+fig1_config = jsonref.load(open('../config/modules/tejasF1.json'))
+logBase = config['logging']['logBase'] + '.modules.figure1.comFunctions'
 
 @lD.log(logBase + '.genDiagCount')
 def genDiagCount(logger, filePath):
@@ -57,24 +58,19 @@ def genDiagCount(logger, filePath):
         for category in resultsDict:
             for race in fig1_config["inputs"]["races"]:
                 query = SQL('''
-                SELECT
-                    count(*)
-                FROM
-                    sarah.test3 t1
-                INNER JOIN
-                    sarah.test2 t2
-                ON
-                    t1.patientid = t2.patientid
-                WHERE
-                    t1.{} is true
-                AND
-                    t2.race = {}
+                SELECT count(*)
+                FROM tejas.restofusers t1
+                INNER JOIN tejas.race_age_t1new t2
+                ON t1.siteid = t2.siteid
+                AND t1.backgroundid = t2.backgroundid
+                WHERE t1.{} is true
+                AND t2.race = {}
                 ''').format(
                     Identifier(category),
                     Literal(race)
                 )
                 data = [d[0] for d in pgIO.getAllData(query)]
-                data = round((data[0]/table1results[race][0])*100, 1)
+                data = round((data[0]/table1results[race])*100, 1)
                 resultsDict[category].append(data) #percentages
 
         json_file.close()
