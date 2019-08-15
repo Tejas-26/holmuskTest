@@ -453,8 +453,7 @@ def ageBinnedGeneralSUD(logger):
                 WITH subQ AS (
                 SELECT * FROM tejas.sud_race_age
                 WHERE sud_race_age.race = {}
-                AND (cast (sud_race_age.age as int) >= {})
-                AND (cast (sud_race_age.age as int) <= {})
+                AND sud_race_age.age BETWEEN {} AND {}
                 ) SELECT count(*) FROM subQ
                 ''').format(
                     Literal(race),
