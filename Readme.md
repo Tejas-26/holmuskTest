@@ -1,6 +1,6 @@
 # holmuskTest
 
-This project generates a report based on data from the paper mentioned in the root directory
+This project generates a report based on data from the paper mentioned in the root directory.
 It presents Tables 1-4, and Fig. 1.
 Note that due to confidentiality and the sheer size of the data analysed, the data folder of this project has been included in .gitignore.
 
